@@ -1,0 +1,27 @@
+<svg width="120" height="35" viewBox="0 0 120 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Green gradient S shape -->
+  <defs>
+    <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#86efac;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4ade80;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- S Icon -->
+  <path d="M 3 7 Q 3 3, 7 3 L 15 3 Q 19 3, 19 7 L 19 10 Q 19 14, 15 14 L 7 14 Q 3 14, 3 18 L 3 28 Q 3 32, 7 32 L 15 32 Q 19 32, 19 28" 
+        stroke="url(#greenGradient)" 
+        stroke-width="5" 
+        stroke-linecap="round"
+        fill="none"/>
+  
+  <!-- Biblio. text -->
+  <text x="28" y="24" 
+        font-family="'Outfit', 'Helvetica Neue', 'Arial', sans-serif" 
+        font-size="20" 
+        font-weight="600" 
+        fill="#1A5C4E"
+        letter-spacing="0.5">
+    Biblio.
+  </text>
+</svg>

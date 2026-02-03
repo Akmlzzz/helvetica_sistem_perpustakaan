@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="auth-logo">
-        <i class="bi bi-book-half"></i> Biblio.
+        <img src="{{ asset('./img/Logo.svg') }}" class="custom-logo" alt="Logo Biblio">
     </div>
     <p class="auth-subtitle">
         Yuk, masuk ke akun Anda dan nikmati kemudahan layanan Sistem Perpustakaan Digital.
