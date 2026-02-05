@@ -29,14 +29,13 @@ class AuthController extends Controller
             'kata_sandi' => ['required', 'string'],
         ]);
 
-        // Map 'kata_sandi' to 'password' for Auth::attempt
-        // Laravel expects 'password' key to check against the hashed password
+
         $authCredentials = [
             'nama_pengguna' => $credentials['nama_pengguna'],
             'password' => $credentials['kata_sandi']
         ];
 
-        // Check if email is used instead of username
+
         if (filter_var($credentials['nama_pengguna'], FILTER_VALIDATE_EMAIL)) {
             $authCredentials = [
                 'email' => $credentials['nama_pengguna'],
