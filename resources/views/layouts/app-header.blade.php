@@ -1,5 +1,10 @@
 <header
-    class="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-gray-900 dark:drop-shadow-none min-h-[70px]">
+    class="fixed top-0 z-998 flex w-full bg-white drop-shadow-1 dark:bg-gray-900 dark:drop-shadow-none min-h-[70px] transition-all duration-300"
+    :class="{
+        'xl:left-[270px] xl:w-[calc(100%-270px)]': $store.sidebar.isExpanded || $store.sidebar.isHovered,
+        'xl:left-[90px] xl:w-[calc(100%-90px)]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,
+        'left-0 w-full': !($store.sidebar.isExpanded || $store.sidebar.isHovered)
+    }">
     <div class="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
         <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
             <!-- Hamburger Toggle BTN -->
@@ -15,7 +20,10 @@
             <!-- Hamburger Toggle BTN -->
 
             <a class="block flex-shrink-0 lg:hidden" href="{{ route('dashboard') }}">
-                <img src="{{ asset('img/Logo - light.svg') }}" alt="Logo" class="h-8 w-auto">
+                <!-- Light Mode Logo -->
+                <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="h-8 w-auto dark:hidden">
+                <!-- Dark Mode Logo -->
+                <img src="{{ asset('img/Logo - light.svg') }}" alt="Logo" class="hidden h-8 w-auto dark:block">
             </a>
         </div>
 
@@ -49,7 +57,8 @@
                     <span class="hidden text-right lg:block">
                         <span
                             class="block text-sm font-medium text-brand-primary dark:text-white">{{ Auth::user()->nama_pengguna ?? 'User' }}</span>
-                        <span class="block text-xs">{{ ucfirst(Auth::user()->level_akses ?? 'Anggota') }}</span>
+                        <span
+                            class="block text-xs text-gray-500 dark:text-white">{{ ucfirst(Auth::user()->level_akses ?? 'Anggota') }}</span>
                     </span>
 
                     <span

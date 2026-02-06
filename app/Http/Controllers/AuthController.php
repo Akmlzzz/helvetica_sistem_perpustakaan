@@ -46,7 +46,7 @@ class AuthController extends Controller
         if (Auth::attempt($authCredentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard');
+            return redirect()->intended(Auth::user()->isAdmin() ? '/dashboard' : '/');
         }
 
         return back()->withErrors([
@@ -89,7 +89,7 @@ class AuthController extends Controller
             // Auto login after register
             Auth::login($pengguna);
 
-            return redirect('/dashboard');
+            return redirect($pengguna->isAdmin() ? '/dashboard' : '/');
 
         } catch (\Exception $e) {
             DB::rollBack();

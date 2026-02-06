@@ -39,6 +39,22 @@ class Pengguna extends Authenticatable implements CanResetPassword
         ];
     }
 
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->level_akses === 'admin';
+    }
+
+    /**
+     * Check if user is regular user
+     */
+    public function isUser(): bool
+    {
+        return $this->level_akses === 'user';
+    }
+
     // RELATIONSHIP
     public function anggota()
     {
