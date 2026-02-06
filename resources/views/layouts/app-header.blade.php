@@ -5,7 +5,7 @@
         'xl:left-[90px] xl:w-[calc(100%-90px)]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,
         'left-0 w-full': !($store.sidebar.isExpanded || $store.sidebar.isHovered)
     }">
-    <div class="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
+    <div class="flex grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
         <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
             <!-- Hamburger Toggle BTN -->
             <button
@@ -19,7 +19,7 @@
             </button>
             <!-- Hamburger Toggle BTN -->
 
-            <a class="block flex-shrink-0 lg:hidden" href="{{ route('dashboard') }}">
+            <a class="block shrink-0 lg:hidden" href="{{ route('dashboard') }}">
                 <!-- Light Mode Logo -->
                 <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="h-8 w-auto dark:hidden">
                 <!-- Dark Mode Logo -->

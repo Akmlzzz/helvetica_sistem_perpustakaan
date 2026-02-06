@@ -25,7 +25,25 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('admin')->group(function () {
         Route::get('/dashboard', function () {
-            return view('dashboard');
+            // Count data for dashboard
+            $totalBuku = \App\Models\Buku::count();
+            $totalAnggota = \App\Models\User::where('role', 'user')->count(); // Assuming 'user' role is for members
+            $totalPeminjaman = \App\Models\Peminjaman::where('status_transaksi', 'dipinjam')->count();
+            // $totalDenda would come from a Denda model if implemented
+
+            return view('dashboard', compact('totalBuku', 'totalAnggota', 'totalPeminjaman'));
         })->name('dashboard');
+
+        // Book Management Routes
+        Route::get('/buku', [\App\Http\Controllers\Admin\BukuController::class, 'index'])->name('admin.buku.index');
+        Route::post('/buku', [\App\Http\Controllers\Admin\BukuController::class, 'store'])->name('admin.buku.store');
+        Route::put('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'update'])->name('admin.buku.update');
+        Route::delete('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'destroy'])->name('admin.buku.destroy');
+
+        // Category Management Routes
+        Route::get('/kategori', [\App\Http\Controllers\Admin\KategoriController::class, 'index'])->name('admin.kategori.index');
+        Route::post('/kategori', [\App\Http\Controllers\Admin\KategoriController::class, 'store'])->name('admin.kategori.store');
+        Route::put('/kategori/{id}', [\App\Http\Controllers\Admin\KategoriController::class, 'update'])->name('admin.kategori.update');
+        Route::delete('/kategori/{id}', [\App\Http\Controllers\Admin\KategoriController::class, 'destroy'])->name('admin.kategori.destroy');
     });
 });

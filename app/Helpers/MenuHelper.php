@@ -21,6 +21,11 @@ class MenuHelper
                         // 'path' => '#', // Optional if using submenus
                         'subItems' => [
                             [
+                                'name' => 'Kategori',
+                                'path' => '/kategori',
+                                'new' => false,
+                            ],
+                            [
                                 'name' => 'Data Buku',
                                 'path' => '/buku',
                                 'new' => false,

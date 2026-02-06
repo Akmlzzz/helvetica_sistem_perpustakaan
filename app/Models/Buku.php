@@ -16,6 +16,8 @@ class Buku extends Model
         'penulis',
         'penerbit',
         'stok',
+        'cover',
+        'lokasi_rak',
         'id_kategori'
     ];
 
