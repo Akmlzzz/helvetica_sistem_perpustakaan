@@ -19,10 +19,12 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminSeeder::class);
 
         // Create test user (optional)
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'role' => 'user',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        //     'role' => 'user',
+        // ]);
+
+        $this->call(DummyDataSeeder::class);
     }
 }

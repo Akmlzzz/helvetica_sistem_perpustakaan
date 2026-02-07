@@ -47,8 +47,8 @@ class MenuHelper
                         'icon' => 'users',
                         'subItems' => [
                             [
-                                'name' => 'Data Anggota',
-                                'path' => '/anggota',
+                                'name' => 'Data Pengguna',
+                                'path' => '/pengguna',
                                 'new' => false,
                             ]
                         ]
