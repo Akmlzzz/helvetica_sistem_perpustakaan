@@ -76,7 +76,7 @@
                                     Nama Kategori <span class="text-meta-1">*</span>
                                 </label>
                                 <input type="text" name="nama_kategori" placeholder="Masukkan nama kategori"
-                                    class="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    class="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                     required />
                                 @error('nama_kategori')
                                     <span class="text-sm text-red-500 mt-1 block">{{ $message }}</span>
@@ -93,7 +93,7 @@
             </div>
 
             <!-- Category List -->
-            <div class="rounded-[20px] border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div class="rounded-[20px] border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
                 <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
                     <h3 class="font-medium text-black dark:text-white">
                         Daftar Kategori
@@ -117,30 +117,36 @@
                             </button>
                             <input type="text" name="search" value="{{ request('search') }}"
                                 placeholder="Cari Nama Kategori..."
-                                class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark" />
+                                class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark dark:text-white" />
                         </div>
                     </form>
                 </div>
 
                 <div class="flex flex-col overflow-x-auto">
                     <div class="min-w-[600px]">
-                        <div class="grid grid-cols-4 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-4">
+                        <div class="grid grid-cols-4 rounded-sm bg-gray-50 dark:bg-gray-800 sm:grid-cols-4">
                             <div class="p-2.5 xl:p-5">
-                                <h5 class="text-sm font-medium uppercase xsm:text-base">ID</h5>
+                                <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">ID
+                                </h5>
                             </div>
                             <div class="p-2.5 xl:p-5">
-                                <h5 class="text-sm font-medium uppercase xsm:text-base">Nama Kategori</h5>
+                                <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">Nama
+                                    Kategori
+                                </h5>
                             </div>
                             <div class="p-2.5 text-center xl:p-5">
-                                <h5 class="text-sm font-medium uppercase xsm:text-base">Jumlah Buku</h5>
+                                <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">
+                                    Jumlah Buku</h5>
                             </div>
                             <div class="p-2.5 text-center xl:p-5">
-                                <h5 class="text-sm font-medium uppercase xsm:text-base">Aksi</h5>
+                                <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">Aksi
+                                </h5>
                             </div>
                         </div>
 
                         @foreach($kategori as $item)
-                            <div class="grid grid-cols-4 border-b border-stroke dark:border-strokedark sm:grid-cols-4">
+                            <div
+                                class="grid grid-cols-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors sm:grid-cols-4">
                                 <div class="flex items-center gap-3 p-2.5 xl:p-5">
                                     <p class="text-black dark:text-white">#{{ $item->id_kategori }}</p>
                                 </div>
@@ -151,7 +157,7 @@
 
                                 <div class="flex items-center justify-center p-2.5 xl:p-5">
                                     <span
-                                        class="bg-success bg-opacity-10 px-3 py-1 text-sm font-medium text-success rounded-full">
+                                        class="bg-success bg-opacity-10 px-3 py-1 text-sm font-medium text-success dark:text-green-400 rounded-full">
                                         {{ $item->buku_count }} Buku
                                     </span>
                                 </div>
@@ -160,7 +166,7 @@
                                     <div class="flex items-center space-x-3.5" x-data="{ editOpen: false }">
                                         <!-- Edit Button (Triggers Modal/Inline Edit) -->
                                         <button @click="editOpen = !editOpen"
-                                            class="hover:text-primary border border-stroke dark:border-strokedark rounded-md p-1.5">
+                                            class="hover:text-primary text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                             <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
                                                 <path
@@ -178,7 +184,7 @@
                                                 <label class="mb-2 block text-sm font-medium text-black dark:text-white">Edit
                                                     Nama</label>
                                                 <input type="text" name="nama_kategori" value="{{ $item->nama_kategori }}"
-                                                    class="mb-2 w-full rounded border border-stroke px-2 py-1 outline-none dark:border-strokedark dark:bg-form-input">
+                                                    class="mb-2 w-full rounded border border-stroke px-2 py-1 outline-none dark:border-strokedark dark:bg-form-input dark:text-white">
                                                 <div class="flex justify-end gap-2">
                                                     <button type="button" @click="editOpen = false"
                                                         class="text-xs text-gray-500">Batal</button>
@@ -192,21 +198,21 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="hover:text-primary border border-stroke dark:border-strokedark rounded-md p-1.5">
+                                                class="hover:text-danger text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                                 <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
                                                         d="M13.7535 2.47502H11.5879V1.9969C11.5879 1.15315 10.9129 0.478149 10.0691 0.478149H7.90352C7.05977 0.478149 6.38477 1.15315 6.38477 1.9969V2.47502H4.21914C3.40352 2.47502 2.72852 3.15002 2.72852 3.96565V4.8094C2.72852 5.42815 3.09414 5.9344 3.62852 6.16877V14.5406C3.62852 15.75 4.6129 16.7344 5.82227 16.7344H12.1504C13.3598 16.7344 14.3441 15.75 14.3441 14.5406V6.16877C14.8785 5.9344 15.2441 5.42815 15.2441 4.8094V3.96565C15.2441 3.15002 14.5691 2.47502 13.7535 2.47502ZM7.67852 1.9969C7.67852 1.85627 7.79102 1.74377 7.93164 1.74377H10.041C10.1816 1.74377 10.2941 1.85627 10.2941 1.9969V2.47502H7.67852V1.9969ZM13.0504 14.5406C13.0504 15.0188 12.6566 15.4125 12.1785 15.4125H5.85039C5.37227 15.4125 4.97852 15.0188 4.97852 14.5406V6.45002H13.0504V14.5406ZM13.9504 4.8094C13.9504 4.9219 13.866 5.00627 13.7535 5.00627H4.21914C4.10664 5.00627 4.02227 4.9219 4.02227 4.8094V3.96565C4.02227 3.85315 4.10664 3.76877 4.21914 3.76877H13.7535C13.866 3.76877 13.9504 3.85315 13.9504 3.96565V4.8094Z"
-                                                        fill="" />
+                                                        fill="currentColor" />
                                                     <path
                                                         d="M6.16875 13.1625C6.42188 13.1625 6.61875 12.9656 6.61875 12.7125V8.29687C6.61875 8.04375 6.42188 7.84688 6.16875 7.84688C5.91563 7.84688 5.71875 8.04375 5.71875 8.29687V12.7125C5.71875 12.9656 5.91563 13.1625 6.16875 13.1625Z"
-                                                        fill="" />
+                                                        fill="currentColor" />
                                                     <path
                                                         d="M8.97187 13.1625C9.225 13.1625 9.42188 12.9656 9.42188 12.7125V8.29687C9.42188 8.04375 9.225 7.84688 8.97187 7.84688C8.71875 7.84688 8.52188 8.04375 8.52188 8.29687V12.7125C8.52188 12.9656 8.71875 13.1625 8.97187 13.1625Z"
-                                                        fill="" />
+                                                        fill="currentColor" />
                                                     <path
                                                         d="M11.7844 13.1625C12.0375 13.1625 12.2344 12.9656 12.2344 12.7125V8.29687C12.2344 8.04375 12.0375 7.84688 11.7844 7.84688C11.5312 7.84688 11.3344 8.04375 11.3344 8.29687V12.7125C11.3344 12.9656 11.5312 13.1625 11.7844 13.1625Z"
-                                                        fill="" />
+                                                        fill="currentColor" />
                                                 </svg>
                                             </button>
                                         </form>

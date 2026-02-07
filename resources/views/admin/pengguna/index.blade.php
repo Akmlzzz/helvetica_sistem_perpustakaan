@@ -58,7 +58,7 @@
 
         <!-- Search & Filter -->
         <div
-            class="rounded-[20px] border border-stroke bg-white px-5 pb-5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+            class="rounded-[20px] border border-gray-100 bg-white px-5 pb-5 pt-6 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:px-7.5 xl:pb-1">
             <form method="GET" action="{{ route('admin.pengguna.index') }}"
                 class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div class="relative w-full sm:w-1/2">
@@ -75,42 +75,53 @@
                     </button>
                     <input type="text" name="search" value="{{ request('search') }}"
                         placeholder="Cari Nama Pengguna, Email, atau Nama Lengkap..."
-                        class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark xl:w-125" />
+                        class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark dark:text-white dark:bg-meta-4 dark:focus:border-primary xl:w-125" />
                 </div>
 
                 <div class="w-full sm:w-1/4">
                     <select name="role" onchange="this.form.submit()"
-                        class="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-2 pl-4 pr-10 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                        <option value="">Semua Level</option>
-                        <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="petugas" {{ request('role') == 'petugas' ? 'selected' : '' }}>Petugas</option>
-                        <option value="anggota" {{ request('role') == 'anggota' ? 'selected' : '' }}>Anggota</option>
+                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('role') ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-stroke bg-transparent' }} focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
+                        <option value="" class="text-gray-700 dark:text-white dark:bg-gray-800">Semua Role</option>
+                        <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}
+                            class="text-gray-700 dark:text-white dark:bg-gray-800">Admin
+                        </option>
+                        <option value="petugas" {{ request('role') == 'petugas' ? 'selected' : '' }}
+                            class="text-gray-700 dark:text-white dark:bg-gray-800">
+                            Petugas</option>
+                        <option value="anggota" {{ request('role') == 'anggota' ? 'selected' : '' }}
+                            class="text-gray-700 dark:text-white dark:bg-gray-800">
+                            Anggota</option>
                     </select>
                 </div>
             </form>
 
             <div class="flex flex-col overflow-x-auto">
                 <div class="min-w-[1000px]">
-                    <div class="grid grid-cols-5 rounded-sm bg-gray-2 dark:bg-meta-4">
+                    <div class="grid grid-cols-5 rounded-sm bg-gray-50 dark:bg-gray-800">
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Pengguna</h5>
+                            <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">Pengguna
+                            </h5>
                         </div>
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Email</h5>
+                            <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">Email
+                            </h5>
                         </div>
                         <div class="p-2.5 xl:p-5 text-center">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Level</h5>
+                            <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">Level
+                            </h5>
                         </div>
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Nama Lengkap</h5>
+                            <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">Nama
+                                Lengkap</h5>
                         </div>
                         <div class="p-2.5 xl:p-5 text-center">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Aksi</h5>
+                            <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">Aksi</h5>
                         </div>
                     </div>
 
                     @foreach($users as $user)
-                        <div class="grid grid-cols-5 border-b border-stroke dark:border-strokedark">
+                        <div
+                            class="grid grid-cols-5 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                             <div class="flex items-center p-2.5 xl:p-5">
                                 <p class="font-bold text-black dark:text-white">{{ $user->nama_pengguna }}</p>
                             </div>
@@ -118,26 +129,24 @@
                                 <p class="text-sm text-black dark:text-white">{{ $user->email }}</p>
                             </div>
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
-                                <span
-                                    class="inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium @if($user->level_akses == 'admin') bg-danger text-danger @elseif($user->level_akses == 'petugas') bg-warning text-warning @else bg-success text-success @endif">
-                                    {{ ucfirst($user->level_akses) }}
-                                </span>
+                                <x-status-badge :type="$user->level_akses" />
                             </div>
                             <div class="flex items-center p-2.5 xl:p-5">
                                 <p class="text-sm text-black dark:text-white">{{ $user->anggota->nama_lengkap ?? '-' }}</p>
                             </div>
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
                                 <div class="flex items-center space-x-3.5">
-                                    <button @click="$dispatch('open-user-modal', { 
-                                                        id: '{{ $user->id_pengguna }}',
-                                                        nama_pengguna: '{{ $user->nama_pengguna }}',
-                                                        email: '{{ $user->email }}',
-                                                        level_akses: '{{ $user->level_akses }}',
-                                                        nama_lengkap: '{{ addslashes($user->anggota->nama_lengkap ?? '') }}',
-                                                        alamat: '{{ addslashes($user->anggota->alamat ?? '') }}',
-                                                        nomor_telepon: '{{ $user->anggota->nomor_telepon ?? '' }}'
-                                                    })"
-                                        class="hover:text-primary border border-stroke dark:border-strokedark rounded-md p-1.5">
+                                    <button
+                                        @click="$dispatch('open-user-modal', { 
+                                                                                                                                                                id: '{{ $user->id_pengguna }}',
+                                                                                                                                                                nama_pengguna: '{{ $user->nama_pengguna }}',
+                                                                                                                                                                email: '{{ $user->email }}',
+                                                                                                                                                                level_akses: '{{ $user->level_akses }}',
+                                                                                                                                                                nama_lengkap: '{{ addslashes($user->anggota->nama_lengkap ?? '') }}',
+                                                                                                                                                                alamat: '{{ addslashes($user->anggota->alamat ?? '') }}',
+                                                                                                                                                                nomor_telepon: '{{ $user->anggota->nomor_telepon ?? '' }}'
+                                                                                                                                                            })"
+                                        class="hover:text-primary text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                         <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
@@ -151,7 +160,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="hover:text-primary border border-stroke dark:border-strokedark rounded-md p-1.5 text-danger">
+                                                class="hover:text-danger text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                                 <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
@@ -168,7 +177,7 @@
                 </div>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 px-4 pb-4 sm:px-7.5">
                 {{ $users->links() }}
             </div>
         </div>

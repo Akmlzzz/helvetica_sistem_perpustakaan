@@ -1,5 +1,5 @@
 <header
-    class="fixed top-0 z-998 flex w-full bg-white drop-shadow-1 dark:bg-gray-900 dark:drop-shadow-none min-h-[70px] transition-all duration-300"
+    class="fixed top-0 z-998 flex w-full bg-white drop-shadow-1 dark:bg-slate-900 dark:drop-shadow-none min-h-[70px] transition-all duration-300"
     :class="{
         'xl:left-[270px] xl:w-[calc(100%-270px)]': $store.sidebar.isExpanded || $store.sidebar.isHovered,
         'xl:left-[90px] xl:w-[calc(100%-90px)]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,
@@ -9,7 +9,7 @@
         <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
             <!-- Hamburger Toggle BTN -->
             <button
-                class="z-99999 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm dark:border-gray-800 dark:bg-gray-900 lg:hidden"
+                class="z-99999 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:hidden"
                 @click.stop="$store.sidebar.toggleMobileOpen()">
                 <svg class="h-6 w-6 stroke-current text-brand-primary dark:text-gray-200" fill="none"
                     viewBox="0 0 24 24">
@@ -34,7 +34,7 @@
         <div class="flex items-center gap-3 2xl:gap-7">
             <!-- Dark Mode Toggler -->
             <button type="button" @click="$store.theme.toggle()"
-                class="flex h-10 w-10 items-center justify-center rounded-full text-brand-primary bg-gray-50 hover:text-brand-primary hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-white">
+                class="flex h-10 w-10 items-center justify-center rounded-full text-brand-primary bg-gray-50 hover:text-brand-primary hover:bg-gray-100 dark:bg-slate-800 dark:text-gray-400 dark:hover:text-white">
                 <span class="sr-only">Toggle dark mode</span>
                 <!-- Sun Icon -->
                 <svg x-show="$store.theme.theme === 'light'" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -81,7 +81,7 @@
                     x-transition:leave="transition ease-in duration-75"
                     x-transition:leave-start="transform opacity-100 scale-100"
                     x-transition:leave-end="transform opacity-0 scale-95"
-                    class="absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-gray-800 z-50 min-w-[200px]"
+                    class="absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-slate-800 z-50 min-w-[200px]"
                     style="display: none;">
 
                     <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700">

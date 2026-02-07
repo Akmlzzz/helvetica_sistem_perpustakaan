@@ -18,7 +18,7 @@
         <!-- Stats Grid -->
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-6 2xl:gap-7.5">
             <x-stat-card title="Total Buku" value="{{ $totalBuku ?? '12' }}"
-                icon='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 17V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM5 19V5h14v12h-2V7H7v10H5z" fill="currentColor"/></svg>' />
+                icon='<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>' />
             <x-stat-card title="Total Anggota" value="{{ $totalAnggota ?? '7' }}"
                 icon='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2"/></svg>' />
             <x-stat-card title="Peminjaman Aktif" value="{{ $totalPeminjaman ?? '4' }}"
@@ -66,45 +66,35 @@
                         </div>
                     </div>
 
-                    <!-- Table Body with Dummy Data -->
-                    @php
-                        $dummyData = [
-                            ['nama' => 'Budi Santoso', 'email' => 'budi.s@student.com', 'pinjam' => '2026-01-05', 'kembali' => '2026-01-12', 'status' => 'Dikembalikan'],
-                            ['nama' => 'Siti Aminah', 'email' => 'siti.a@student.com', 'pinjam' => '2026-01-10', 'kembali' => '2026-01-17', 'status' => 'Telat'],
-                            ['nama' => 'Andi Wijaya', 'email' => 'andi.w@student.com', 'pinjam' => '2026-01-18', 'kembali' => '2026-01-25', 'status' => 'Dipinjam'],
-                            ['nama' => 'Ambacong', 'email' => 'amba.s@student.com', 'pinjam' => '2026-01-20', 'kembali' => '2026-01-27', 'status' => 'Dipinjam'],
-                        ];
-                    @endphp
-
-                    @foreach($dummyData as $row)
+                    @foreach($latestPeminjaman as $row)
                         <div
                             class="grid grid-cols-5 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-xs sm:text-sm">
                             <div class="flex items-center gap-1 p-2 xl:p-5">
                                 <p class="font-bold text-black dark:text-white truncate">
-                                    {{ $row['nama'] }}
+                                    {{ $row->pengguna->nama_pengguna ?? 'Guest' }}
                                 </p>
                             </div>
 
                             <div class="flex items-center justify-center p-2 xl:p-5">
                                 <p class="text-black dark:text-white font-medium truncate">
-                                    {{ $row['email'] }}
+                                    {{ $row->pengguna->email ?? '-' }}
                                 </p>
                             </div>
 
                             <div class="flex items-center justify-center p-2 xl:p-5">
                                 <p class="font-medium text-gray-600 dark:text-gray-400 truncate">
-                                    {{ $row['pinjam'] }}
+                                    {{ $row->tgl_pinjam }}
                                 </p>
                             </div>
 
                             <div class="flex items-center justify-center p-2 xl:p-5">
                                 <p class="text-black dark:text-white font-medium truncate">
-                                    {{ $row['kembali'] }}
+                                    {{ $row->tgl_kembali }}
                                 </p>
                             </div>
 
                             <div class="flex items-center justify-center p-2 xl:p-5">
-                                <x-status-badge :status="$row['status']" />
+                                <x-status-badge :type="$row->status_transaksi" />
                             </div>
                         </div>
                     @endforeach

@@ -11,7 +11,7 @@
 
         <!-- Search & Filter -->
         <div
-            class="rounded-[20px] border border-stroke bg-white px-5 pb-5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+            class="rounded-[20px] border border-gray-100 bg-white px-5 pb-5 pt-6 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:px-7.5 xl:pb-1">
             <form method="GET" action="{{ route('admin.denda.index') }}"
                 class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
 
@@ -30,17 +30,17 @@
                     </button>
                     <input type="text" name="search" value="{{ request('search') }}"
                         placeholder="Cari Nama Peminjam atau Judul Buku..."
-                        class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark xl:w-125" />
+                        class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark dark:text-white xl:w-125" />
                 </div>
 
                 <!-- Filter Status -->
                 <div class="w-full sm:w-1/4">
                     <select name="status" onchange="this.form.submit()"
-                        class="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-2 pl-4 pr-10 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
-                        <option value="">Semua Status Peminjaman</option>
-                        <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
-                        <option value="telat" {{ request('status') == 'telat' ? 'selected' : '' }}>Telat</option>
-                        <option value="kembali" {{ request('status') == 'kembali' ? 'selected' : '' }}>Kembali</option>
+                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('status') ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-stroke bg-transparent' }} focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
+                        <option value="" class="text-gray-700 dark:text-white dark:bg-gray-800">Semua Status Peminjaman</option>
+                        <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">Dipinjam</option>
+                        <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">Dikembalikan</option>
+                        <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">Terlambat</option>
                     </select>
                 </div>
             </form>
@@ -48,29 +48,29 @@
             <!-- Table Section with Responsive Scroll -->
             <div class="flex flex-col overflow-x-auto">
                 <div class="min-w-[1000px]">
-                    <div class="grid grid-cols-6 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-6">
+                    <div class="grid grid-cols-6 rounded-sm bg-gray-50 dark:bg-gray-800 sm:grid-cols-6">
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Nama Peminjam</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Nama Peminjam</h5>
                         </div>
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Judul Buku</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Judul Buku</h5>
                         </div>
                         <div class="p-2.5 text-center xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Tgl Pinjam</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Tgl Pinjam</h5>
                         </div>
                         <div class="p-2.5 text-center xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Deadline</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Deadline</h5>
                         </div>
                          <div class="p-2.5 text-center xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Status</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Status</h5>
                         </div>
                         <div class="p-2.5 text-center xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Aksi</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Aksi</h5>
                         </div>
                     </div>
 
                     @foreach($denda as $item)
-                        <div class="grid grid-cols-6 border-b border-stroke dark:border-strokedark sm:grid-cols-6">
+                        <div class="grid grid-cols-6 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors sm:grid-cols-6">
                             <!-- Nama Peminjam -->
                             <div class="flex items-center p-2.5 xl:p-5">
                                 <p class="text-black dark:text-white">
@@ -108,25 +108,13 @@
 
                             <!-- Status -->
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
-                                @php
-                                    $statusColor = 'bg-primary text-white';
-                                    if($item->peminjaman->status_transaksi == 'kembali') {
-                                        $statusColor = 'bg-success text-white';
-                                    } elseif($item->peminjaman->status_transaksi == 'telat') {
-                                        $statusColor = 'bg-danger text-white';
-                                    } elseif($item->peminjaman->status_transaksi == 'dipinjam') {
-                                        $statusColor = 'bg-primary text-white';
-                                    }
-                                @endphp
-                                <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium {{ $statusColor }}">
-                                    {{ ucfirst($item->peminjaman->status_transaksi) }}
-                                </span>
+                                <x-status-badge :type="$item->peminjaman->status_transaksi" />
                             </div>
 
                             <!-- Aksi -->
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
                                 <a href="{{ route('admin.denda.show', $item->id_denda) }}"
-                                   class="inline-flex items-center justify-center rounded-md border border-primary px-4 py-2 text-center font-medium text-primary hover:bg-opacity-90 lg:px-4 xl:px-4">
+                                   class="inline-flex items-center justify-center rounded-md border border-primary px-4 py-2 text-center font-medium text-black hover:bg-primary dark:border-primary dark:text-white dark:hover:bg-primary transition-colors lg:px-4 xl:px-4">
                                    Detail
                                 </a>
                             </div>
@@ -135,7 +123,7 @@
                 </div>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 px-4 pb-4 sm:px-7.5">
                  {{ $denda->links() }}
             </div>
         </div>

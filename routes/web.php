@@ -31,7 +31,13 @@ Route::middleware('auth')->group(function () {
             $totalPeminjaman = \App\Models\Peminjaman::where('status_transaksi', 'dipinjam')->count();
             // $totalDenda would come from a Denda model if implemented
 
-            return view('dashboard', compact('totalBuku', 'totalAnggota', 'totalPeminjaman'));
+            // Get latest peminjaman
+            $latestPeminjaman = \App\Models\Peminjaman::with(['pengguna', 'buku', 'detail.buku'])
+                ->latest('tgl_pinjam')
+                ->take(5)
+                ->get();
+
+            return view('dashboard', compact('totalBuku', 'totalAnggota', 'totalPeminjaman', 'latestPeminjaman'));
         })->name('dashboard');
 
         // Book Management Routes

@@ -32,7 +32,7 @@ class LaporanController extends Controller
                     ->get();
                 break;
             case 'peminjaman':
-                $data = Peminjaman::with(['pengguna', 'detail.buku'])
+                $data = Peminjaman::with(['pengguna', 'detail.buku', 'denda'])
                     ->whereBetween('tgl_pinjam', [$startDate, $endDate])
                     ->get();
                 break;
@@ -45,7 +45,18 @@ class LaporanController extends Controller
                 break;
         }
 
-        return view('admin.laporan.index', compact('data', 'startDate', 'endDate', 'type'));
+        // Calculate summary statistics for peminjaman report
+        $totalPeminjaman = 0;
+        $totalTerlambat = 0;
+        $totalDikembalikan = 0;
+
+        if ($type === 'peminjaman') {
+            $totalPeminjaman = $data->count();
+            $totalTerlambat = $data->where('status_transaksi', 'terlambat')->count();
+            $totalDikembalikan = $data->where('status_transaksi', 'dikembalikan')->count();
+        }
+
+        return view('admin.laporan.index', compact('data', 'startDate', 'endDate', 'type', 'totalPeminjaman', 'totalTerlambat', 'totalDikembalikan'));
     }
 
     public function exportPdf(Request $request)

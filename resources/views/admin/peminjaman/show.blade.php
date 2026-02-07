@@ -15,8 +15,8 @@
         <div class="grid grid-cols-1 gap-9 sm:grid-cols-2">
             <!-- Transaction Info -->
             <div class="flex flex-col gap-9">
-                <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                    <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+                <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-gray-800 dark:bg-gray-900">
+                    <div class="border-b border-stroke px-6.5 py-4 dark:border-gray-800">
                         <h3 class="font-medium text-black dark:text-white">
                             Informasi Peminjaman
                         </h3>
@@ -27,7 +27,7 @@
                                 Kode Booking
                             </label>
                             <input type="text" readonly value="{{ $peminjaman->kode_booking }}"
-                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
                         </div>
 
                         <div class="mb-4.5">
@@ -35,7 +35,7 @@
                                 Tanggal Pinjam
                             </label>
                             <input type="text" readonly value="{{ $peminjaman->tgl_pinjam }}"
-                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
                         </div>
 
                         <div class="mb-4.5">
@@ -43,7 +43,7 @@
                                 Tanggal Kembali (Deadline)
                             </label>
                             <input type="text" readonly value="{{ $peminjaman->tgl_kembali }}"
-                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
                         </div>
 
                         <div class="mb-4.5">
@@ -51,7 +51,7 @@
                                 Status
                             </label>
                             <input type="text" readonly value="{{ ucfirst($peminjaman->status_transaksi) }}"
-                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
                         </div>
                     </div>
                 </div>
@@ -59,8 +59,8 @@
 
             <!-- Borrower Info -->
             <div class="flex flex-col gap-9">
-                <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                    <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
+                <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-gray-800 dark:bg-gray-900">
+                    <div class="border-b border-stroke px-6.5 py-4 dark:border-gray-800">
                         <h3 class="font-medium text-black dark:text-white">
                             Informasi Peminjam
                         </h3>
@@ -72,14 +72,14 @@
                             </label>
                             <input type="text" readonly
                                 value="{{ $peminjaman->pengguna->anggota->nama_lengkap ?? $peminjaman->pengguna->nama_pengguna ?? '-' }}"
-                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
                         </div>
                         <div class="mb-4.5">
                             <label class="mb-2.5 block text-black dark:text-white">
                                 Email
                             </label>
                             <input type="text" readonly value="{{ $peminjaman->pengguna->email ?? '-' }}"
-                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                                class="w-full rounded border border-stroke bg-gray py-3 px-5 text-black focus:border-primary focus-visible:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
                         </div>
                     </div>
                 </div>
@@ -88,30 +88,30 @@
 
         <!-- Book List -->
         <div
-            class="mt-6 rounded-sm border border-stroke bg-white px-5 pb-5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+            class="mt-6 rounded-sm border border-stroke bg-white px-5 pb-5 pt-6 shadow-default dark:border-gray-800 dark:bg-gray-900 sm:px-7.5 xl:pb-1">
             <h4 class="mb-6 text-xl font-bold text-black dark:text-white">
                 Buku yang Dipinjam
             </h4>
 
             <div class="flex flex-col overflow-x-auto">
                 <div class="min-w-full">
-                    <div class="grid grid-cols-4 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-4">
+                    <div class="grid grid-cols-4 rounded-sm bg-gray-2 dark:bg-gray-800 sm:grid-cols-4">
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Judul Buku</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-white">Judul Buku</h5>
                         </div>
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">ISBN</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-white">ISBN</h5>
                         </div>
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Penulis</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-white">Penulis</h5>
                         </div>
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base">Penerbit</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-white">Penerbit</h5>
                         </div>
                     </div>
 
                     @if($peminjaman->id_buku)
-                        <div class="grid grid-cols-4 border-b border-stroke dark:border-strokedark sm:grid-cols-4">
+                        <div class="grid grid-cols-4 border-b border-stroke dark:border-gray-700 sm:grid-cols-4">
                             <div class="p-2.5 xl:p-5">
                                 <p class="text-black dark:text-white">{{ $peminjaman->buku->judul_buku ?? '-' }}</p>
                             </div>
@@ -127,7 +127,7 @@
                         </div>
                     @elseif($peminjaman->detail)
                         @foreach($peminjaman->detail as $item)
-                            <div class="grid grid-cols-4 border-b border-stroke dark:border-strokedark sm:grid-cols-4">
+                            <div class="grid grid-cols-4 border-b border-stroke dark:border-gray-700 sm:grid-cols-4">
                                 <div class="p-2.5 xl:p-5">
                                     <p class="text-black dark:text-white">{{ $item->buku->judul_buku ?? '-' }}</p>
                                 </div>
