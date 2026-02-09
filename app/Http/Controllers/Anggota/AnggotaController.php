@@ -80,4 +80,40 @@ class AnggotaController extends Controller
         // Logic to book a book
         return redirect()->back()->with('success', 'Booking berhasil dibuat. Kode Booking: BK-' . rand(1000, 9999));
     }
+
+    public function profile()
+    {
+        $user = auth()->user();
+        $anggota = $user->anggota;
+        return view('anggota.profile', compact('user', 'anggota'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+        $anggota = $user->anggota;
+
+        $request->validate([
+            'email' => 'required|email|unique:pengguna,email,' . $user->id_pengguna . ',id_pengguna',
+            'nama_pengguna' => 'required|unique:pengguna,nama_pengguna,' . $user->id_pengguna . ',id_pengguna',
+            'nama_lengkap' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'password' => 'nullable|min:6',
+        ]);
+
+        // Update Pengguna
+        $user->email = $request->email;
+        $user->nama_pengguna = $request->nama_pengguna;
+        if ($request->filled('password')) {
+            $user->kata_sandi = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+        $user->save();
+
+        // Update Anggota
+        $anggota->nama_lengkap = $request->nama_lengkap;
+        $anggota->alamat = $request->alamat;
+        $anggota->save();
+
+        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+    }
 }

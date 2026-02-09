@@ -87,6 +87,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/anggota/pinjaman', [\App\Http\Controllers\Anggota\AnggotaController::class, 'pinjaman'])->name('anggota.pinjaman');
         Route::get('/anggota/riwayat', [\App\Http\Controllers\Anggota\AnggotaController::class, 'riwayat'])->name('anggota.riwayat');
         Route::post('/anggota/booking', [\App\Http\Controllers\Anggota\AnggotaController::class, 'storeBooking'])->name('anggota.booking.store');
+
+        // Profile Routes
+        Route::get('/anggota/profile', [\App\Http\Controllers\Anggota\AnggotaController::class, 'profile'])->name('anggota.profile');
+        Route::put('/anggota/profile', [\App\Http\Controllers\Anggota\AnggotaController::class, 'updateProfile'])->name('anggota.profile.update');
     });
 });
 

@@ -92,7 +92,7 @@
 
                     <ul class="flex flex-col gap-1 border-b border-stroke px-4 py-3 dark:border-strokedark">
                         <li>
-                            <a href="#"
+                            <a href="{{ Auth::user()->isAnggota() ? route('anggota.profile') : '#' }}"
                                 class="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-brand-primary lg:text-base py-1">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
