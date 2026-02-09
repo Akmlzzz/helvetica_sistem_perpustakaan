@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,12 +18,7 @@ class DatabaseSeeder extends Seeder
         // Create admin account
         $this->call(AdminSeeder::class);
 
-        // Create test user (optional)
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        //     'role' => 'user',
-        // ]);
+
 
         $this->call(DummyDataSeeder::class);
     }

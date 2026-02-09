@@ -69,7 +69,7 @@
                 <!-- Filter Categories -->
                 <div class="w-full sm:w-1/4">
                     <select name="kategori" onchange="this.form.submit()"
-                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('kategori') ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-stroke bg-transparent' }} focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
+                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('kategori') ? 'border-brand-primary bg-brand-primary/5 dark:bg-brand-primary/10' : 'border-stroke bg-transparent' }} focus:border-brand-primary active:border-brand-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
                         <option value="" class="text-gray-700 dark:text-white dark:bg-gray-800">Semua Kategori</option>
                         @foreach($kategori as $kat)
                             <option value="{{ $kat->id_kategori }}" {{ request('kategori') == $kat->id_kategori ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">
@@ -160,15 +160,15 @@
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
                                 <div class="flex items-center space-x-3.5" x-data="{ editOpen: false }">
                                     <button @click="$dispatch('open-edit-book-modal', { 
-                                                                                id: '{{ $item->id_buku }}',
-                                                                                judul: '{{ addslashes($item->judul_buku) }}',
-                                                                                isbn: '{{ $item->isbn }}',
-                                                                                penulis: '{{ addslashes($item->penulis) }}',
-                                                                                penerbit: '{{ addslashes($item->penerbit) }}',
-                                                                                stok: '{{ $item->stok }}',
-                                                                                kategori: '{{ $item->id_kategori }}',
-                                                                                lokasi: '{{ addslashes($item->lokasi_rak) }}'
-                                                                             })"
+                                                                                        id: '{{ $item->id_buku }}',
+                                                                                        judul: '{{ addslashes($item->judul_buku) }}',
+                                                                                        isbn: '{{ $item->isbn }}',
+                                                                                        penulis: '{{ addslashes($item->penulis) }}',
+                                                                                        penerbit: '{{ addslashes($item->penerbit) }}',
+                                                                                        stok: '{{ $item->stok }}',
+                                                                                        kategori: '{{ $item->id_kategori }}',
+                                                                                        lokasi: '{{ addslashes($item->lokasi_rak) }}'
+                                                                                     })"
                                         class="hover:text-primary text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                         <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -294,7 +294,7 @@
                 <div class="mb-6">
                     <label class="mb-2.5 block font-medium text-black dark:text-white">Cover Buku</label>
                     <input type="file" name="cover"
-                        class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary" />
+                        class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-brand-primary file:hover:bg-opacity-10 focus:border-brand-primary active:border-brand-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-brand-primary" />
                 </div>
 
                 <div class="flex justify-end gap-4">
@@ -302,7 +302,7 @@
                         class="rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white">
                         Batal
                     </button>
-                    <button type="submit" class="rounded bg-primary px-6 py-2 font-medium text-gray hover:shadow-1">
+                    <button type="submit" class="rounded bg-brand-primary px-6 py-2 font-medium text-white hover:shadow-1">
                         Simpan
                     </button>
                 </div>

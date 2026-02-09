@@ -5,8 +5,13 @@
         <!-- Header Section -->
         <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 class="text-title-md2 font-bold text-black dark:text-white">
-                Sirkulasi Denda
+                Pengaturan Denda
             </h2>
+            <button @click="$dispatch('open-edit-config-modal')"
+                class="inline-flex items-center justify-center gap-2.5 rounded-xl bg-brand-primary px-4 py-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8">
+                <!-- Assuming there should be some content here, e.g., an icon or text -->
+                <span>Edit Konfigurasi</span>
+            </button>
         </div>
 
         <!-- Search & Filter -->
@@ -36,7 +41,7 @@
                 <!-- Filter Status -->
                 <div class="w-full sm:w-1/4">
                     <select name="status" onchange="this.form.submit()"
-                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('status') ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-stroke bg-transparent' }} focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
+                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('status') ? 'border-brand-primary bg-brand-primary/5 dark:bg-brand-primary/10' : 'border-stroke bg-transparent' }} focus:border-brand-primary active:border-brand-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
                         <option value="" class="text-gray-700 dark:text-white dark:bg-gray-800">Semua Status Peminjaman</option>
                         <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">Dipinjam</option>
                         <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">Dikembalikan</option>
@@ -114,7 +119,7 @@
                             <!-- Aksi -->
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
                                 <a href="{{ route('admin.denda.show', $item->id_denda) }}"
-                                   class="inline-flex items-center justify-center rounded-md border border-primary px-4 py-2 text-center font-medium text-black hover:bg-primary dark:border-primary dark:text-white dark:hover:bg-primary transition-colors lg:px-4 xl:px-4">
+                                   class="inline-flex items-center justify-center rounded-md border border-brand-primary px-4 py-2 text-center font-medium text-black hover:bg-brand-primary dark:border-brand-primary dark:text-white dark:hover:bg-brand-primary transition-colors lg:px-4 xl:px-4">
                                    Detail
                                 </a>
                             </div>

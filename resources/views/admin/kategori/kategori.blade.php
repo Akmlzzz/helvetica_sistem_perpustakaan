@@ -62,7 +62,7 @@
             <!-- Add Category Form -->
             <div class="flex flex-col gap-9">
                 <div
-                    class="rounded-[20px] border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                    class="rounded-[20px] border border-stroke bg-white shadow-default dark:border-gray-800 dark:bg-gray-900">
                     <div class="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
                         <h3 class="font-medium text-black dark:text-white">
                             Tambah Kategori Baru
@@ -176,7 +176,7 @@
                                         </button>
                                         <!-- Simple Edit Modal/Form can be put here or use separate page. For now, just show name in input -->
                                         <div x-show="editOpen" @click.outside="editOpen = false"
-                                            class="absolute z-50 mt-8 w-60 rounded border border-stroke bg-white p-4 shadow-default dark:border-strokedark dark:bg-boxdark">
+                                            class="absolute z-50 mt-8 w-60 rounded border border-stroke bg-white p-4 shadow-default dark:border-gray-800 dark:bg-gray-900">
                                             <form action="{{ route('admin.kategori.update', $item->id_kategori) }}"
                                                 method="POST">
                                                 @csrf

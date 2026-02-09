@@ -89,9 +89,22 @@
         <!-- Book List -->
         <div
             class="mt-6 rounded-sm border border-stroke bg-white px-5 pb-5 pt-6 shadow-default dark:border-gray-800 dark:bg-gray-900 sm:px-7.5 xl:pb-1">
-            <h4 class="mb-6 text-xl font-bold text-black dark:text-white">
-                Buku yang Dipinjam
-            </h4>
+            <div class="mb-6 flex items-center justify-between">
+                <h4 class="text-xl font-bold text-black dark:text-white">
+                    Buku yang Dipinjam
+                </h4>
+                <a href="{{ route('admin.peminjaman.create') }}"
+                    class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-4 py-2 font-medium text-white hover:bg-opacity-90">
+                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 4.16666V15.8333" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M4.16669 10H15.8334" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                    Tambah Peminjaman
+                </a>
+            </div>
 
             <div class="flex flex-col overflow-x-auto">
                 <div class="min-w-full">

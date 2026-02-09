@@ -80,7 +80,7 @@
 
                 <div class="w-full sm:w-1/4">
                     <select name="role" onchange="this.form.submit()"
-                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('role') ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-stroke bg-transparent' }} focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
+                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('role') ? 'border-brand-primary bg-brand-primary/5 dark:bg-brand-primary/10' : 'border-stroke bg-transparent' }} focus:border-brand-primary active:border-brand-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
                         <option value="" class="text-gray-700 dark:text-white dark:bg-gray-800">Semua Role</option>
                         <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}
                             class="text-gray-700 dark:text-white dark:bg-gray-800">Admin
@@ -138,14 +138,14 @@
                                 <div class="flex items-center space-x-3.5">
                                     <button
                                         @click="$dispatch('open-user-modal', { 
-                                                                                                                                                                id: '{{ $user->id_pengguna }}',
-                                                                                                                                                                nama_pengguna: '{{ $user->nama_pengguna }}',
-                                                                                                                                                                email: '{{ $user->email }}',
-                                                                                                                                                                level_akses: '{{ $user->level_akses }}',
-                                                                                                                                                                nama_lengkap: '{{ addslashes($user->anggota->nama_lengkap ?? '') }}',
-                                                                                                                                                                alamat: '{{ addslashes($user->anggota->alamat ?? '') }}',
-                                                                                                                                                                nomor_telepon: '{{ $user->anggota->nomor_telepon ?? '' }}'
-                                                                                                                                                            })"
+                                                                                                                                                                        id: '{{ $user->id_pengguna }}',
+                                                                                                                                                                        nama_pengguna: '{{ $user->nama_pengguna }}',
+                                                                                                                                                                        email: '{{ $user->email }}',
+                                                                                                                                                                        level_akses: '{{ $user->level_akses }}',
+                                                                                                                                                                        nama_lengkap: '{{ addslashes($user->anggota->nama_lengkap ?? '') }}',
+                                                                                                                                                                        alamat: '{{ addslashes($user->anggota->alamat ?? '') }}',
+                                                                                                                                                                        nomor_telepon: '{{ $user->anggota->nomor_telepon ?? '' }}'
+                                                                                                                                                                    })"
                                         class="hover:text-primary text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                         <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -261,7 +261,7 @@
                     <button type="button" @click="closeModal()"
                         class="rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white">Batal</button>
                     <button type="submit"
-                        class="rounded bg-primary px-6 py-2 font-medium text-gray hover:shadow-1">Simpan</button>
+                        class="rounded bg-brand-primary px-6 py-2 font-medium text-white hover:shadow-1">Simpan</button>
                 </div>
             </form>
         </div>

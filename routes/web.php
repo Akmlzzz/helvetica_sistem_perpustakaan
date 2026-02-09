@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', function () {
             // Count data for dashboard
             $totalBuku = \App\Models\Buku::count();
-            $totalAnggota = \App\Models\User::where('role', 'user')->count(); // Assuming 'user' role is for members
+            $totalAnggota = \App\Models\Pengguna::where('level_akses', 'anggota')->count();
             $totalPeminjaman = \App\Models\Peminjaman::where('status_transaksi', 'dipinjam')->count();
             // $totalDenda would come from a Denda model if implemented
 
@@ -54,6 +54,8 @@ Route::middleware('auth')->group(function () {
 
         // Peminjaman Management Routes
         Route::get('/peminjaman', [\App\Http\Controllers\Admin\PeminjamanController::class, 'index'])->name('admin.peminjaman.index');
+        Route::get('/peminjaman/create', [\App\Http\Controllers\Admin\PeminjamanController::class, 'create'])->name('admin.peminjaman.create');
+        Route::post('/peminjaman', [\App\Http\Controllers\Admin\PeminjamanController::class, 'store'])->name('admin.peminjaman.store');
         Route::get('/peminjaman/{id}', [\App\Http\Controllers\Admin\PeminjamanController::class, 'show'])->name('admin.peminjaman.show');
 
         // Denda Management Routes
@@ -71,3 +73,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/laporan/excel', [\App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('admin.laporan.excel');
     });
 });
+
+// API Routes for AJAX calls
+Route::get('/api/buku/search', [\App\Http\Controllers\Api\BukuApiController::class, 'search'])->name('api.buku.search');

@@ -6,10 +6,10 @@
         'left-0 w-full': !($store.sidebar.isExpanded || $store.sidebar.isHovered)
     }">
     <div class="flex grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
-        <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
+        <div class="flex items-center gap-2 sm:gap-4 xl:hidden">
             <!-- Hamburger Toggle BTN -->
             <button
-                class="z-99999 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:hidden"
+                class="z-99999 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-900 xl:hidden"
                 @click.stop="$store.sidebar.toggleMobileOpen()">
                 <svg class="h-6 w-6 stroke-current text-brand-primary dark:text-gray-200" fill="none"
                     viewBox="0 0 24 24">
@@ -19,7 +19,7 @@
             </button>
             <!-- Hamburger Toggle BTN -->
 
-            <a class="block shrink-0 lg:hidden" href="{{ route('dashboard') }}">
+            <a class="block shrink-0 xl:hidden" href="{{ route('dashboard') }}">
                 <!-- Light Mode Logo -->
                 <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="h-8 w-auto dark:hidden">
                 <!-- Dark Mode Logo -->

@@ -11,31 +11,59 @@
 
         <!-- Filter Card -->
         <div
-            class="mb-8 rounded-[20px] border border-stroke bg-white px-5 pt-6 pb-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
+            class="mb-8 rounded-[20px] border border-stroke bg-white px-5 pt-6 pb-6 shadow-default dark:border-gray-800 dark:bg-gray-900 sm:px-7.5">
             <form method="GET" action="{{ route('admin.laporan.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
+                <div x-data="{
+                    init() {
+                        flatpickr(this.$refs.startDate, {
+                            dateFormat: 'Y-m-d',
+                            defaultDate: '{{ $startDate }}'
+                        });
+                    }
+                }">
                     <label class="mb-2.5 block font-medium text-black dark:text-white">Mulai Tanggal</label>
-                    <input type="date" name="start_date" value="{{ $startDate }}"
-                        class="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                    <div class="relative">
+                        <input x-ref="startDate" type="text" name="start_date" value="{{ $startDate }}"
+                            class="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2">
+                            <svg class="fill-current text-gray-500" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.75 2.25H14.25V1.5C14.25 1.0875 13.9125 0.75 13.5 0.75C13.0875 0.75 12.75 1.0875 12.75 1.5V2.25H5.25V1.5C5.25 1.0875 4.9125 0.75 4.5 0.75C4.0875 0.75 3.75 1.0875 3.75 1.5V2.25H2.25C1.4175 2.25 0.75825 2.925 0.75825 3.75L0.75 15.75C0.75 16.575 1.4175 17.25 2.25 17.25H15.75C16.575 17.25 17.25 16.575 17.25 15.75V3.75C17.25 2.925 16.575 2.25 15.75 2.25ZM15.75 15.75H2.25V7.5H15.75V15.75ZM15.75 6H2.25V3.75H3.75V4.5C3.75 4.9125 4.0875 5.25 4.5 5.25C4.9125 5.25 5.25 4.9125 5.25 4.5V3.75H12.75V4.5C12.75 4.9125 13.0875 5.25 13.5 5.25C13.9125 5.25 14.25 4.9125 14.25 4.5V3.75H15.75V6Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                    </div>
                 </div>
-                <div>
+                <div x-data="{
+                    init() {
+                        flatpickr(this.$refs.endDate, {
+                            dateFormat: 'Y-m-d',
+                            defaultDate: '{{ $endDate }}'
+                        });
+                    }
+                }">
                     <label class="mb-2.5 block font-medium text-black dark:text-white">Sampai Tanggal</label>
-                    <input type="date" name="end_date" value="{{ $endDate }}"
-                        class="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                    <div class="relative">
+                        <input x-ref="endDate" type="text" name="end_date" value="{{ $endDate }}"
+                            class="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2">
+                            <svg class="fill-current text-gray-500" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.75 2.25H14.25V1.5C14.25 1.0875 13.9125 0.75 13.5 0.75C13.0875 0.75 12.75 1.0875 12.75 1.5V2.25H5.25V1.5C5.25 1.0875 4.9125 0.75 4.5 0.75C4.0875 0.75 3.75 1.5V2.25H2.25C1.4175 2.25 0.75825 2.925 0.75825 3.75L0.75 15.75C0.75 16.575 1.4175 17.25 2.25 17.25H15.75C16.575 17.25 17.25 16.575 17.25 15.75V3.75C17.25 2.925 16.575 2.25 15.75 2.25ZM15.75 15.75H2.25V7.5H15.75V15.75ZM15.75 6H2.25V3.75H3.75V4.5C3.75 4.9125 4.0875 5.25 4.5 5.25C4.9125 5.25 5.25 4.9125 5.25 4.5V3.75H12.75V4.5C12.75 4.9125 13.0875 5.25 13.5 5.25C13.9125 5.25 14.25 4.9125 14.25 4.5V3.75H15.75V6Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                    </div>
                 </div>
                 <div>
                     <label class="mb-2.5 block font-medium text-black dark:text-white">Jenis Laporan</label>
                     <select name="type"
                         class="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:text-white">
-                        <option value="peminjaman" {{ $type == 'peminjaman' ? 'selected' : '' }}>Peminjaman</option>
-                        <option value="buku" {{ $type == 'buku' ? 'selected' : '' }}>Data Buku</option>
-                        <option value="anggota" {{ $type == 'anggota' ? 'selected' : '' }}>Data Anggota</option>
-                        <option value="denda" {{ $type == 'denda' ? 'selected' : '' }}>Denda</option>
+                        <option value="peminjaman" {{ $type == 'peminjaman' ? 'selected' : '' }} class="dark:bg-gray-800 dark:text-white">Peminjaman</option>
+                        <option value="buku" {{ $type == 'buku' ? 'selected' : '' }} class="dark:bg-gray-800 dark:text-white">Data Buku</option>
+                        <option value="anggota" {{ $type == 'anggota' ? 'selected' : '' }} class="dark:bg-gray-800 dark:text-white">Data Anggota</option>
+                        <option value="denda" {{ $type == 'denda' ? 'selected' : '' }} class="dark:bg-gray-800 dark:text-white">Denda</option>
                     </select>
                 </div>
                 <div class="flex items-end gap-2">
                     <button type="submit"
-                        class="flex-1 rounded bg-primary py-3 px-6 font-medium text-gray hover:bg-opacity-90">
+                        class="flex-1 rounded bg-brand-primary py-3 px-6 font-medium text-white hover:bg-opacity-90">
                         Filter
                     </button>
                 </div>
@@ -117,8 +145,8 @@
                 
                 <!-- Export Buttons -->
                 <div class="flex flex-wrap gap-2">
-                    <a href="{{ route('admin.laporan.pdf', request()->all()) }}" target="_blank"
-                        class="inline-flex items-center justify-center gap-2 rounded-md bg-meta-1 py-2 px-4 text-sm font-medium text-white hover:bg-opacity-90">
+                    <a href="{{ route('admin.laporan.pdf', ['start_date' => $startDate, 'end_date' => $endDate, 'type' => $type]) }}"
+                    class="inline-flex items-center justify-center gap-2.5 rounded-md bg-brand-primary px-4 py-2 text-center font-medium text-white hover:bg-opacity-90">
                         <svg class="fill-current" width="16" height="16" viewBox="0 0 20 20" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path

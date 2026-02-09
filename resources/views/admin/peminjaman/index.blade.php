@@ -3,10 +3,21 @@
 @section('content')
     <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
         <!-- Header Section -->
-        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="mb-6 flex items-center justify-between">
             <h2 class="text-title-md2 font-bold text-black dark:text-white">
-                Sirkulasi Global
+                Data Peminjaman
             </h2>
+            <a href="{{ route('admin.peminjaman.create') }}"
+                class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-6 py-3 font-medium text-white hover:bg-opacity-90">
+                <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 4.16666V15.8333" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M4.16669 10H15.8334" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                Tambah Peminjaman
+            </a>
         </div>
 
         <!-- Search & Filter -->
@@ -36,7 +47,7 @@
                 <!-- Filter Status -->
                 <div class="w-full sm:w-1/4">
                     <select name="status" onchange="this.form.submit()"
-                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('status') ? 'border-primary bg-primary/5 dark:bg-primary/10' : 'border-stroke bg-transparent' }} focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
+                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('status') ? 'border-brand-primary bg-brand-primary/5 dark:bg-brand-primary/10' : 'border-stroke bg-transparent' }} focus:border-brand-primary active:border-brand-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
                         <option value="" class="text-gray-700 dark:text-white dark:bg-gray-800">Semua Status</option>
                         <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}
                             class="text-gray-700 dark:text-white dark:bg-gray-800">Dipinjam</option>
