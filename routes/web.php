@@ -72,6 +72,22 @@ Route::middleware('auth')->group(function () {
         Route::get('/laporan/pdf', [\App\Http\Controllers\Admin\LaporanController::class, 'exportPdf'])->name('admin.laporan.pdf');
         Route::get('/laporan/excel', [\App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('admin.laporan.excel');
     });
+
+    Route::middleware(['auth', \App\Http\Middleware\PetugasMiddleware::class])->group(function () {
+        Route::get('/petugas/dashboard', [\App\Http\Controllers\Petugas\PetugasController::class, 'index'])->name('petugas.dashboard');
+        Route::get('/petugas/booking', [\App\Http\Controllers\Petugas\PetugasController::class, 'booking'])->name('petugas.booking');
+        Route::get('/petugas/katalog', [\App\Http\Controllers\Petugas\PetugasController::class, 'katalog'])->name('petugas.katalog');
+        Route::post('/petugas/peminjaman', [\App\Http\Controllers\Petugas\PetugasController::class, 'storePeminjaman'])->name('petugas.peminjaman.store');
+        Route::post('/petugas/pengembalian', [\App\Http\Controllers\Petugas\PetugasController::class, 'returnBuku'])->name('petugas.pengembalian.store');
+    });
+
+    // Anggota Routes
+    Route::middleware(['auth', \App\Http\Middleware\AnggotaMiddleware::class])->group(function () {
+        Route::get('/anggota/dashboard', [\App\Http\Controllers\Anggota\AnggotaController::class, 'index'])->name('anggota.dashboard');
+        Route::get('/anggota/pinjaman', [\App\Http\Controllers\Anggota\AnggotaController::class, 'pinjaman'])->name('anggota.pinjaman');
+        Route::get('/anggota/riwayat', [\App\Http\Controllers\Anggota\AnggotaController::class, 'riwayat'])->name('anggota.riwayat');
+        Route::post('/anggota/booking', [\App\Http\Controllers\Anggota\AnggotaController::class, 'storeBooking'])->name('anggota.booking.store');
+    });
 });
 
 // API Routes for AJAX calls
