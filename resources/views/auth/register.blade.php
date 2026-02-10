@@ -1,6 +1,11 @@
 @extends('layouts.auth')
 
 @section('content')
+    <div class="mb-4">
+        <a href="/" class="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-2">
+            <i class="bi bi-arrow-left"></i> Kembali ke Beranda
+        </a>
+    </div>
     <div class="auth-logo">
         <img src="{{ asset('./img/Logo.svg') }}" class="custom-logo" alt="Logo Biblio">
     </div>
@@ -29,45 +34,59 @@
             </div>
         @endif
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="form-group">
                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
-                <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control-glass"
-                    value="{{ old('nama_lengkap') }}" placeholder="" required>
+                <div class="relative">
+                    <input type="text" name="nama_lengkap" id="nama_lengkap" class="form-control-glass"
+                        value="{{ old('nama_lengkap') }}" placeholder="" required>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="nama_pengguna" class="form-label">Username</label>
-                <input type="text" name="nama_pengguna" id="nama_pengguna" class="form-control-glass"
-                    value="{{ old('nama_pengguna') }}" placeholder="" required>
-                <i class="bi bi-person input-icon" style="top: 38px;"></i>
+                <div class="relative">
+                    <input type="text" name="nama_pengguna" id="nama_pengguna" class="form-control-glass pe-10"
+                        value="{{ old('nama_pengguna') }}" placeholder="" required>
+                    <i class="bi bi-person input-icon absolute top-1/2 right-4 -translate-y-1/2"></i>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" name="email" id="email" class="form-control-glass" value="{{ old('email') }}"
-                    placeholder="" required>
-                <i class="bi bi-envelope input-icon" style="top: 38px;"></i>
+                <div class="relative">
+                    <input type="email" name="email" id="email" class="form-control-glass pe-10" value="{{ old('email') }}"
+                        placeholder="" required>
+                    <i class="bi bi-envelope input-icon absolute top-1/2 right-4 -translate-y-1/2"></i>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="nomor_telepon" class="form-label">No. Telepon</label>
-                <input type="tel" name="nomor_telepon" id="nomor_telepon" class="form-control-glass"
-                    value="{{ old('nomor_telepon') }}" placeholder="" required>
-                <i class="bi bi-telephone input-icon" style="top: 38px;"></i>
+                <div class="relative">
+                    <input type="tel" name="nomor_telepon" id="nomor_telepon" class="form-control-glass pe-10"
+                        value="{{ old('nomor_telepon') }}" placeholder="" required>
+                    <i class="bi bi-telephone input-icon absolute top-1/2 right-4 -translate-y-1/2"></i>
+                </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" x-data="{ showPassword: false }">
                 <label for="kata_sandi" class="form-label">Kata Sandi</label>
-                <input type="password" name="kata_sandi" id="kata_sandi" class="form-control-glass" placeholder="" required>
-                <i class="bi bi-eye-slash input-icon" style="top: 38px; cursor: pointer;"></i>
+                <div class="relative">
+                    <input :type="showPassword ? 'text' : 'password'" name="kata_sandi" id="kata_sandi"
+                        class="form-control-glass pe-10" placeholder="" required>
+                    <i class="bi input-icon absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer"
+                        :class="showPassword ? 'bi-eye' : 'bi-eye-slash'" @click="showPassword = !showPassword"></i>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="alamat" class="form-label">Alamat</label>
-                <input type="text" name="alamat" id="alamat" class="form-control-glass" value="{{ old('alamat') }}"
-                    placeholder="" required>
-                <i class="bi bi-house input-icon" style="top: 38px;"></i>
+                <div class="relative">
+                    <input type="text" name="alamat" id="alamat" class="form-control-glass pe-10"
+                        value="{{ old('alamat') }}" placeholder="" required>
+                    <i class="bi bi-house input-icon absolute top-1/2 right-4 -translate-y-1/2"></i>
+                </div>
             </div>
         </div>
 

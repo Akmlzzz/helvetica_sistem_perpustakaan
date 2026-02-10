@@ -1,6 +1,11 @@
 @extends('layouts.auth')
 
 @section('content')
+    <div class="mb-4">
+        <a href="/" class="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-2">
+            <i class="bi bi-arrow-left"></i> Kembali ke Beranda
+        </a>
+    </div>
     <div class="auth-logo">
         <img src="{{ asset('./img/Logo.svg') }}" class="custom-logo" alt="Logo Biblio">
     </div>
@@ -31,15 +36,21 @@
 
         <div class="form-group">
             <label for="nama_pengguna" class="form-label">Username / Email</label>
-            <input type="text" name="nama_pengguna" id="nama_pengguna" class="form-control-glass"
-                value="{{ old('nama_pengguna') }}" placeholder="" required>
-            <i class="bi bi-envelope input-icon" style="top: 38px;"></i>
+            <div class="relative">
+                <input type="text" name="nama_pengguna" id="nama_pengguna" class="form-control-glass pe-10"
+                    value="{{ old('nama_pengguna') }}" placeholder="" required>
+                <i class="bi bi-envelope input-icon absolute top-1/2 right-4 -translate-y-1/2"></i>
+            </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" x-data="{ showPassword: false }">
             <label for="kata_sandi" class="form-label">Kata Sandi</label>
-            <input type="password" name="kata_sandi" id="kata_sandi" class="form-control-glass" placeholder="" required>
-            <i class="bi bi-eye-slash input-icon" style="top: 38px; cursor: pointer;"></i>
+            <div class="relative">
+                <input :type="showPassword ? 'text' : 'password'" name="kata_sandi" id="kata_sandi"
+                    class="form-control-glass pe-10" placeholder="" required>
+                <i class="bi input-icon absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer"
+                    :class="showPassword ? 'bi-eye' : 'bi-eye-slash'" @click="showPassword = !showPassword"></i>
+            </div>
             <div style="text-align: right; margin-top: 5px;">
                 <a href="{{ route('password.request') }}"
                     style="font-size: 0.8rem; color: #3b82f6; text-decoration: none;">Lupa kata sandi?</a>

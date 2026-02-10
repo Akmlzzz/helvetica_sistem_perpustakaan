@@ -18,16 +18,14 @@
 
     <style>
         body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            height: 100vh;
+            font-family: 'Outfit', 'Arial', sans-serif;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0;
+            padding: 2rem 1rem;
             box-sizing: border-box;
             margin: 0;
-            overflow: hidden;
-            /* No scroll */
             position: relative;
         }
 
@@ -142,11 +140,8 @@
         }
 
         .input-icon {
-            position: absolute;
-            right: 15px;
-            top: 40px;
-            /* Adjusted based on label height */
             color: #666;
+            transition: all 0.3s ease;
         }
 
         .auth-footer {
