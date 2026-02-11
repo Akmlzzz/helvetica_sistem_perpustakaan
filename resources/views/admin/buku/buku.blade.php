@@ -85,7 +85,7 @@
                 <div class="min-w-[1000px]">
                     <div class="grid grid-cols-6 rounded-sm bg-gray-50 dark:bg-gray-800 sm:grid-cols-6">
                         <div class="p-2.5 xl:p-5">
-                            <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">Cover
+                            <h5 class="text-sm font-bold uppercase xsm:text-base text-gray-500 dark:text-gray-400">Sampul
                             </h5>
                         </div>
                         <div class="p-2.5 xl:p-5">
@@ -111,11 +111,12 @@
                     @foreach($buku as $item)
                         <div
                             class="grid grid-cols-6 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors sm:grid-cols-6">
-                            <!-- Cover -->
+                            <!-- Sampul -->
                             <div class="flex items-center p-2.5 xl:p-5">
                                 <div class="h-15 w-10 overflow-hidden rounded-md bg-gray-200">
-                                    @if($item->cover)
-                                        <img src="{{ Storage::url($item->cover) }}" alt="Cover" class="h-full w-full object-cover">
+                                    @if($item->sampul)
+                                        <img src="{{ Storage::url($item->sampul) }}" alt="Sampul"
+                                            class="h-full w-full object-cover">
                                     @else
                                         <div class="flex h-full w-full items-center justify-center text-xs text-gray-500">No Image
                                         </div>
@@ -160,15 +161,15 @@
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
                                 <div class="flex items-center space-x-3.5" x-data="{ editOpen: false }">
                                     <button @click="$dispatch('open-edit-book-modal', { 
-                                                                                        id: '{{ $item->id_buku }}',
-                                                                                        judul: '{{ addslashes($item->judul_buku) }}',
-                                                                                        isbn: '{{ $item->isbn }}',
-                                                                                        penulis: '{{ addslashes($item->penulis) }}',
-                                                                                        penerbit: '{{ addslashes($item->penerbit) }}',
-                                                                                        stok: '{{ $item->stok }}',
-                                                                                        kategori: '{{ $item->id_kategori }}',
-                                                                                        lokasi: '{{ addslashes($item->lokasi_rak) }}'
-                                                                                     })"
+                                                                                                id: '{{ $item->id_buku }}',
+                                                                                                judul: '{{ addslashes($item->judul_buku) }}',
+                                                                                                isbn: '{{ $item->isbn }}',
+                                                                                                penulis: '{{ addslashes($item->penulis) }}',
+                                                                                                penerbit: '{{ addslashes($item->penerbit) }}',
+                                                                                                stok: '{{ $item->stok }}',
+                                                                                                kategori: '{{ $item->id_kategori }}',
+                                                                                                lokasi: '{{ addslashes($item->lokasi_rak) }}'
+                                                                                             })"
                                         class="hover:text-primary text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                         <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -292,8 +293,8 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="mb-2.5 block font-medium text-black dark:text-white">Cover Buku</label>
-                    <input type="file" name="cover"
+                    <label class="mb-2.5 block font-medium text-black dark:text-white">Sampul Buku</label>
+                    <input type="file" name="sampul"
                         class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-brand-primary file:hover:bg-opacity-10 focus:border-brand-primary active:border-brand-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-brand-primary" />
                 </div>
 

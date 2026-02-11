@@ -8,7 +8,10 @@ class Peminjaman extends Model
 {
     protected $table = 'peminjaman';
     protected $primaryKey = 'id_peminjaman';
-    public $timestamps = false;
+    public $timestamps = true;
+
+    const CREATED_AT = 'dibuat_pada';
+    const UPDATED_AT = 'diperbarui_pada';
 
     protected $fillable = [
         'id_pengguna',

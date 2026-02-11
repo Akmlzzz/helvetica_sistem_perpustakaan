@@ -8,7 +8,10 @@ class DetailPeminjaman extends Model
 {
     protected $table = 'detail_peminjaman';
     protected $primaryKey = 'id_detail';
-    public $timestamps = false;
+    public $timestamps = true;
+
+    const CREATED_AT = 'dibuat_pada';
+    const UPDATED_AT = 'diperbarui_pada';
 
     protected $fillable = [
         'id_peminjaman',

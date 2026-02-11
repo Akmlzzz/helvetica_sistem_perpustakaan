@@ -13,6 +13,9 @@ class Pengguna extends Authenticatable implements CanResetPassword
 
     protected $table = 'pengguna';
     protected $primaryKey = 'id_pengguna';
+
+    const CREATED_AT = 'dibuat_pada';
+    const UPDATED_AT = 'diperbarui_pada';
     // public $timestamps = false; // Removed as Authenticatable typically uses timestamps
 
     protected $fillable = [

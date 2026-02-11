@@ -16,7 +16,8 @@ return new class extends Migration {
             $table->integer('stok');
             $table->unsignedBigInteger('id_kategori')->nullable();
             $table->foreign('id_kategori')->references('id_kategori')->on('kategori')->onDelete('set null');
-            $table->timestamps();
+            $table->timestamp('dibuat_pada')->nullable();
+            $table->timestamp('diperbarui_pada')->nullable();
         });
     }
 

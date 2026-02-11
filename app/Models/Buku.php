@@ -8,7 +8,10 @@ class Buku extends Model
 {
     protected $table = 'buku';
     protected $primaryKey = 'id_buku';
-    public $timestamps = false;
+    public $timestamps = true;
+
+    const CREATED_AT = 'dibuat_pada';
+    const UPDATED_AT = 'diperbarui_pada';
 
     protected $fillable = [
         'isbn',
@@ -16,7 +19,7 @@ class Buku extends Model
         'penulis',
         'penerbit',
         'stok',
-        'cover',
+        'sampul',
         'lokasi_rak',
         'id_kategori'
     ];

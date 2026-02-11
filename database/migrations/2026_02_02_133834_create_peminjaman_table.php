@@ -18,7 +18,8 @@ return new class extends Migration {
             $table->date('tgl_pinjam')->nullable();
             $table->date('tgl_kembali')->nullable();
             $table->enum('status_transaksi', ['booking', 'dipinjam', 'dikembalikan', 'terlambat']);
-            $table->timestamps();
+            $table->timestamp('dibuat_pada')->nullable();
+            $table->timestamp('diperbarui_pada')->nullable();
         });
     }
 

@@ -42,15 +42,15 @@ class BukuController extends Controller
             'penerbit' => 'nullable|string|max:100',
             'stok' => 'required|integer|min:0',
             'id_kategori' => 'nullable|exists:kategori,id_kategori',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'lokasi_rak' => 'nullable|string|max:50',
         ]);
 
         $data = $request->all();
 
-        if ($request->hasFile('cover')) {
-            $path = $request->file('cover')->store('covers', 'public');
-            $data['cover'] = $path;
+        if ($request->hasFile('sampul')) {
+            $path = $request->file('sampul')->store('sampul', 'public');
+            $data['sampul'] = $path;
         }
 
         Buku::create($data);
@@ -67,20 +67,20 @@ class BukuController extends Controller
             'penerbit' => 'nullable|string|max:100',
             'stok' => 'required|integer|min:0',
             'id_kategori' => 'nullable|exists:kategori,id_kategori',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'lokasi_rak' => 'nullable|string|max:50',
         ]);
 
         $buku = Buku::findOrFail($id);
         $data = $request->all();
 
-        if ($request->hasFile('cover')) {
-            // Delete old cover if exists
-            if ($buku->cover && Storage::disk('public')->exists($buku->cover)) {
-                Storage::disk('public')->delete($buku->cover);
+        if ($request->hasFile('sampul')) {
+            // Delete old sampul if exists
+            if ($buku->sampul && Storage::disk('public')->exists($buku->sampul)) {
+                Storage::disk('public')->delete($buku->sampul);
             }
-            $path = $request->file('cover')->store('covers', 'public');
-            $data['cover'] = $path;
+            $path = $request->file('sampul')->store('sampul', 'public');
+            $data['sampul'] = $path;
         }
 
         $buku->update($data);
@@ -92,8 +92,8 @@ class BukuController extends Controller
     {
         $buku = Buku::findOrFail($id);
 
-        if ($buku->cover && Storage::disk('public')->exists($buku->cover)) {
-            Storage::disk('public')->delete($buku->cover);
+        if ($buku->sampul && Storage::disk('public')->exists($buku->sampul)) {
+            Storage::disk('public')->delete($buku->sampul);
         }
 
         $buku->delete();

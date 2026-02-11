@@ -13,7 +13,8 @@ return new class extends Migration {
             $table->foreign('id_peminjaman')->references('id_peminjaman')->on('peminjaman')->onDelete('cascade');
             $table->decimal('jumlah_denda', 10, 2);
             $table->enum('status_pembayaran', ['belum_bayar', 'lunas']);
-            $table->timestamps();
+            $table->timestamp('dibuat_pada')->nullable();
+            $table->timestamp('diperbarui_pada')->nullable();
         });
     }
 

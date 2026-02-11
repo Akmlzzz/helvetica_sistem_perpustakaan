@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->string('nama_lengkap', 100)->nullable();
             $table->text('alamat')->nullable();
             $table->string('nomor_telepon', 15)->nullable();
-            $table->timestamps();
+            $table->timestamp('dibuat_pada')->nullable();
+            $table->timestamp('diperbarui_pada')->nullable();
         });
     }
 

@@ -210,7 +210,7 @@
                                 <div class="p-2.5 xl:p-4">{{ $row->id_pengguna }}</div>
                                 <div class="p-2.5 xl:p-4 font-bold">{{ $row->nama_pengguna }}</div>
                                 <div class="p-2.5 xl:p-4">{{ $row->email }}</div>
-                                <div class="p-2.5 xl:p-4 text-center">{{ $row->created_at->format('Y-m-d') }}</div>
+                                <div class="p-2.5 xl:p-4 text-center">{{ $row->dibuat_pada ? $row->dibuat_pada->format('Y-m-d') : '-' }}</div>
                             </div>
                         @endforeach
 

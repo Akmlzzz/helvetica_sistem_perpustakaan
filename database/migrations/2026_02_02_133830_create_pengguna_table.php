@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->string('kata_sandi');
             $table->enum('level_akses', ['admin', 'petugas', 'anggota']);
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamp('dibuat_pada')->nullable();
+            $table->timestamp('diperbarui_pada')->nullable();
         });
     }
 

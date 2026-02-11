@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_buku');
             $table->foreign('id_buku')->references('id_buku')->on('buku')->onDelete('cascade');
             $table->integer('jumlah');
-            $table->timestamps();
+            $table->timestamp('dibuat_pada')->nullable();
+            $table->timestamp('diperbarui_pada')->nullable();
         });
     }
 

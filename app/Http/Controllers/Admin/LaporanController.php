@@ -23,12 +23,12 @@ class LaporanController extends Controller
         switch ($type) {
             case 'buku':
                 $data = Buku::with('kategori')
-                    ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+                    ->whereBetween('dibuat_pada', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
                     ->get();
                 break;
             case 'anggota':
                 $data = Pengguna::where('level_akses', 'anggota')
-                    ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+                    ->whereBetween('dibuat_pada', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
                     ->get();
                 break;
             case 'peminjaman':

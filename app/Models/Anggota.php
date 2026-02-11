@@ -12,6 +12,9 @@ class Anggota extends Model
     protected $table = 'anggota';
     protected $primaryKey = 'id_anggota';
 
+    const CREATED_AT = 'dibuat_pada';
+    const UPDATED_AT = 'diperbarui_pada';
+
     protected $fillable = [
         'id_pengguna',
         'nama_lengkap',
