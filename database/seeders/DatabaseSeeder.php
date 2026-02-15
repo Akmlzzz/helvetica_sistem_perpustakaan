@@ -15,11 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // Create admin account
-        $this->call(AdminSeeder::class);
+        // Create users with different roles (admin, petugas, anggota)
+        $this->call(UsersSeeder::class);
 
-
-
+        // Create dummy data for books, categories, etc.
         $this->call(DummyDataSeeder::class);
     }
 }
