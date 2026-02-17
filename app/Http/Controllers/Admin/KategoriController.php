@@ -8,9 +8,31 @@ use Illuminate\Http\Request;
 
 class KategoriController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kategori = Kategori::withCount('buku')->get();
+        $query = Kategori::withCount('buku');
+
+        // Search
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('nama_kategori', 'like', "%{$search}%");
+        }
+
+        // Sort
+        if ($request->has('sort')) {
+            if ($request->sort == 'terbaru') {
+                $query->orderBy('dibuat_pada', 'desc');
+            } elseif ($request->sort == 'terlama') {
+                $query->orderBy('dibuat_pada', 'asc');
+            } else {
+                $query->orderBy('nama_kategori', 'asc');
+            }
+        } else {
+            // Default sort
+            $query->orderBy('dibuat_pada', 'desc');
+        }
+
+        $kategori = $query->get();
         return view('admin.kategori.kategori', compact('kategori'));
     }
 

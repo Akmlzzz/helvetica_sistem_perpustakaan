@@ -34,7 +34,7 @@
     </div>
 
     <!-- Navigation Menu -->
-    <div class="flex flex-col flex-grow overflow-y-auto duration-300 ease-linear no-scrollbar mt-5" x-data="{
+    <div class="flex flex-col grow overflow-y-auto duration-300 ease-linear no-scrollbar mt-5" x-data="{
             openSubmenus: {},
             currentPath: '{{ $currentPath }}',
             init() {

@@ -300,7 +300,7 @@
 
                 <!-- Card 3: Rekomendasi -->
                 <div
-                    class="reveal-on-scroll delay-300 bg-[#063929] rounded-3xl p-6 relative overflow-hidden h-64 md:h-72 flex items-center group border border-[#87D800]/20">
+                    class="reveal-on-scroll delay-300 bg-brand-600 rounded-3xl p-6 relative overflow-hidden h-64 md:h-72 flex items-center group border border-[#87D800]/20">
                     <div class="relative z-10 w-1/2 flex flex-col items-start justify-center h-full">
                         <h3 class="text-2xl font-bold text-white mb-1 leading-tight">Rekomendasi</h3>
                         <button
@@ -331,7 +331,7 @@
                     </h2>
                     <div class="flex justify-center">
                         <button
-                            class="bg-[#084734] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#063929] transition shadow-lg">
+                            class="bg-[#084734] text-white px-8 py-3 rounded-lg font-bold hover:bg-brand-600 transition shadow-lg">
                             Pinjam Sekarang
                         </button>
                     </div>
@@ -344,7 +344,7 @@
     <section id="layanan" class="py-16 md:py-24 bg-white">
         <div class="container mx-auto px-6">
             <!-- Header -->
-            <div class="reveal-on-scroll flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+            <div class="reveal-on-scroll flex flex-col md:flex-row justify-between items-start mb-16 gap-4">
                 <h2 class="text-3xl md:text-5xl font-bold text-[#084734]">Layanan Kami</h2>
                 <p class="text-xl text-[#3F3D56] font-medium">Lebih Dari Sekadar Peminjaman.</p>
             </div>
@@ -447,7 +447,7 @@
                 <!-- Card 1: Akmal Irsyad -->
                 <div class="reveal-on-scroll delay-300 flex flex-col items-center group">
                     <div
-                        class="w-full bg-gray-200 rounded-t-[2rem] rounded-b-xl overflow-hidden shadow-lg relative aspect-[3/4] mb-6">
+                        class="w-full bg-gray-200 rounded-t-xl rounded-b-xl overflow-hidden shadow-lg relative aspect-3/4 mb-6">
                         <img src="{{ asset('img/tim-1.jfif') }}" alt="Akmal Irsyad" class="w-full h-full object-cover">
                         <!-- Name Bar -->
                         <div class="absolute bottom-0 left-0 w-full bg-[#CEF17B] py-3 text-center">
@@ -466,7 +466,7 @@
                 <!-- Card 2: Rista Aneu Febriyanti -->
                 <div class="reveal-on-scroll delay-400 flex flex-col items-center group">
                     <div
-                        class="w-full bg-gray-200 rounded-t-[2rem] rounded-b-xl overflow-hidden shadow-lg relative aspect-[3/4] mb-6">
+                        class="w-full bg-gray-200 rounded-t-xl rounded-b-xl overflow-hidden shadow-lg relative aspect-3/4 mb-6">
                         <img src="{{ asset('img/tim-2.jfif') }}" alt="Rista Aneu Febriyanti"
                             class="w-full h-full object-cover">
                         <!-- Name Bar -->
@@ -486,7 +486,7 @@
                 <!-- Card 3: Moch Rihenza Adam -->
                 <div class="reveal-on-scroll delay-500 flex flex-col items-center group">
                     <div
-                        class="w-full bg-gray-200 rounded-t-[2rem] rounded-b-xl overflow-hidden shadow-lg relative aspect-[3/4] mb-6">
+                        class="w-full bg-gray-200 rounded-t-xl rounded-b-xl overflow-hidden shadow-lg relative aspect-3/4 mb-6">
                         <img src="{{ asset('img/tim-3.jfif') }}" alt="Moch Rihenza Adam"
                             class="w-full h-full object-cover">
                         <!-- Name Bar -->
@@ -521,7 +521,7 @@
                         booking buku favorit kamu.
                     </p>
                     <a href="{{ route('register') }}"
-                        class="inline-block bg-[#084734] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#063929] transition shadow-lg text-lg">
+                        class="inline-block bg-[#084734] text-white px-8 py-4 rounded-xl font-bold hover:bg-brand-600 transition shadow-lg text-lg">
                         Daftar Sekarang
                     </a>
                 </div>

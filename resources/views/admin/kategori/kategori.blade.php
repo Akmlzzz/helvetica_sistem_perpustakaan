@@ -6,12 +6,7 @@
             <h2 class="text-title-md2 font-bold text-black dark:text-white">
                 Kelola Kategori
             </h2>
-            <nav>
-                <ol class="flex items-center gap-2">
-                    <li><a class="font-medium" href="{{ route('dashboard') }}">Dashboard /</a></li>
-                    <li class="font-medium text-primary">Kategori</li>
-                </ol>
-            </nav>
+
         </div>
 
         @if(session('success'))
@@ -99,10 +94,10 @@
                         Daftar Kategori
                     </h3>
                 </div>
-                <!-- Search Bar -->
+                <!-- Search & Filter Bar -->
                 <div class="px-6.5 py-4 border-b border-stroke dark:border-strokedark">
-                    <form action="{{ route('admin.kategori.index') }}" method="GET">
-                        <div class="relative">
+                    <form action="{{ route('admin.kategori.index') }}" method="GET" class="flex flex-col sm:flex-row gap-4">
+                        <div class="relative flex-1">
                             <button type="submit" class="absolute left-4 top-1/2 -translate-y-1/2">
                                 <svg class="fill-current text-black dark:text-white hover:text-primary transition-colors"
                                     width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -118,6 +113,24 @@
                             <input type="text" name="search" value="{{ request('search') }}"
                                 placeholder="Cari Nama Kategori..."
                                 class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark dark:text-white" />
+                        </div>
+
+                        <!-- Sort Dropdown -->
+                        <div class="relative w-full sm:w-48">
+                            <select name="sort" onchange="this.form.submit()"
+                                class="w-full appearance-none rounded-lg border border-stroke bg-transparent px-4 py-2 pr-10 font-medium outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white">
+                                <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                                <option value="terlama" {{ request('sort') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                                <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A-Z</option>
+                            </select>
+                            <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0.47072 1.08816C0.47072 1.02932 0.50072 0.97048 0.559553 0.911642C0.677219 0.793976 0.912552 0.793976 1.03022 0.911642L4.99988 4.8813L8.96954 0.911642C9.0872 0.793976 9.32254 0.793976 9.44021 0.911642C9.55787 1.02931 9.55787 1.26464 9.44021 1.38231L5.23522 5.5873C5.11756 5.70497 4.88222 5.70497 4.76456 5.5873L0.559553 1.38231C0.50072 1.32348 0.47072 1.26464 0.47072 1.08816Z"
+                                        fill="currentColor" />
+                                </svg>
+                            </div>
                         </div>
                     </form>
                 </div>

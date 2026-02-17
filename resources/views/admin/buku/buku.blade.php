@@ -49,8 +49,8 @@
                 class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
 
                 <!-- Search Bar -->
-                <div class="relative w-full sm:w-1/2">
-                    <button class="absolute left-4 top-1/2 -translate-y-1/2">
+                <div class="relative flex-1">
+                    <button type="submit" class="absolute left-4 top-1/2 -translate-y-1/2">
                         <svg class="fill-current text-black dark:text-white hover:text-primary transition-colors" width="20"
                             height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -63,20 +63,40 @@
                     </button>
                     <input type="text" name="search" value="{{ request('search') }}"
                         placeholder="Cari Judul, Penulis, atau ISBN..."
-                        class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark dark:text-white xl:w-125" />
+                        class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark dark:text-white" />
                 </div>
 
                 <!-- Filter Categories -->
-                <div class="w-full sm:w-1/4">
+                <div class="relative w-full sm:w-48">
                     <select name="kategori" onchange="this.form.submit()"
-                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('kategori') ? 'border-brand-primary bg-brand-primary/5 dark:bg-brand-primary/10' : 'border-stroke bg-transparent' }} focus:border-brand-primary active:border-brand-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
-                        <option value="" class="text-gray-700 dark:text-white dark:bg-gray-800">Semua Kategori</option>
+                        class="w-full appearance-none rounded-lg border border-stroke bg-transparent px-4 py-2 pr-10 font-medium outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white">
+                        <option value="" class="text-gray-500">Semua Kategori</option>
                         @foreach($kategori as $kat)
-                            <option value="{{ $kat->id_kategori }}" {{ request('kategori') == $kat->id_kategori ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">
+                            <option value="{{ $kat->id_kategori }}" {{ request('kategori') == $kat->id_kategori ? 'selected' : '' }}>
                                 {{ $kat->nama_kategori }}
                             </option>
                         @endforeach
                     </select>
+                    <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.47072 1.08816C0.47072 1.02932 0.50072 0.97048 0.559553 0.911642C0.677219 0.793976 0.912552 0.793976 1.03022 0.911642L4.99988 4.8813L8.96954 0.911642C9.0872 0.793976 9.32254 0.793976 9.44021 0.911642C9.55787 1.02931 9.55787 1.26464 9.44021 1.38231L5.23522 5.5873C5.11756 5.70497 4.88222 5.70497 4.76456 5.5873L0.559553 1.38231C0.50072 1.32348 0.47072 1.26464 0.47072 1.08816Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Sort Filter -->
+                <div class="relative w-full sm:w-48">
+                    <select name="sort" onchange="this.form.submit()"
+                        class="w-full appearance-none rounded-lg border border-stroke bg-transparent px-4 py-2 pr-10 font-medium outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white">
+                        <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                        <option value="terlama" {{ request('sort') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                        <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A-Z</option>
+                    </select>
+                    <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.47072 1.08816C0.47072 1.02932 0.50072 0.97048 0.559553 0.911642C0.677219 0.793976 0.912552 0.793976 1.03022 0.911642L4.99988 4.8813L8.96954 0.911642C9.0872 0.793976 9.32254 0.793976 9.44021 0.911642C9.55787 1.02931 9.55787 1.26464 9.44021 1.38231L5.23522 5.5873C5.11756 5.70497 4.88222 5.70497 4.76456 5.5873L0.559553 1.38231C0.50072 1.32348 0.47072 1.26464 0.47072 1.08816Z" fill="currentColor"/>
+                        </svg>
+                    </div>
                 </div>
             </form>
 
@@ -128,12 +148,14 @@
                             <div class="flex flex-col justify-center p-2.5 xl:p-5">
                                 <p class="font-bold text-black dark:text-white">{{ $item->judul_buku }}</p>
                                 <p class="text-xs text-gray-500">ISBN: {{ $item->isbn ?? '-' }}</p>
-                                @if($item->kategori)
-                                    <span
-                                        class="mt-1 inline-block rounded bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                                        {{ $item->kategori->nama_kategori }}
-                                    </span>
-                                @endif
+                                <div class="flex flex-wrap gap-1 mt-1">
+                                    @foreach($item->kategori as $kat)
+                                        <span
+                                            class="inline-block rounded bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                                            {{ $kat->nama_kategori }}
+                                        </span>
+                                    @endforeach
+                                </div>
                             </div>
 
                             <!-- Penulis -->
@@ -160,16 +182,17 @@
                             <!-- Aksi -->
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
                                 <div class="flex items-center space-x-3.5" x-data="{ editOpen: false }">
-                                    <button @click="$dispatch('open-edit-book-modal', { 
-                                                                                                id: '{{ $item->id_buku }}',
-                                                                                                judul: '{{ addslashes($item->judul_buku) }}',
-                                                                                                isbn: '{{ $item->isbn }}',
-                                                                                                penulis: '{{ addslashes($item->penulis) }}',
-                                                                                                penerbit: '{{ addslashes($item->penerbit) }}',
-                                                                                                stok: '{{ $item->stok }}',
-                                                                                                kategori: '{{ $item->id_kategori }}',
-                                                                                                lokasi: '{{ addslashes($item->lokasi_rak) }}'
-                                                                                             })"
+                                    <button
+                                        @click="$dispatch('open-edit-book-modal', { 
+                                                                                                                                id: '{{ $item->id_buku }}',
+                                                                                                                                judul: '{{ addslashes($item->judul_buku) }}',
+                                                                                                                                isbn: '{{ $item->isbn }}',
+                                                                                                                                penulis: '{{ addslashes($item->penulis) }}',
+                                                                                                                                penerbit: '{{ addslashes($item->penerbit) }}',
+                                                                                                                                stok: '{{ $item->stok }}',
+                                                                                                                                kategori: {{ $item->kategori->pluck('id_kategori') }},
+                                                                                                                                lokasi: '{{ addslashes($item->lokasi_rak) }}'
+                                                                                                                             })"
                                         class="hover:text-primary text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                         <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -228,86 +251,110 @@
     </div>
 
     <!-- Modal for Add/Edit Book -->
+    <!-- Modal for Add/Edit Book -->
     <div x-data="bookModal()" x-show="isOpen" @open-add-book-modal.window="openAddModal()"
         @open-edit-book-modal.window="openEditModal($event.detail)" style="display: none;"
-        class="fixed inset-0 z-999999 flex items-center justify-center bg-black/90 px-4 py-5">
-        <div @click.outside="closeModal()"
-            class="w-full max-w-lg rounded-lg bg-white px-8 py-12 dark:bg-boxdark md:px-17.5 md:py-15">
-            <h3 class="mb-4 text-xl font-bold text-black dark:text-white"
-                x-text="isEdit ? 'Edit Data Buku' : 'Tambah Buku Baru'"></h3>
+        class="fixed inset-0 z-999999 overflow-y-auto bg-black/90">
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div @click.outside="closeModal()"
+                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl dark:bg-boxdark">
+                <div class="px-6 py-8 md:px-10 md:py-10">
 
-            <form :action="actionUrl" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="_method" :value="isEdit ? 'PUT' : 'POST'">
+                    <h3 class="mb-6 text-xl font-bold text-black dark:text-white"
+                        x-text="isEdit ? 'Edit Data Buku' : 'Tambah Buku Baru'"></h3>
 
-                <div class="mb-4">
-                    <label class="mb-2.5 block font-medium text-black dark:text-white">Judul Buku <span
-                            class="text-meta-1">*</span></label>
-                    <input type="text" name="judul_buku" x-model="form.judul" required
-                        class="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                    <form :action="actionUrl" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="_method" :value="isEdit ? 'PUT' : 'POST'">
+
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <!-- Left Column: Book Details -->
+                            <div class="w-full md:w-1/2 space-y-4">
+                                <div>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Judul Buku <span
+                                            class="text-meta-1">*</span></label>
+                                    <input type="text" name="judul_buku" x-model="form.judul" required
+                                        class="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                                </div>
+
+                                <div>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">ISBN</label>
+                                    <input type="text" name="isbn" x-model="form.isbn"
+                                        class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                                </div>
+
+                                <div>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Stok <span
+                                            class="text-meta-1">*</span></label>
+                                    <input type="number" name="stok" x-model="form.stok" required min="0"
+                                        class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                                </div>
+
+                                <div>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Penulis</label>
+                                    <input type="text" name="penulis" x-model="form.penulis"
+                                        class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                                </div>
+
+                                <div>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Penerbit</label>
+                                    <input type="text" name="penerbit" x-model="form.penerbit"
+                                        class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                                </div>
+
+                                <div>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Lokasi Rak</label>
+                                    <input type="text" name="lokasi_rak" x-model="form.lokasi"
+                                        class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                                </div>
+                            </div>
+
+                            <!-- Right Column: Categories & Cover -->
+                            <div class="w-full md:w-1/2 space-y-4">
+                                <div>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Kategori</label>
+                                    <div
+                                        class="flex flex-wrap gap-2 rounded border border-stroke bg-gray p-3 dark:border-strokedark dark:bg-meta-4 max-h-[150px] overflow-y-auto">
+                                        @foreach($kategori as $kat)
+                                            <div @click="toggleKategori({{ $kat->id_kategori }})"
+                                                class="cursor-pointer select-none rounded border px-3 py-1 text-sm font-medium transition-colors"
+                                                :class="form.kategori.includes({{ $kat->id_kategori }}) 
+                                                            ? 'bg-brand-primary border-brand-primary text-white' 
+                                                            : 'bg-white border-stroke text-gray-600 hover:border-brand-primary dark:bg-boxdark dark:border-strokedark dark:text-gray-300'">
+                                                {{ $kat->nama_kategori }}
+                                                <span x-show="form.kategori.includes({{ $kat->id_kategori }})"
+                                                    class="ml-1 inline-block">✓</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <!-- Hidden inputs for form submission -->
+                                    <template x-for="id in form.kategori" :key="id">
+                                        <input type="hidden" name="kategori[]" :value="id">
+                                    </template>
+                                    <p class="text-xs text-gray-500 mt-2">Klik untuk memilih kategori.</p>
+                                </div>
+
+                                <div>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Sampul Buku</label>
+                                    <input type="file" name="sampul"
+                                        class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-brand-primary file:hover:bg-opacity-10 focus:border-brand-primary active:border-brand-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-brand-primary" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end gap-4 mt-8">
+                            <button type="button" @click="closeModal()"
+                                class="rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white">
+                                Batal
+                            </button>
+                            <button type="submit"
+                                class="rounded bg-brand-primary px-6 py-2 font-medium text-white hover:shadow-1">
+                                Simpan
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="mb-4 grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="mb-2.5 block font-medium text-black dark:text-white">ISBN</label>
-                        <input type="text" name="isbn" x-model="form.isbn"
-                            class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
-                    </div>
-                    <div>
-                        <label class="mb-2.5 block font-medium text-black dark:text-white">Kategori</label>
-                        <select name="id_kategori" x-model="form.kategori"
-                            class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white">
-                            <option value="">Pilih Kategori</option>
-                            @foreach($kategori as $kat)
-                                <option value="{{ $kat->id_kategori }}">{{ $kat->nama_kategori }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mb-4 grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="mb-2.5 block font-medium text-black dark:text-white">Penulis</label>
-                        <input type="text" name="penulis" x-model="form.penulis"
-                            class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
-                    </div>
-                    <div>
-                        <label class="mb-2.5 block font-medium text-black dark:text-white">Penerbit</label>
-                        <input type="text" name="penerbit" x-model="form.penerbit"
-                            class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
-                    </div>
-                </div>
-
-                <div class="mb-4 grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="mb-2.5 block font-medium text-black dark:text-white">Stok <span
-                                class="text-meta-1">*</span></label>
-                        <input type="number" name="stok" x-model="form.stok" required min="0"
-                            class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
-                    </div>
-                    <div>
-                        <label class="mb-2.5 block font-medium text-black dark:text-white">Lokasi Rak</label>
-                        <input type="text" name="lokasi_rak" x-model="form.lokasi"
-                            class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <label class="mb-2.5 block font-medium text-black dark:text-white">Sampul Buku</label>
-                    <input type="file" name="sampul"
-                        class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-brand-primary file:hover:bg-opacity-10 focus:border-brand-primary active:border-brand-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-brand-primary" />
-                </div>
-
-                <div class="flex justify-end gap-4">
-                    <button type="button" @click="closeModal()"
-                        class="rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white">
-                        Batal
-                    </button>
-                    <button type="submit" class="rounded bg-brand-primary px-6 py-2 font-medium text-white hover:shadow-1">
-                        Simpan
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -323,7 +370,7 @@
                     penulis: '',
                     penerbit: '',
                     stok: '',
-                    kategori: '',
+                    kategori: [],
                     lokasi: ''
                 },
                 openAddModal() {
@@ -341,7 +388,7 @@
                         penulis: data.penulis,
                         penerbit: data.penerbit,
                         stok: data.stok,
-                        kategori: data.kategori,
+                        kategori: data.kategori || [],
                         lokasi: data.lokasi
                     };
                     this.isOpen = true;
@@ -356,9 +403,16 @@
                         penulis: '',
                         penerbit: '',
                         stok: '',
-                        kategori: '',
+                        kategori: [],
                         lokasi: ''
                     };
+                },
+                toggleKategori(id) {
+                    if (this.form.kategori.includes(id)) {
+                        this.form.kategori = this.form.kategori.filter(item => item !== id);
+                    } else {
+                        this.form.kategori.push(id);
+                    }
                 }
             }
         }

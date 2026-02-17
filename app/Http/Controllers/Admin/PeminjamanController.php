@@ -39,7 +39,25 @@ class PeminjamanController extends Controller
             $query->where('status_transaksi', $request->status);
         }
 
-        $peminjaman = $query->latest('tgl_pinjam')->paginate(10);
+        // Sort
+        if ($request->has('sort')) {
+            if ($request->sort == 'terbaru') {
+                $query->orderBy('tgl_pinjam', 'desc');
+            } elseif ($request->sort == 'terlama') {
+                $query->orderBy('tgl_pinjam', 'asc');
+            } elseif ($request->sort == 'az') {
+                $query->join('pengguna', 'peminjaman.id_pengguna', '=', 'pengguna.id_pengguna')
+                    ->leftJoin('anggota', 'pengguna.id_pengguna', '=', 'anggota.id_pengguna')
+                    ->select('peminjaman.*')
+                    ->orderByRaw('COALESCE(anggota.nama_lengkap, pengguna.nama_pengguna) ASC');
+            } else {
+                $query->orderBy('tgl_pinjam', 'desc');
+            }
+        } else {
+            $query->orderBy('tgl_pinjam', 'desc');
+        }
+
+        $peminjaman = $query->paginate(10);
 
         return view('admin.peminjaman.index', compact('peminjaman'));
     }

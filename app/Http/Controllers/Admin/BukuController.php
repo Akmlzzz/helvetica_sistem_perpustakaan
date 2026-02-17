@@ -24,7 +24,25 @@ class BukuController extends Controller
         }
 
         if ($request->has('kategori') && $request->kategori != '') {
-            $query->where('id_kategori', $request->kategori);
+            $query->whereHas('kategori', function ($q) use ($request) {
+                $q->where('kategori.id_kategori', $request->kategori);
+            });
+        }
+
+        // Sort
+        if ($request->has('sort')) {
+            if ($request->sort == 'terbaru') {
+                $query->orderBy('dibuat_pada', 'desc');
+            } elseif ($request->sort == 'terlama') {
+                $query->orderBy('dibuat_pada', 'asc');
+            } elseif ($request->sort == 'az') {
+                $query->orderBy('judul_buku', 'asc');
+            } else {
+                $query->orderBy('dibuat_pada', 'desc');
+            }
+        } else {
+            // Default sort
+            $query->orderBy('dibuat_pada', 'desc');
         }
 
         $buku = $query->paginate(10);
@@ -41,19 +59,24 @@ class BukuController extends Controller
             'penulis' => 'nullable|string|max:100',
             'penerbit' => 'nullable|string|max:100',
             'stok' => 'required|integer|min:0',
-            'id_kategori' => 'nullable|exists:kategori,id_kategori',
+            'kategori' => 'nullable|array',
+            'kategori.*' => 'exists:kategori,id_kategori',
             'sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'lokasi_rak' => 'nullable|string|max:50',
         ]);
 
-        $data = $request->all();
+        $data = $request->except('kategori');
 
         if ($request->hasFile('sampul')) {
             $path = $request->file('sampul')->store('sampul', 'public');
             $data['sampul'] = $path;
         }
 
-        Buku::create($data);
+        $buku = Buku::create($data);
+
+        if ($request->has('kategori')) {
+            $buku->kategori()->attach($request->kategori);
+        }
 
         return redirect()->route('admin.buku.index')->with('success', 'Buku berhasil ditambahkan!');
     }
@@ -66,13 +89,14 @@ class BukuController extends Controller
             'penulis' => 'nullable|string|max:100',
             'penerbit' => 'nullable|string|max:100',
             'stok' => 'required|integer|min:0',
-            'id_kategori' => 'nullable|exists:kategori,id_kategori',
+            'kategori' => 'nullable|array',
+            'kategori.*' => 'exists:kategori,id_kategori',
             'sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'lokasi_rak' => 'nullable|string|max:50',
         ]);
 
         $buku = Buku::findOrFail($id);
-        $data = $request->all();
+        $data = $request->except('kategori');
 
         if ($request->hasFile('sampul')) {
             // Delete old sampul if exists
@@ -84,6 +108,12 @@ class BukuController extends Controller
         }
 
         $buku->update($data);
+
+        if ($request->has('kategori')) {
+            $buku->kategori()->sync($request->kategori);
+        } else {
+            $buku->kategori()->detach();
+        }
 
         return redirect()->route('admin.buku.index')->with('success', 'Buku berhasil diperbarui!');
     }

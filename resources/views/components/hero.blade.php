@@ -5,7 +5,7 @@
 
     <!-- Hero Content -->
     <div
-        class="container mx-auto flex flex-grow flex-col-reverse items-center justify-center px-6 py-8 pb-24 md:flex-row md:py-0">
+        class="container mx-auto flex grow flex-col-reverse items-center justify-center px-6 py-8 pb-24 md:flex-row md:py-0">
         <!-- Left Column: Content -->
         <div
             class="z-10 mt-12 flex w-full flex-col items-center text-center md:items-start md:text-left md:mt-0 md:w-1/2">
@@ -39,7 +39,6 @@
                 </a>
             </div>
 
-            <p class="mt-4 text-sm text-gray-500">Tidak perlu instalasi manual, langsung akses via web.</p>
         </div>
 
         <!-- Right Column: Images & Decorations -->

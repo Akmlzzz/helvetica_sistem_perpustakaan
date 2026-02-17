@@ -30,6 +30,21 @@ class PenggunaController extends Controller
             $query->where('level_akses', $request->role);
         }
 
+        // Sort
+        if ($request->has('sort')) {
+            if ($request->sort == 'terbaru') {
+                $query->orderBy('dibuat_pada', 'desc');
+            } elseif ($request->sort == 'terlama') {
+                $query->orderBy('dibuat_pada', 'asc');
+            } elseif ($request->sort == 'az') {
+                $query->orderBy('nama_pengguna', 'asc');
+            } else {
+                $query->orderBy('dibuat_pada', 'desc');
+            }
+        } else {
+            $query->orderBy('dibuat_pada', 'desc');
+        }
+
         $users = $query->paginate(10);
         return view('admin.pengguna.index', compact('users'));
     }

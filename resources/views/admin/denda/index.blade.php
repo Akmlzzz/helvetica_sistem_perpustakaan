@@ -21,8 +21,8 @@
                 class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
 
                 <!-- Search Bar -->
-                <div class="relative w-full sm:w-1/2">
-                    <button class="absolute left-4 top-1/2 -translate-y-1/2">
+                <div class="relative flex-1">
+                    <button type="submit" class="absolute left-4 top-1/2 -translate-y-1/2">
                         <svg class="fill-current text-black dark:text-white hover:text-primary transition-colors" width="20"
                             height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -35,18 +35,38 @@
                     </button>
                     <input type="text" name="search" value="{{ request('search') }}"
                         placeholder="Cari Nama Peminjam atau Judul Buku..."
-                        class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark dark:text-white xl:w-125" />
+                        class="w-full rounded-lg border border-stroke bg-transparent pl-12 pr-4 py-2 font-medium outline-none focus:border-primary dark:border-strokedark dark:text-white" />
                 </div>
 
                 <!-- Filter Status -->
-                <div class="w-full sm:w-1/4">
+                <div class="relative w-full sm:w-48">
                     <select name="status" onchange="this.form.submit()"
-                        class="relative z-20 w-full appearance-none rounded border py-2 pl-4 pr-10 outline-none transition {{ request('status') ? 'border-brand-primary bg-brand-primary/5 dark:bg-brand-primary/10' : 'border-stroke bg-transparent' }} focus:border-brand-primary active:border-brand-primary dark:border-form-strokedark dark:bg-form-input dark:text-white">
-                        <option value="" class="text-gray-700 dark:text-white dark:bg-gray-800">Semua Status Peminjaman</option>
-                        <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">Dipinjam</option>
-                        <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">Dikembalikan</option>
-                        <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }} class="text-gray-700 dark:text-white dark:bg-gray-800">Terlambat</option>
+                        class="w-full appearance-none rounded-lg border border-stroke bg-transparent px-4 py-2 pr-10 font-medium outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white">
+                        <option value="" class="text-gray-500">Semua Status</option>
+                        <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
+                        <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }}>Dikembalikan</option>
+                        <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }}>Terlambat</option>
                     </select>
+                    <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.47072 1.08816C0.47072 1.02932 0.50072 0.97048 0.559553 0.911642C0.677219 0.793976 0.912552 0.793976 1.03022 0.911642L4.99988 4.8813L8.96954 0.911642C9.0872 0.793976 9.32254 0.793976 9.44021 0.911642C9.55787 1.02931 9.55787 1.26464 9.44021 1.38231L5.23522 5.5873C5.11756 5.70497 4.88222 5.70497 4.76456 5.5873L0.559553 1.38231C0.50072 1.32348 0.47072 1.26464 0.47072 1.08816Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Sort Filter -->
+                <div class="relative w-full sm:w-48">
+                    <select name="sort" onchange="this.form.submit()"
+                        class="w-full appearance-none rounded-lg border border-stroke bg-transparent px-4 py-2 pr-10 font-medium outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white">
+                        <option value="terbaru" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                        <option value="terlama" {{ request('sort') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                        <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A-Z (Peminjam)</option>
+                    </select>
+                    <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.47072 1.08816C0.47072 1.02932 0.50072 0.97048 0.559553 0.911642C0.677219 0.793976 0.912552 0.793976 1.03022 0.911642L4.99988 4.8813L8.96954 0.911642C9.0872 0.793976 9.32254 0.793976 9.44021 0.911642C9.55787 1.02931 9.55787 1.26464 9.44021 1.38231L5.23522 5.5873C5.11756 5.70497 4.88222 5.70497 4.76456 5.5873L0.559553 1.38231C0.50072 1.32348 0.47072 1.26464 0.47072 1.08816Z" fill="currentColor"/>
+                        </svg>
+                    </div>
                 </div>
             </form>
 

@@ -2,14 +2,14 @@
 
 @section('content')
     <div x-data="{
-                                    showDetailModal: false,
-                                    selectedBook: null,
+                                        showDetailModal: false,
+                                        selectedBook: null,
 
-                                    openModal(book) {
-                                        this.selectedBook = book;
-                                        this.showDetailModal = true;
-                                    }
-                                }">
+                                        openModal(book) {
+                                            this.selectedBook = book;
+                                            this.showDetailModal = true;
+                                        }
+                                    }">
         <!-- Header & Filter -->
         <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -70,7 +70,7 @@
                 <div
                     class="group flex flex-col rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
                     <!-- Image -->
-                    <div class="relative aspect-[2/3] w-full overflow-hidden rounded-t-lg bg-gray-200">
+                    <div class="relative aspect-2/3 w-full overflow-hidden rounded-t-lg bg-gray-200">
                         @if($item->cover)
                             <img src="{{ Storage::url($item->cover) }}" alt="{{ $item->judul_buku }}"
                                 class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300">
@@ -86,7 +86,7 @@
                     </div>
 
                     <!-- Content -->
-                    <div class="flex flex-col flex-grow p-4">
+                    <div class="flex flex-col grow p-4">
                         <!-- Badge -->
                         <div class="mb-2">
                             <span
@@ -151,14 +151,14 @@
                     <!-- Cover -->
                     <div class="w-full md:w-1/3">
                         <template x-if="selectedBook?.cover">
-                            <div class="aspect-[2/3] w-full rounded-lg bg-gray-200 overflow-hidden">
+                            <div class="aspect-2/3 w-full rounded-lg bg-gray-200 overflow-hidden">
                                 <img :src="'/storage/' + selectedBook?.cover" :alt="selectedBook?.judul_buku"
                                     class="h-full w-full object-cover">
                             </div>
                         </template>
                         <template x-if="!selectedBook?.cover">
                             <div
-                                class="aspect-[2/3] w-full rounded-lg bg-gray-200 flex items-center justify-center text-gray-400">
+                                class="aspect-2/3 w-full rounded-lg bg-gray-200 flex items-center justify-center text-gray-400">
                                 <svg class="h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">

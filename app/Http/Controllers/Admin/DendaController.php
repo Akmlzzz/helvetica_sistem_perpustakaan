@@ -39,6 +39,25 @@ class DendaController extends Controller
             });
         }
 
+        // Sort
+        if ($request->has('sort')) {
+            if ($request->sort == 'terbaru') {
+                $query->orderBy('dibuat_pada', 'desc');
+            } elseif ($request->sort == 'terlama') {
+                $query->orderBy('dibuat_pada', 'asc');
+            } elseif ($request->sort == 'az') {
+                $query->join('peminjaman', 'denda.id_peminjaman', '=', 'peminjaman.id_peminjaman')
+                    ->join('pengguna', 'peminjaman.id_pengguna', '=', 'pengguna.id_pengguna')
+                    ->leftJoin('anggota', 'pengguna.id_pengguna', '=', 'anggota.id_pengguna')
+                    ->select('denda.*')
+                    ->orderByRaw('COALESCE(anggota.nama_lengkap, pengguna.nama_pengguna) ASC');
+            } else {
+                $query->orderBy('dibuat_pada', 'desc');
+            }
+        } else {
+            $query->orderBy('dibuat_pada', 'desc');
+        }
+
         $denda = $query->paginate(10);
 
         return view('admin.denda.index', compact('denda'));
