@@ -25,22 +25,6 @@
         </div>
 
         <!-- Alert Messages -->
-        @if(session('success'))
-            <div
-                class="mb-4 flex w-full border-l-6 border-[#34D399] bg-[#34D399] bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-[#1b1b24] dark:bg-opacity-30 md:p-9">
-                <div class="mr-5 flex h-9 w-full max-w-[36px] items-center justify-center rounded-lg bg-[#34D399]">
-                    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M15.2984 0.826822L15.2868 0.811827L15.2741 0.797751C14.9173 0.401867 14.3238 0.400754 13.9657 0.794406L5.91818 9.54222L2.4148 5.78758L2.05284 5.41959C1.69293 5.04375 1.10842 5.0436 0.748513 5.41959C0.387113 5.79558 0.387113 6.40228 0.748513 6.77827L0.763482 6.79389L0.778451 6.80951L4.69345 10.9835L4.70842 10.9991L4.72339 10.9147C5.08323 11.2905 5.66774 11.2907 6.02758 10.9147L15.2984 0.826822Z"
-                            fill="white" stroke="white"></path>
-                    </svg>
-                </div>
-                <div class="w-full">
-                    <h5 class="mb-3 text-lg font-bold text-black dark:text-[#34D399]">Berhasil!</h5>
-                    <p class="text-base leading-relaxed text-body">{{ session('success') }}</p>
-                </div>
-            </div>
-        @endif
 
         @if($errors->any())
             <div
@@ -140,7 +124,7 @@
                         </div>
                     </div>
 
-                    @foreach($users as $user)
+                    @forelse($users as $user)
                         <div
                             class="grid grid-cols-5 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                             <div class="flex items-center p-2.5 xl:p-5">
@@ -159,14 +143,14 @@
                                 <div class="flex items-center space-x-3.5">
                                     <button
                                         @click="$dispatch('open-user-modal', { 
-                                                                                                                                                                                id: '{{ $user->id_pengguna }}',
-                                                                                                                                                                                nama_pengguna: '{{ $user->nama_pengguna }}',
-                                                                                                                                                                                email: '{{ $user->email }}',
-                                                                                                                                                                                level_akses: '{{ $user->level_akses }}',
-                                                                                                                                                                                nama_lengkap: '{{ addslashes($user->anggota->nama_lengkap ?? '') }}',
-                                                                                                                                                                                alamat: '{{ addslashes($user->anggota->alamat ?? '') }}',
-                                                                                                                                                                                nomor_telepon: '{{ $user->anggota->nomor_telepon ?? '' }}'
-                                                                                                                                                                            })"
+                                                                                                                                                                                                id: '{{ $user->id_pengguna }}',
+                                                                                                                                                                                                nama_pengguna: '{{ $user->nama_pengguna }}',
+                                                                                                                                                                                                email: '{{ $user->email }}',
+                                                                                                                                                                                                level_akses: '{{ $user->level_akses }}',
+                                                                                                                                                                                                nama_lengkap: '{{ addslashes($user->anggota->nama_lengkap ?? '') }}',
+                                                                                                                                                                                                alamat: '{{ addslashes($user->anggota->alamat ?? '') }}',
+                                                                                                                                                                                                nomor_telepon: '{{ $user->anggota->nomor_telepon ?? '' }}'
+                                                                                                                                                                                            })"
                                         class="hover:text-primary text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                         <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -176,25 +160,32 @@
                                         </svg>
                                     </button>
                                     @if(auth()->id() != $user->id_pengguna)
-                                        <form action="{{ route('admin.pengguna.destroy', $user->id_pengguna) }}" method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus pengguna ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="hover:text-danger text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
-                                                <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M13.7535 2.47502H11.5879V1.9969C11.5879 1.15315 10.9129 0.478149 10.0691 0.478149H7.90352C7.05977 0.478149 6.38477 1.15315 6.38477 1.9969V2.47502H4.21914C3.40352 2.47502 2.72852 3.15002 2.72852 3.96565V4.8094C2.72852 5.42815 3.09414 5.9344 3.62852 6.16877V14.5406C3.62852 15.75 4.6129 16.7344 5.82227 16.7344H12.1504C13.3598 16.7344 14.3441 15.75 14.3441 14.5406V6.16877C14.8785 5.9344 15.2441 5.42815 15.2441 4.8094V3.96565C15.2441 3.15002 14.5691 2.47502 13.7535 2.47502ZM7.67852 1.9969C7.67852 1.85627 7.79102 1.74377 7.93164 1.74377H10.041C10.1816 1.74377 10.2941 1.85627 10.2941 1.9969V2.47502H7.67852V1.9969ZM13.0504 14.5406C13.0504 15.0188 12.6566 15.4125 12.1785 15.4125H5.85039C5.37227 15.4125 4.97852 15.0188 4.97852 14.5406V6.45002H13.0504V14.5406ZM13.9504 4.8094C13.9504 4.9219 13.866 5.00627 13.7535 5.00627H4.21914C4.10664 5.00627 4.02227 4.9219 4.02227 4.8094V3.96565C4.02227 3.85315 4.10664 3.76877 4.21914 3.76877H13.7535C13.866 3.76877 13.9504 3.85315 13.9504 3.96565V4.8094Z"
-                                                        fill="currentColor" />
-                                                </svg>
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                            @click="$dispatch('open-delete-modal', { action: '{{ route('admin.pengguna.destroy', $user->id_pengguna) }}' })"
+                                            class="hover:text-danger text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
+                                            <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M13.7535 2.47502H11.5879V1.9969C11.5879 1.15315 10.9129 0.478149 10.0691 0.478149H7.90352C7.05977 0.478149 6.38477 1.15315 6.38477 1.9969V2.47502H4.21914C3.40352 2.47502 2.72852 3.15002 2.72852 3.96565V4.8094C2.72852 5.42815 3.09414 5.9344 3.62852 6.16877V14.5406C3.62852 15.75 4.6129 16.7344 5.82227 16.7344H12.1504C13.3598 16.7344 14.3441 15.75 14.3441 14.5406V6.16877C14.8785 5.9344 15.2441 5.42815 15.2441 4.8094V3.96565C15.2441 3.15002 14.5691 2.47502 13.7535 2.47502ZM7.67852 1.9969C7.67852 1.85627 7.79102 1.74377 7.93164 1.74377H10.041C10.1816 1.74377 10.2941 1.85627 10.2941 1.9969V2.47502H7.67852V1.9969ZM13.0504 14.5406C13.0504 15.0188 12.6566 15.4125 12.1785 15.4125H5.85039C5.37227 15.4125 4.97852 15.0188 4.97852 14.5406V6.45002H13.0504V14.5406ZM13.9504 4.8094C13.9504 4.9219 13.866 5.00627 13.7535 5.00627H4.21914C4.10664 5.00627 4.02227 4.9219 4.02227 4.8094V3.96565C4.02227 3.85315 4.10664 3.76877 4.21914 3.76877H13.7535C13.866 3.76877 13.9504 3.85315 13.9504 3.96565V4.8094Z"
+                                                    fill="currentColor" />
+                                            </svg>
+                                        </button>
                                     @endif
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <div class="col-span-5 p-10 text-center">
+                            <div class="flex flex-col items-center gap-2">
+                                <svg class="h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                                    </path>
+                                </svg>
+                                <p class="text-gray-500 font-medium">Pengguna tidak ditemukan.</p>
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
 
@@ -288,6 +279,37 @@
         </div>
     </div>
 
+    <!-- Custom Delete Confirmation Modal -->
+    <div x-data="deleteModal()" x-show="isOpen" @open-delete-modal.window="openModal($event.detail)" style="display: none;"
+        class="fixed inset-0 z-999999 flex items-center justify-center bg-black/90 px-4 py-5 overflow-y-auto">
+        <div @click.outside="closeModal()"
+            class="w-full max-w-md rounded-lg bg-white px-8 py-10 dark:bg-boxdark md:px-10 md:py-12 text-center">
+            <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                <svg class="h-10 w-10 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                    </path>
+                </svg>
+            </div>
+            <h3 class="mb-4 text-xl font-bold text-black dark:text-white">Hapus Pengguna?</h3>
+            <p class="mb-10 text-gray-500 dark:text-gray-400">Yakin ingin menghapus pengguna ini? Tindakan ini tidak dapat
+                dibatalkan.</p>
+
+            <form :action="actionUrl" method="POST" class="flex items-center justify-center gap-4">
+                @csrf
+                @method('DELETE')
+                <button type="button" @click="closeModal()"
+                    class="flex-1 rounded-lg border border-stroke px-6 py-3 font-medium text-black hover:bg-gray-100 dark:border-strokedark dark:text-white dark:hover:bg-white/5 transition-colors">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="flex-1 rounded-lg bg-red-600 px-6 py-3 font-medium text-white hover:bg-red-700 shadow-md transition-colors">
+                    Ya, Hapus
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script>
         function userModal() {
             return {
@@ -333,6 +355,20 @@
                         alamat: '',
                         nomor_telepon: ''
                     };
+                }
+            }
+        }
+
+        function deleteModal() {
+            return {
+                isOpen: false,
+                actionUrl: '',
+                openModal(data) {
+                    this.actionUrl = data.action;
+                    this.isOpen = true;
+                },
+                closeModal() {
+                    this.isOpen = false;
                 }
             }
         }

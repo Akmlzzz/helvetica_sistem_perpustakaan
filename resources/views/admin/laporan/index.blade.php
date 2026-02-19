@@ -145,8 +145,8 @@
                 
                 <!-- Export Buttons -->
                 <div class="flex flex-wrap gap-2">
-                    <a href="{{ route('admin.laporan.pdf', ['start_date' => $startDate, 'end_date' => $endDate, 'type' => $type]) }}"
-                    class="inline-flex items-center justify-center gap-2.5 rounded-md bg-brand-primary px-4 py-2 text-center font-medium text-white hover:bg-opacity-90">
+                    <a href="{{ route('admin.laporan.pdf', request()->all()) }}" target="_blank"
+                        class="inline-flex items-center justify-center gap-2 rounded-md border border-success bg-white px-4 py-2 text-sm font-medium text-success">
                         <svg class="fill-current" width="16" height="16" viewBox="0 0 20 20" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -156,7 +156,7 @@
                         PDF
                     </a>
                     <a href="{{ route('admin.laporan.excel', request()->all()) }}"
-                        class="inline-flex items-center justify-center gap-2 rounded-md bg-success py-2 px-4 text-sm font-medium text-white hover:bg-opacity-90">
+                        class="inline-flex items-center justify-center gap-2 rounded-md border border-success bg-white px-4 py-2 text-sm font-medium text-success">
                         <svg class="fill-current" width="16" height="16" viewBox="0 0 20 20" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -166,7 +166,7 @@
                         Excel
                     </a>
                     <button onclick="window.print()"
-                        class="inline-flex items-center justify-center gap-2 rounded-md bg-warning py-2 px-4 text-sm font-medium text-white hover:bg-opacity-90">
+                        class="inline-flex items-center justify-center gap-2 rounded-md border border-success bg-white px-4 py-2 text-sm font-medium text-success">
                         <svg class="fill-current" width="16" height="16" viewBox="0 0 20 20" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -189,28 +189,46 @@
                             <div class="p-2.5 xl:p-4 text-center">Stok</div>
                         </div>
                         @foreach($data as $row)
-                            <div class="grid grid-cols-5 border-b border-stroke dark:border-strokedark">
-                                <div class="p-2.5 xl:p-4">{{ $row->id_buku }}</div>
-                                <div class="p-2.5 xl:p-4 font-bold">{{ $row->judul_buku }}</div>
-                                <div class="p-2.5 xl:p-4">{{ $row->penulis }}</div>
-                                <div class="p-2.5 xl:p-4">{{ $row->kategori->nama_kategori ?? '-' }}</div>
-                                <div class="p-2.5 xl:p-4 text-center">{{ $row->stok }}</div>
+                            <div class="grid grid-cols-5 border-b border-stroke dark:border-strokedark items-center">
+                                <div class="p-2.5 xl:p-4 text-black dark:text-white">#{{ $row->id_buku }}</div>
+                                <div class="p-2.5 xl:p-4">
+                                    <p class="font-bold text-black dark:text-white">{{ $row->judul_buku }}</p>
+                                    <p class="text-xs text-gray-500 italic">ISBN: {{ $row->isbn ?? '-' }}</p>
+                                </div>
+                                <div class="p-2.5 xl:p-4 text-black dark:text-white">{{ $row->penulis }}</div>
+                                <div class="p-2.5 xl:p-4">
+                                    <div class="flex flex-wrap gap-1">
+                                        @forelse($row->kategori as $kat)
+                                            <span class="inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                                {{ $kat->nama_kategori }}
+                                            </span>
+                                        @empty
+                                            <span class="text-gray-400">-</span>
+                                        @endforelse
+                                    </div>
+                                </div>
+                                <div class="p-2.5 xl:p-4 text-center text-black dark:text-white">{{ $row->stok }}</div>
                             </div>
                         @endforeach
 
                     @elseif($type == 'anggota')
-                        <div class="grid grid-cols-4 rounded-sm bg-gray-2 dark:bg-meta-4">
-                            <div class="p-2.5 xl:p-4">ID</div>
-                            <div class="p-2.5 xl:p-4">Nama Pengguna</div>
-                            <div class="p-2.5 xl:p-4">Email</div>
+                        <div class="grid grid-cols-5 rounded-sm bg-gray-2 dark:bg-meta-4 font-bold text-black dark:text-white">
+                            <div class="p-2.5 xl:p-4 text-center">ID</div>
+                            <div class="p-2.5 xl:p-4">Akun</div>
+                            <div class="p-2.5 xl:p-4">Nama Lengkap</div>
+                            <div class="p-2.5 xl:p-4">Telepon</div>
                             <div class="p-2.5 xl:p-4 text-center">Tgl Registrasi</div>
                         </div>
                         @foreach($data as $row)
-                            <div class="grid grid-cols-4 border-b border-stroke dark:border-strokedark">
-                                <div class="p-2.5 xl:p-4">{{ $row->id_pengguna }}</div>
-                                <div class="p-2.5 xl:p-4 font-bold">{{ $row->nama_pengguna }}</div>
-                                <div class="p-2.5 xl:p-4">{{ $row->email }}</div>
-                                <div class="p-2.5 xl:p-4 text-center">{{ $row->dibuat_pada ? $row->dibuat_pada->format('Y-m-d') : '-' }}</div>
+                            <div class="grid grid-cols-5 border-b border-stroke dark:border-strokedark items-center text-sm">
+                                <div class="p-2.5 xl:p-4 text-black dark:text-white">#{{ $row->id_pengguna }}</div>
+                                <div class="p-2.5 xl:p-4">
+                                    <p class="font-bold text-black dark:text-white">{{ $row->nama_pengguna }}</p>
+                                    <p class="text-xs text-gray-500">{{ $row->email }}</p>
+                                </div>
+                                <div class="p-2.5 xl:p-4 text-black dark:text-white">{{ $row->anggota->nama_lengkap ?? '-' }}</div>
+                                <div class="p-2.5 xl:p-4 text-black dark:text-white">{{ $row->anggota->nomor_telepon ?? '-' }}</div>
+                                <div class="p-2.5 xl:p-4 text-center text-black dark:text-white">{{ $row->dibuat_pada ? $row->dibuat_pada->format('d/m/Y') : '-' }}</div>
                             </div>
                         @endforeach
 

@@ -50,12 +50,15 @@
                         class="w-full appearance-none rounded-lg border border-stroke bg-transparent px-4 py-2 pr-10 font-medium outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white">
                         <option value="" class="text-gray-500">Semua Status</option>
                         <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
-                        <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }}>Dikembalikan</option>
+                        <option value="dikembalikan" {{ request('status') == 'dikembalikan' ? 'selected' : '' }}>Dikembalikan
+                        </option>
                         <option value="terlambat" {{ request('status') == 'terlambat' ? 'selected' : '' }}>Terlambat</option>
                     </select>
                     <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
                         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.47072 1.08816C0.47072 1.02932 0.50072 0.97048 0.559553 0.911642C0.677219 0.793976 0.912552 0.793976 1.03022 0.911642L4.99988 4.8813L8.96954 0.911642C9.0872 0.793976 9.32254 0.793976 9.44021 0.911642C9.55787 1.02931 9.55787 1.26464 9.44021 1.38231L5.23522 5.5873C5.11756 5.70497 4.88222 5.70497 4.76456 5.5873L0.559553 1.38231C0.50072 1.32348 0.47072 1.26464 0.47072 1.08816Z" fill="currentColor"/>
+                            <path
+                                d="M0.47072 1.08816C0.47072 1.02932 0.50072 0.97048 0.559553 0.911642C0.677219 0.793976 0.912552 0.793976 1.03022 0.911642L4.99988 4.8813L8.96954 0.911642C9.0872 0.793976 9.32254 0.793976 9.44021 0.911642C9.55787 1.02931 9.55787 1.26464 9.44021 1.38231L5.23522 5.5873C5.11756 5.70497 4.88222 5.70497 4.76456 5.5873L0.559553 1.38231C0.50072 1.32348 0.47072 1.26464 0.47072 1.08816Z"
+                                fill="currentColor" />
                         </svg>
                     </div>
                 </div>
@@ -70,7 +73,9 @@
                     </select>
                     <div class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
                         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0.47072 1.08816C0.47072 1.02932 0.50072 0.97048 0.559553 0.911642C0.677219 0.793976 0.912552 0.793976 1.03022 0.911642L4.99988 4.8813L8.96954 0.911642C9.0872 0.793976 9.32254 0.793976 9.44021 0.911642C9.55787 1.02931 9.55787 1.26464 9.44021 1.38231L5.23522 5.5873C5.11756 5.70497 4.88222 5.70497 4.76456 5.5873L0.559553 1.38231C0.50072 1.32348 0.47072 1.26464 0.47072 1.08816Z" fill="currentColor"/>
+                            <path
+                                d="M0.47072 1.08816C0.47072 1.02932 0.50072 0.97048 0.559553 0.911642C0.677219 0.793976 0.912552 0.793976 1.03022 0.911642L4.99988 4.8813L8.96954 0.911642C9.0872 0.793976 9.32254 0.793976 9.44021 0.911642C9.55787 1.02931 9.55787 1.26464 9.44021 1.38231L5.23522 5.5873C5.11756 5.70497 4.88222 5.70497 4.76456 5.5873L0.559553 1.38231C0.50072 1.32348 0.47072 1.26464 0.47072 1.08816Z"
+                                fill="currentColor" />
                         </svg>
                     </div>
                 </div>
@@ -100,7 +105,7 @@
                         </div>
                     </div>
 
-                    @foreach($peminjaman as $item)
+                    @forelse($peminjaman as $item)
                         <div
                             class="grid grid-cols-6 border-b border-stroke dark:border-strokedark hover:bg-gray-50 dark:hover:bg-white/5 sm:grid-cols-6">
                             <!-- Nama Peminjam -->
@@ -152,17 +157,28 @@
                                 </a>
                                 @if($item->status_transaksi == 'terlambat')
                                     <button @click="$dispatch('open-denda-modal', {
-                                                                    id: '{{ $item->id_peminjaman }}',
-                                                                    nama: '{{ $item->pengguna->anggota->nama_lengkap ?? $item->pengguna->nama_pengguna }}',
-                                                                    tgl_kembali: '{{ $item->tgl_kembali }}'
-                                                                })"
+                                                                                id: '{{ $item->id_peminjaman }}',
+                                                                                nama: '{{ $item->pengguna->anggota->nama_lengkap ?? $item->pengguna->nama_pengguna }}',
+                                                                                tgl_kembali: '{{ $item->tgl_kembali }}'
+                                                                            })"
                                         class="inline-flex items-center justify-center rounded-md border border-red-500 px-3 py-1 text-center font-medium text-red-500 hover:border-red-700 hover:text-red-700 hover:bg-red-50 transition-colors dark:hover:bg-red-900/20">
                                         Denda
                                     </button>
                                 @endif
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <div class="col-span-6 p-10 text-center">
+                            <div class="flex flex-col items-center gap-2">
+                                <svg class="h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                                    </path>
+                                </svg>
+                                <p class="text-gray-500 font-medium">Peminjaman tidak ditemukan.</p>
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
 

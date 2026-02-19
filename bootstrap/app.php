@@ -15,7 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
 
-        $middleware->redirectUsersTo(fn() => auth()->user()->isAdmin() ? route('dashboard') : url('/'));
+        $middleware->redirectUsersTo(function () {
+            if (auth()->user()->isAdmin())
+                return route('dashboard');
+            if (auth()->user()->isPetugas())
+                return route('petugas.dashboard');
+            if (auth()->user()->isAnggota())
+                return route('anggota.dashboard');
+            return url('/');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

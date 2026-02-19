@@ -2,14 +2,14 @@
 
 @section('content')
     <div x-data="{
-                                            showDetailModal: false,
-                                            selectedBook: null,
+                                                                showDetailModal: false,
+                                                                selectedBook: null,
 
-                                            openModal(book) {
-                                                this.selectedBook = book;
-                                                this.showDetailModal = true;
-                                            }
-                                        }">
+                                                                openModal(book) {
+                                                                    this.selectedBook = book;
+                                                                    this.showDetailModal = true;
+                                                                }
+                                                            }">
         <!-- Header & Filter -->
         <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -71,8 +71,8 @@
                     class="group flex flex-col rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
                     <!-- Image -->
                     <div class="relative aspect-2/3 w-full overflow-hidden rounded-t-lg bg-gray-200">
-                        @if($item->cover)
-                            <img src="{{ Storage::url($item->cover) }}" alt="{{ $item->judul_buku }}"
+                        @if($item->sampul)
+                            <img src="{{ Storage::url($item->sampul) }}" alt="{{ $item->judul_buku }}"
                                 class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300">
                         @else
                             <div class="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">
@@ -97,7 +97,7 @@
 
                         <!-- Category -->
                         <p class="mb-1 text-sm text-gray-500 dark:text-gray-400">
-                            {{ $item->kategori->nama_kategori ?? 'Umum' }}
+                            {{ $item->kategori->first()?->nama_kategori ?? 'Umum' }}
                         </p>
 
                         <!-- Title -->
@@ -123,8 +123,27 @@
                     </div>
                 </div>
             @empty
-                <div class="col-span-full py-10 text-center">
-                    <p class="text-lg text-gray-500">Tidak ada buku yang ditemukan.</p>
+                <div class="col-span-full py-20 text-center">
+                    <div class="flex flex-col items-center justify-center gap-4">
+                        <div class="rounded-full bg-gray-100 p-6 dark:bg-gray-800">
+                            <svg class="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-black dark:text-white">Buku tidak ditemukan</h3>
+                            <p class="mt-1 text-gray-500">Coba gunakan kata kunci lain atau filter kategori yang berbeda.
+                            </p>
+                        </div>
+                        @if(request('search') || request('kategori'))
+                            <a href="{{ route('anggota.dashboard') }}"
+                                class="mt-2 inline-flex items-center text-primary hover:underline">
+                                Bersihkan semua filter
+                            </a>
+                        @endif
+                    </div>
                 </div>
             @endforelse
         </div>
@@ -150,13 +169,13 @@
                 <div class="flex flex-col gap-8 md:flex-row">
                     <!-- Cover -->
                     <div class="w-full md:w-1/3">
-                        <template x-if="selectedBook?.cover">
+                        <template x-if="selectedBook?.sampul">
                             <div class="aspect-2/3 w-full rounded-lg bg-gray-200 overflow-hidden">
-                                <img :src="'/storage/' + selectedBook?.cover" :alt="selectedBook?.judul_buku"
+                                <img :src="'/storage/' + selectedBook?.sampul" :alt="selectedBook?.judul_buku"
                                     class="h-full w-full object-cover">
                             </div>
                         </template>
-                        <template x-if="!selectedBook?.cover">
+                        <template x-if="!selectedBook?.sampul">
                             <div
                                 class="aspect-2/3 w-full rounded-lg bg-gray-200 flex items-center justify-center text-gray-400">
                                 <svg class="h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">

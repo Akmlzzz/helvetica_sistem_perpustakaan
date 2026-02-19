@@ -70,7 +70,7 @@
                                     <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                                         <p
                                             class="inline-flex rounded-full bg-primary bg-opacity-10 py-1 px-3 text-sm font-medium text-primary">
-                                            {{ $item->kategori->nama_kategori ?? '-' }}
+                                            {{ $item->kategori->first()?->nama_kategori ?? '-' }}
                                         </p>
                                     </td>
                                     <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">

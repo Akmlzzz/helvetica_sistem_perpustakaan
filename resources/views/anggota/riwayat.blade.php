@@ -88,7 +88,7 @@
                             <div class="flex items-start justify-between rounded bg-gray-50 p-3 dark:bg-meta-4">
                                 <div>
                                     <h5 class="text-sm font-bold text-black dark:text-white">
-                                        {{ $denda->peminjaman->detail->first()->buku->judul_buku ?? 'Buku' }}
+                                        {{ $denda->peminjaman->detail->first()?->buku?->judul_buku ?? 'Buku' }}
                                     </h5>
                                     <p class="text-xs text-gray-500">
                                         {{ \Carbon\Carbon::parse($denda->peminjaman->tgl_kembali)->format('d M Y') }}</p>

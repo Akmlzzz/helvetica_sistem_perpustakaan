@@ -10,7 +10,7 @@
                         <div>
                             <h4 class="text-xl font-bold text-black dark:text-white mb-1">Booking Aktif!</h4>
                             <p class="text-sm text-gray-500">
-                                Buku: {{ $booking->detail->first()->buku->judul_buku ?? 'Judul tidak tersedia' }}
+                                Buku: {{ $booking->detail->first()?->buku?->judul_buku ?? 'Judul tidak tersedia' }}
                                 <br>
                                 Tunjukkan kode ini kepada petugas untuk mengambil buku.
                             </p>

@@ -26,11 +26,27 @@
                     kami</a>
             </div>
 
-            <!-- CTA Button (Desktop) -->
-            <a href="{{ route('login') }}"
-                class="hidden rounded-full border border-gray-200 bg-white px-6 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 md:inline-flex">
-                Masuk
-            </a>
+            <!-- Desktop Auth/CTA -->
+            @auth
+                <div class="hidden items-center gap-4 md:flex">
+                    <a href="{{ auth()->user()->isAdmin() ? route('dashboard') : (auth()->user()->isPetugas() ? route('petugas.dashboard') : route('anggota.dashboard')) }}"
+                        class="text-sm font-bold text-brand-primary hover:text-[#084734] transition-colors">
+                        Dashboard
+                    </a>
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit"
+                            class="rounded-full border border-red-200 bg-white px-6 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50">
+                            Keluar
+                        </button>
+                    </form>
+                </div>
+            @else
+                <a href="{{ route('login') }}"
+                    class="hidden rounded-full border border-gray-200 bg-white px-6 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 md:inline-flex">
+                    Masuk
+                </a>
+            @endauth
 
             <!-- Hamburger Button (Mobile) -->
             <button @click="isOpen = !isOpen" class="flex md:hidden text-gray-700 focus:outline-none">
@@ -64,10 +80,22 @@
             <a href="#tentang-kami"
                 class="nav-link text-sm font-medium text-gray-500 hover:text-brand-primary transition-colors">Tentang
                 kami</a>
-            <a href="{{ route('login') }}"
-                class="w-full text-center rounded-full border border-gray-200 bg-white px-6 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
-                Masuk
-            </a>
+            @auth
+                <a href="{{ auth()->user()->isAdmin() ? route('dashboard') : (auth()->user()->isPetugas() ? route('petugas.dashboard') : route('anggota.dashboard')) }}"
+                    class="nav-link text-sm font-bold text-brand-primary transition-colors">Dashboard</a>
+                <form action="{{ route('logout') }}" method="POST" class="w-full">
+                    @csrf
+                    <button type="submit"
+                        class="w-full text-center rounded-full border border-red-200 bg-white px-6 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50">
+                        Keluar
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}"
+                    class="w-full text-center rounded-full border border-gray-200 bg-white px-6 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
+                    Masuk
+                </a>
+            @endauth
         </div>
     </nav>
 </div>
