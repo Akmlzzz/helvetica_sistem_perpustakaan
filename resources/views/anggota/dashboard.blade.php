@@ -2,14 +2,14 @@
 
 @section('content')
     <div x-data="{
-                                        showDetailModal: false,
-                                        selectedBook: null,
+                                            showDetailModal: false,
+                                            selectedBook: null,
 
-                                        openModal(book) {
-                                            this.selectedBook = book;
-                                            this.showDetailModal = true;
-                                        }
-                                    }">
+                                            openModal(book) {
+                                                this.selectedBook = book;
+                                                this.showDetailModal = true;
+                                            }
+                                        }">
         <!-- Header & Filter -->
         <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>

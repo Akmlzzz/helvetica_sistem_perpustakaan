@@ -60,7 +60,7 @@ class AnggotaController extends Controller
         // History: Peminjaman yang sudah kembali
         $history = \App\Models\Peminjaman::with(['detail.buku', 'denda'])
             ->where('id_pengguna', $userId)
-            ->where('status_transaksi', 'kembali')
+            ->where('status_transaksi', 'dikembalikan')
             ->orderBy('tgl_kembali', 'desc')
             ->get();
 
@@ -77,8 +77,34 @@ class AnggotaController extends Controller
 
     public function storeBooking(Request $request)
     {
-        // Logic to book a book
-        return redirect()->back()->with('success', 'Booking berhasil dibuat. Kode Booking: BK-' . rand(1000, 9999));
+        $request->validate([
+            'id_buku' => 'required|exists:buku,id_buku',
+        ]);
+
+        $buku = \App\Models\Buku::findOrFail($request->id_buku);
+
+        if ($buku->stok <= 0) {
+            return redirect()->back()->with('error', 'Stok buku tidak tersedia.');
+        }
+
+        // Generate unique kode booking
+        $kodeBooking = 'BK-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(4));
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $kodeBooking) {
+            \App\Models\Peminjaman::create([
+                'id_pengguna' => auth()->id(),
+                'id_buku' => $request->id_buku,
+                'kode_booking' => $kodeBooking,
+                'tgl_booking' => now(),
+                'status_transaksi' => 'booking',
+            ]);
+
+            // Optional: Decrement stock immediately on booking? 
+            // Usually booking reserves stock.
+            \App\Models\Buku::where('id_buku', $request->id_buku)->decrement('stok');
+        });
+
+        return redirect()->route('anggota.pinjaman')->with('success', 'Booking berhasil dibuat. Kode Booking: ' . $kodeBooking);
     }
 
     public function profile()

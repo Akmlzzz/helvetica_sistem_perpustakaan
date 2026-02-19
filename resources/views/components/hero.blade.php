@@ -55,21 +55,21 @@
                 <!-- Card 1: Statistik (Top Left - White) -->
                 <div class="animate-float absolute left-2 top-4 z-30 w-44 md:left-0 md:top-24 md:w-[400px]"
                     style="animation-delay: 0s;">
-                    <img src="{{ asset('img/Card-statistik.png') }}" alt="Statistik Card"
+                    <img src="{{ asset('img/Card-statistik.webp') }}" alt="Statistik Card"
                         class="h-auto w-full drop-shadow-xl">
                 </div>
 
                 <!-- Card 2: Anggota (Bottom Right - Bright Green) -->
                 <div class="animate-float absolute bottom-8 -right-2 z-20 w-48 md:-right-16 md:bottom-24 md:w-[450px]"
                     style="animation-delay: 0.8s;">
-                    <img src="{{ asset('img/Card-Anggota.png') }}" alt="Anggota Card"
+                    <img src="{{ asset('img/Card-Anggota.webp') }}" alt="Anggota Card"
                         class="h-auto w-full drop-shadow-2xl">
                 </div>
 
                 <!-- Card 3: Verify (Bottom Left - Dark Green) -->
                 <div class="animate-float absolute bottom-2 left-0 z-10 w-48 md:bottom-16 md:left-4 md:w-96"
                     style="animation-delay: 1.5s;">
-                    <img src="{{ asset('img/Card-Verify.png') }}" alt="Verify Card"
+                    <img src="{{ asset('img/Card-Verify.webp') }}" alt="Verify Card"
                         class="h-auto w-full drop-shadow-xl">
                 </div>
             </div>

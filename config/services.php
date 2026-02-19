@@ -35,19 +35,5 @@ return [
         ],
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Google Gemini AI Configuration (FREE!)
-    |--------------------------------------------------------------------------
-    |
-    | Get your free API key at: https://ai.google.dev/
-    | Free tier: 60 requests/minute, unlimited usage!
-    |
-    */
-    'gemini' => [
-        'api_key' => env('GEMINI_API_KEY'),
-        'model' => env('GEMINI_MODEL', 'gemini-1.5-flash'),
-        'enabled' => env('AI_RECOMMENDATIONS_ENABLED', true),
-    ],
 
 ];
