@@ -9,9 +9,30 @@ class PetugasController extends Controller
 {
     public function index()
     {
-        // Dashboard / Layanan Sirkulasi
-        // Init variables for view
-        return view('petugas.dashboard');
+        $user = auth()->user();
+        $user->loadMissing('hakAkses');
+
+        // Fitur yang boleh diakses petugas ini
+        $fiturAkses = $user->daftarFiturAkses(); // Collection
+
+        // Statistik untuk stat cards (hanya fitur yang boleh diakses)
+        $stats = [];
+
+        if ($fiturAkses->contains('buku')) {
+            $stats['buku'] = \App\Models\Buku::count();
+        }
+        if ($fiturAkses->contains('peminjaman')) {
+            $stats['peminjaman_aktif'] = \App\Models\Peminjaman::where('status_transaksi', 'dipinjam')->count();
+            $stats['peminjaman_booking'] = \App\Models\Peminjaman::where('status_transaksi', 'booking')->count();
+        }
+        if ($fiturAkses->contains('denda')) {
+            $stats['denda_belum_bayar'] = \App\Models\Denda::where('status_pembayaran', 'belum_bayar')->count();
+        }
+        if ($fiturAkses->contains('kategori')) {
+            $stats['kategori'] = \App\Models\Kategori::count();
+        }
+
+        return view('petugas.dashboard', compact('fiturAkses', 'stats'));
     }
 
     public function booking()

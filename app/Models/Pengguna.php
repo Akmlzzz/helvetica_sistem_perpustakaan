@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 
 class Pengguna extends Authenticatable implements CanResetPassword
 {
@@ -74,7 +75,29 @@ class Pengguna extends Authenticatable implements CanResetPassword
         return in_array($this->level_akses, ['anggota', 'petugas']);
     }
 
-    // RELATIONSHIP
+    /**
+     * Cek apakah user boleh mengakses fitur tertentu.
+     * Admin selalu boleh akses semua, petugas hanya yang diberikan izin.
+     */
+    public function canAccess(string $fitur): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->hakAkses->pluck('fitur')->contains($fitur);
+    }
+
+    /**
+     * Ambil daftar nama fitur yang dimiliki petugas ini.
+     */
+    public function daftarFiturAkses(): Collection
+    {
+        return $this->hakAkses->pluck('fitur');
+    }
+
+    // ----------- RELATIONSHIPS -----------
+
     public function anggota()
     {
         return $this->hasOne(Anggota::class, 'id_pengguna');
@@ -83,5 +106,10 @@ class Pengguna extends Authenticatable implements CanResetPassword
     public function peminjaman()
     {
         return $this->hasMany(Peminjaman::class, 'id_pengguna');
+    }
+
+    public function hakAkses()
+    {
+        return $this->hasMany(HakAkses::class, 'id_pengguna', 'id_pengguna');
     }
 }

@@ -16,7 +16,11 @@ class PetugasMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->level_akses == 'petugas') {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        if (Auth::user()->level_akses == 'petugas') {
             return $next($request);
         }
 

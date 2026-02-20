@@ -8,31 +8,70 @@ class MenuHelper
     {
         $user = \Illuminate\Support\Facades\Auth::user();
 
+        // ─────────────────────────────────────
+        // MENU PETUGAS — dinamis sesuai hak akses
+        // ─────────────────────────────────────
         if ($user && $user->level_akses == 'petugas') {
+
+            // Load hakAkses jika belum
+            $user->loadMissing('hakAkses');
+            $fiturAkses = $user->daftarFiturAkses(); // Collection of fitur names
+
+            // Menu dasar petugas (selalu muncul)
+            $items = [
+                [
+                    'name' => 'Layanan Sirkulasi',
+                    'icon' => 'dashboard',
+                    'path' => '/petugas/dashboard',
+                ],
+                [
+                    'name' => 'Daftar Booking',
+                    'icon' => 'calendar',
+                    'path' => '/petugas/booking',
+                ],
+                [
+                    'name' => 'Katalog Buku',
+                    'icon' => 'book',
+                    'path' => '/petugas/katalog',
+                ],
+            ];
+
+            // Fitur tambahan berdasarkan hak akses
+            $fiturTambahan = [];
+
+            if ($fiturAkses->contains('kategori')) {
+                $fiturTambahan[] = ['name' => 'Kategori', 'path' => '/kategori', 'new' => false];
+            }
+            if ($fiturAkses->contains('buku')) {
+                $fiturTambahan[] = ['name' => 'Data Buku', 'path' => '/buku', 'new' => false];
+            }
+            if ($fiturAkses->contains('peminjaman')) {
+                $fiturTambahan[] = ['name' => 'Peminjaman', 'path' => '/peminjaman', 'new' => false];
+            }
+            if ($fiturAkses->contains('denda')) {
+                $fiturTambahan[] = ['name' => 'Denda', 'path' => '/denda', 'new' => false];
+            }
+
+            // Jika ada fitur tambahan, tampilkan sebagai submenu "Kelola Data"
+            if (!empty($fiturTambahan)) {
+                $items[] = [
+                    'name' => 'Kelola Data',
+                    'icon' => 'database',
+                    'subItems' => $fiturTambahan,
+                ];
+            }
+
             return [
                 'menu' => [
                     'title' => 'MENU UTAMA',
-                    'items' => [
-                        [
-                            'name' => 'Layanan Sirkulasi',
-                            'icon' => 'dashboard', // Reusing dashboard icon for main service
-                            'path' => '/petugas/dashboard',
-                        ],
-                        [
-                            'name' => 'Daftar Booking',
-                            'icon' => 'calendar',
-                            'path' => '/petugas/booking',
-                        ],
-                        [
-                            'name' => 'Katalog Buku',
-                            'icon' => 'book',
-                            'path' => '/petugas/katalog',
-                        ],
-                    ],
+                    'items' => $items,
                 ],
             ];
         }
 
+        // ─────────────────────────────────────
+        // MENU ANGGOTA
+        // ─────────────────────────────────────
         if ($user && $user->level_akses == 'anggota') {
             return [
                 'menu' => [
@@ -50,7 +89,7 @@ class MenuHelper
                         ],
                         [
                             'name' => 'Riwayat & Denda',
-                            'icon' => 'report', // Using report icon for history
+                            'icon' => 'report',
                             'path' => '/anggota/riwayat',
                         ],
                     ],
@@ -58,7 +97,9 @@ class MenuHelper
             ];
         }
 
-        // Default to Admin Menu
+        // ─────────────────────────────────────
+        // MENU ADMIN (default)
+        // ─────────────────────────────────────
         return [
             'menu' => [
                 'title' => 'MENU UTAMA',
@@ -71,40 +112,20 @@ class MenuHelper
                     [
                         'name' => 'Kelola Data',
                         'icon' => 'database',
-                        // 'path' => '#', // Optional if using submenus
                         'subItems' => [
-                            [
-                                'name' => 'Kategori',
-                                'path' => '/kategori',
-                                'new' => false,
-                            ],
-                            [
-                                'name' => 'Data Buku',
-                                'path' => '/buku',
-                                'new' => false,
-                            ],
-                            [
-                                'name' => 'Peminjaman',
-                                'path' => '/peminjaman',
-                                'new' => false,
-                            ],
-                            [
-                                'name' => 'Denda',
-                                'path' => '/denda',
-                                'new' => false,
-                            ],
-                        ]
+                            ['name' => 'Kategori', 'path' => '/kategori', 'new' => false],
+                            ['name' => 'Data Buku', 'path' => '/buku', 'new' => false],
+                            ['name' => 'Peminjaman', 'path' => '/peminjaman', 'new' => false],
+                            ['name' => 'Denda', 'path' => '/denda', 'new' => false],
+                        ],
                     ],
                     [
                         'name' => 'Kelola Pengguna',
                         'icon' => 'users',
                         'subItems' => [
-                            [
-                                'name' => 'Data Pengguna',
-                                'path' => '/pengguna',
-                                'new' => false,
-                            ]
-                        ]
+                            ['name' => 'Data Pengguna', 'path' => '/pengguna', 'new' => false],
+                            ['name' => 'Hak Akses', 'path' => '/hak-akses', 'new' => false],
+                        ],
                     ],
                     [
                         'name' => 'Laporan',
@@ -144,13 +165,15 @@ class MenuHelper
                             <line x1="12" y1="1" x2="12" y2="23" />
                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                         </svg>',
+            'shield' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                        </svg>',
             'icon-katalog' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
                                </svg>',
             'icon-pinjaman' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
                                </svg>',
-            // Add other icons as needed
         ];
 
         return $icons[$iconName] ?? '';
