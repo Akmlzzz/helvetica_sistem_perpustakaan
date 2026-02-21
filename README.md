@@ -1,66 +1,150 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📚 Biblio - Sistem Perpustakaan Digital Modern
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
 </p>
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📖 Deskripsi Proyek
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Biblio** adalah platform manajemen perpustakaan digital berbasis web yang dirancang untuk mentransformasi sistem pengelolaan perpustakaan konvensional menjadi ekosistem digital yang efisien, transparan, dan interaktif.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Dibangun dengan **Laravel 12** dan **Tailwind CSS 4**, aplikasi ini mengedepankan performa tinggi dengan antarmuka yang modern (premium UI/UX) dan responsif untuk berbagai perangkat.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🔥 Fitur Utama Berdasarkan Peran
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Aplikasi ini menggunakan sistem **Role-Based Access Control (RBAC)** yang ketat untuk menjamin keamanan dan fleksibilitas akses:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🛠️ Mode Administrator (Owner)
 
-## Laravel Sponsors
+- **Dashboard Visual Kontemporer**: Pantau performa perpustakaan melalui grafik interaktif dari _ApexCharts_.
+- **Manajemen Hak Akses (RBAC)**: Konfigurasi izin spesifik bagi setiap petugas secara dinamis.
+- **Pengawasan Pengajuan Buku**: Sistem kurasi untuk menyetujui atau menolak usulan buku dari anggota dengan catatan administrasi.
+- **Pelaporan Akurat**: Generate laporan aktivitas dalam format ekspor PDF dan Excel.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 📋 Mode Petugas (Staff)
 
-### Premium Partners
+- **Sirkulasi Kilat**: Manajemen peminjaman dan pengembalian dalam satu antarmuka terpadu.
+- **Inventory Control**: Kelola metadata buku, kategori, dan stok secara real-time.
+- **Gateway Peminjaman**: Verifikasi kode booking anggota untuk pengambilan fisik buku.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 👤 Mode Anggota (Member)
 
-## Contributing
+- **Exploration Catalog**: Pencarian buku cerdas dengan filter kategori yang intuitif.
+- **Smart Booking**: Sistem reservasi buku secara mandiri untuk menjamin ketersediaan.
+- **Engagement Tools**: Usulkan buku favorit yang belum ada di katalog dan pantau progresnya melalui sistem **Notifikasi Real-time**.
+- **Finance & History Transparency**: Rekam jejak peminjaman dan denda yang transparan.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 💻 Tech Stack
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Proyek ini dibangun menggunakan kombinasi teknologi terbaru:
 
-## Security Vulnerabilities
+- **Core Framework**: [Laravel 12.x](https://laravel.com)
+- **Styling Engine**: [Tailwind CSS 4.0](https://tailwindcss.com) (Modern utility-first architecture)
+- **Interactive UI**: [Alpine.js](https://alpinejs.dev) & [Blade UI Kit](https://blade-ui-kit.com)
+- **Database**: [MySQL](https://www.mysql.com/) / [MariaDB](https://mariadb.org/)
+- **Build Tool**: [Vite 6.0](https://vitejs.dev)
+- **Analytics**: [ApexCharts](https://apexcharts.com)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🚀 Instalasi di Lingkungan Lokal
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Ikuti urutan langkah di bawah ini untuk memulai:
+
+### 1. Persiapan Awal
+
+Pastikan mesin Anda telah terpasang:
+
+- PHP >= 8.2
+- Composer
+- Node.js & NPM
+- Database Server (MySQL/MariaDB)
+
+### 2. Kloning Repository & Dependensi
+
+```bash
+# Clone repository ini
+git clone https://github.com/Akmlzzz/sistem-perpustakaan-digital.git
+
+# Masuk ke folder project
+cd sistem-perpustakaan-digital
+
+# Install dependensi PHP
+composer install
+
+# Install dependensi JavaScript
+npm install
+```
+
+### 3. Konfigurasi Environment
+
+```bash
+# Copy file contoh konfigurasi
+cp .env.example .env
+
+# Generate security key aplikasi
+php artisan key:generate
+```
+
+### 4. Konfigurasi Database
+
+Buka file `.env` dan sesuaikan pengaturan database Anda:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database_anda
+DB_USERNAME=username_anda
+DB_PASSWORD=password_anda
+```
+
+### 5. Inisialisasi Database
+
+```bash
+# Jalankan migrasi dan seeding data demo
+php artisan migrate --seed
+```
+
+### 6. Menjalankan Aplikasi
+
+Buka dua terminal berbeda:
+
+- **Terminal 1**: `npm run dev` (Kompilasi asset frontend)
+- **Terminal 2**: `php artisan serve` (Server aplikasi)
+
+Akses aplikasi melalui: `http://localhost:8000`
+
+---
+
+## 🔑 Akun Demo (Default)
+
+| Role              | Email                | Password   |
+| :---------------- | :------------------- | :--------- |
+| **Administrator** | `admin@biblio.com`   | `password` |
+| **Petugas**       | `petugas@biblio.com` | `password` |
+| **Anggota**       | `anggota@biblio.com` | `password` |
+
+---
+
+## 🗂️ Struktur Folder Utama
+
+- `app/Http/Controllers/` : Logika bisnis aplikasi.
+- `resources/views/` : Template UI (Blade files).
+- `database/migrations/` : Skema basis data.
+- `routes/web.php` : Definisi rute aplikasi.
+
+---
+
+## 📄 Lisensi
+
+Didistribusikan di bawah lisensi [MIT](LICENSE).
+
+**Biblio** - Mengubah cara Anda membaca dan mengelola ilmu pengetahuan.  
+Didesain oleh [Akmlzzz](https://github.com/Akmlzzz).
