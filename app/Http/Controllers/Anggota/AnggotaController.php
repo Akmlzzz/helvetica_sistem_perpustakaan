@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Anggota;
 
+use App\Models\PengajuanBuku;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -141,5 +143,39 @@ class AnggotaController extends Controller
         $anggota->save();
 
         return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    /**
+     * Daftar pengajuan buku milik anggota yang sedang login
+     */
+    public function pengajuanBuku(Request $request)
+    {
+        $userId = auth()->id();
+
+        $query = PengajuanBuku::where('id_pengguna', $userId)
+            ->latest('dibuat_pada');
+
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $pengajuan = $query->paginate(10)->withQueryString();
+
+        return view('anggota.pengajuan-buku.index', compact('pengajuan'));
+    }
+
+    /**
+     * Detail satu pengajuan buku milik anggota
+     */
+    public function showPengajuan($id)
+    {
+        $userId = auth()->id();
+
+        $pengajuan = PengajuanBuku::where('id_pengajuan', $id)
+            ->where('id_pengguna', $userId)
+            ->firstOrFail();
+
+        return view('anggota.pengajuan-buku.show', compact('pengajuan'));
     }
 }

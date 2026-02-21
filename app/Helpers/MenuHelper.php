@@ -51,6 +51,9 @@ class MenuHelper
             if ($fiturAkses->contains('denda')) {
                 $fiturTambahan[] = ['name' => 'Denda', 'path' => '/denda', 'new' => false];
             }
+            if ($fiturAkses->contains('laporan')) {
+                $fiturTambahan[] = ['name' => 'Laporan', 'path' => '/laporan', 'new' => false];
+            }
 
             // Jika ada fitur tambahan, tampilkan sebagai submenu "Kelola Data"
             if (!empty($fiturTambahan)) {
@@ -92,6 +95,16 @@ class MenuHelper
                             'icon' => 'report',
                             'path' => '/anggota/riwayat',
                         ],
+                        [
+                            'name' => 'Pengajuan Saya',
+                            'icon' => 'icon-pengajuan',
+                            'path' => '/anggota/pengajuan-saya',
+                        ],
+                        [
+                            'name' => 'Usulkan Buku',
+                            'icon' => 'inbox',
+                            'path' => '/ajukan-buku',
+                        ],
                     ],
                 ],
             ];
@@ -100,6 +113,8 @@ class MenuHelper
         // ─────────────────────────────────────
         // MENU ADMIN (default)
         // ─────────────────────────────────────
+        $unreadPengajuan = \App\Models\PengajuanBuku::where('sudah_dibaca', false)->count();
+
         return [
             'menu' => [
                 'title' => 'MENU UTAMA',
@@ -118,6 +133,12 @@ class MenuHelper
                             ['name' => 'Peminjaman', 'path' => '/peminjaman', 'new' => false],
                             ['name' => 'Denda', 'path' => '/denda', 'new' => false],
                         ],
+                    ],
+                    [
+                        'name' => 'Pengajuan Buku',
+                        'icon' => 'inbox',
+                        'path' => '/pengajuan-buku',
+                        'badge' => $unreadPengajuan > 0 ? $unreadPengajuan : null,
                     ],
                     [
                         'name' => 'Kelola Pengguna',
@@ -174,6 +195,12 @@ class MenuHelper
             'icon-pinjaman' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
                                </svg>',
+            'inbox' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h1.166a2.25 2.25 0 0 0 1.608-.67l1.114-1.114a2.25 2.25 0 0 1 1.608-.67h3.096m-12 7.208V19.5a2.25 2.25 0 0 1 2.25-2.25h10.5A2.25 2.25 0 0 1 21 19.5v2.958M3 13.5V4.875C3 3.839 3.84 3 4.875 3h14.25C20.16 3 21 3.84 21 4.875V13.5m-9-4.5h.008v.008H12V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                        </svg>',
+            'icon-pengajuan' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z" />
+                        </svg>',
         ];
 
         return $icons[$iconName] ?? '';

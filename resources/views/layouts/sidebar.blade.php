@@ -136,9 +136,15 @@
                                             :class="isActive('{{ $item['path'] }}') ? 'text-[#004236] font-bold dark:text-white' : 'text-gray-900 dark:text-gray-400'">
 
                                             <div class="flex items-center gap-3">
-                                                <span
+                                                <span class="relative"
                                                     :class="isActive('{{ $item['path'] }}') ? 'text-[#004236] dark:text-white' : 'text-gray-500'">
                                                     {!! MenuHelper::getIconSvg($item['icon']) !!}
+                                                    @if(!empty($item['badge']))
+                                                        <span
+                                                            class="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white leading-none z-10">
+                                                            {{ $item['badge'] > 99 ? '99+' : $item['badge'] }}
+                                                        </span>
+                                                    @endif
                                                 </span>
                                                 <!-- Text Right of Icon -->
                                                 <span
@@ -146,6 +152,14 @@
                                                     {{ $item['name'] }}
                                                 </span>
                                             </div>
+
+                                            @if(!empty($item['badge']))
+                                                <span
+                                                    x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                                                    class="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
+                                                    {{ $item['badge'] > 99 ? '99+' : $item['badge'] }}
+                                                </span>
+                                            @endif
                                         </a>
                                     @endif
                                 </li>

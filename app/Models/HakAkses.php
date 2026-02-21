@@ -43,6 +43,12 @@ class HakAkses extends Model
                 'icon' => 'money',
                 'warna' => 'red',
             ],
+            'laporan' => [
+                'label' => 'Laporan',
+                'deskripsi' => 'Melihat dan mengekspor laporan perpustakaan',
+                'icon' => 'report',
+                'warna' => 'orange',
+            ],
         ];
     }
 

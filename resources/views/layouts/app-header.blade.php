@@ -33,6 +33,159 @@
 
         <div class="flex items-center gap-3 2xl:gap-7">
 
+            <!-- ===== NOTIFICATION BELL ===== -->
+            @php
+                $notifCount = \App\Models\Notifikasi::where('id_pengguna', Auth::id())
+                    ->where('sudah_dibaca', false)
+                    ->count();
+                $notifList = \App\Models\Notifikasi::where('id_pengguna', Auth::id())
+                    ->orderBy('created_at', 'desc')
+                    ->take(8)
+                    ->get();
+            @endphp
+
+            <div class="relative" x-data="{ notifOpen: false }" @click.outside="notifOpen = false">
+                <button id="notif-bell-btn"
+                    class="relative flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 focus:outline-none"
+                    @click.stop="notifOpen = !notifOpen" title="Notifikasi">
+                    <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    @if($notifCount > 0)
+                        <span id="notif-badge"
+                            class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse">
+                            {{ $notifCount > 9 ? '9+' : $notifCount }}
+                        </span>
+                    @endif
+                </button>
+
+                <!-- Notification Dropdown -->
+                <div x-show="notifOpen" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="transform opacity-0 scale-95 translate-y-2"
+                    x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+                    x-transition:leave-end="transform opacity-0 scale-95 translate-y-2"
+                    class="absolute right-0 mt-3 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden"
+                    style="display: none;">
+
+                    <!-- Header -->
+                    <div
+                        class="flex items-center justify-between px-4 py-3 bg-linear-to-r from-brand-primary to-blue-600">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                            <h3 class="text-sm font-semibold text-white">Notifikasi</h3>
+                            @if($notifCount > 0)
+                                <span
+                                    class="px-2 py-0.5 text-xs font-bold bg-white/30 text-white rounded-full">{{ $notifCount }}
+                                    baru</span>
+                            @endif
+                        </div>
+                        @if($notifCount > 0)
+                            <form method="POST" action="{{ route('notifikasi.baca-semua') }}">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit"
+                                    class="text-xs text-white/80 hover:text-white transition-colors underline">
+                                    Tandai semua dibaca
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+
+                    <!-- List Notifikasi -->
+                    <div class="max-h-80 overflow-y-auto divide-y divide-gray-50" id="notif-list">
+                        @forelse($notifList as $notif)
+                            <a href="{{ route('notifikasi.buka', $notif->id_notifikasi) }}"
+                                class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 {{ !$notif->sudah_dibaca ? 'bg-blue-50/50' : '' }} block relative group">
+                                <!-- Icon -->
+                                <div class="shrink-0 mt-0.5">
+                                    @if($notif->tipe === 'pengajuan_baru')
+                                        <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center">
+                                            <svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                            </svg>
+                                        </div>
+                                    @elseif(str_contains($notif->pesan, 'disetujui'))
+                                        <div class="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center">
+                                            <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                    @else
+                                        <div class="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center">
+                                            <svg class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <!-- Content -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-start justify-between gap-1">
+                                        <p class="text-xs font-semibold text-gray-800 leading-tight">
+                                            {{ $notif->judul }}
+                                            @if(!$notif->sudah_dibaca)
+                                                <span
+                                                    class="inline-block w-2 h-2 rounded-full bg-blue-500 ml-1 align-middle"></span>
+                                            @endif
+                                        </p>
+                                        <!-- Hapus -->
+                                        <form method="POST" action="{{ route('notifikasi.hapus', $notif->id_notifikasi) }}"
+                                            class="shrink-0" @click.stop>
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="text-gray-300 hover:text-red-400 transition-colors p-0.5 rounded"
+                                                title="Hapus notifikasi">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-0.5 leading-snug line-clamp-2">{{ $notif->pesan }}
+                                    </p>
+                                    <p class="text-xs text-gray-400 mt-1">{{ $notif->created_at->diffForHumans() }}</p>
+                                </div>
+                            </a>
+                        @empty
+                            <div class="flex flex-col items-center justify-center py-10 text-center">
+                                <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                                    <svg class="w-7 h-7 text-gray-300" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-medium text-gray-400">Tidak ada notifikasi</p>
+                                <p class="text-xs text-gray-300 mt-1">Semua sudah dibaca</p>
+                            </div>
+                        @endforelse
+                    </div>
+
+                    <!-- Footer -->
+                    @if($notifList->count() > 0)
+                        <div class="px-4 py-2.5 border-t border-gray-100 bg-gray-50/50 text-center">
+                            <p class="text-xs text-gray-400">Menampilkan {{ $notifList->count() }} notifikasi terbaru</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+            <!-- ===== END NOTIFICATION BELL ===== -->
 
             <!-- User Area -->
             <div class="relative" x-data="{ dropdownOpen: false }" @click.outside="dropdownOpen = false">

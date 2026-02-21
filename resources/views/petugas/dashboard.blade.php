@@ -2,40 +2,40 @@
 
 @section('content')
     <div x-data="{
-                activeTab: 'peminjaman',
-                scannedMemberId: '',
-                scannedBookId: '',
-                tempBooks: [],
-                showFineModal: false,
-                fineData: null,
+                    activeTab: 'peminjaman',
+                    scannedMemberId: '',
+                    scannedBookId: '',
+                    tempBooks: [],
+                    showFineModal: false,
+                    fineData: null,
 
-                addBook(isbn) {
-                    // Mock adding book to temp list
-                    if(!isbn) return;
-                    this.tempBooks.push({
-                        id: Date.now(),
-                        isbn: isbn,
-                        title: 'Judul Buku Contoh (' + isbn + ')',
-                        author: 'Penulis Contoh'
-                    });
-                    this.scannedBookId = '';
-                },
+                    addBook(isbn) {
+                        // Mock adding book to temp list
+                        if(!isbn) return;
+                        this.tempBooks.push({
+                            id: Date.now(),
+                            isbn: isbn,
+                            title: 'Judul Buku Contoh (' + isbn + ')',
+                            author: 'Penulis Contoh'
+                        });
+                        this.scannedBookId = '';
+                    },
 
-                removeBook(idx) {
-                    this.tempBooks.splice(idx, 1);
-                },
+                    removeBook(idx) {
+                        this.tempBooks.splice(idx, 1);
+                    },
 
-                processReturn(id) {
-                    // Mock return process
-                    // If late, show fine modal
-                    // else submit return
-                    this.fineData = {
-                        overdue_days: 3,
-                        amount: 15000
-                    };
-                    this.showFineModal = true;
-                }
-            }">
+                    processReturn(id) {
+                        // Mock return process
+                        // If late, show fine modal
+                        // else submit return
+                        this.fineData = {
+                            overdue_days: 3,
+                            amount: 15000
+                        };
+                        this.showFineModal = true;
+                    }
+                }">
 
         <!-- Page Header -->
         <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -162,6 +162,32 @@
                             @if(isset($stats['denda_belum_bayar']))
                                 <p class="mt-1 text-2xl font-extrabold text-red-600">{{ $stats['denda_belum_bayar'] }}</p>
                                 <p class="text-xs text-red-400">belum dibayar</p>
+                            @endif
+                        </a>
+                    @endif
+
+                    {{-- LAPORAN --}}
+                    @if($fiturAkses->contains('laporan'))
+                        <a href="{{ route('admin.laporan.index') }}"
+                            class="group relative overflow-hidden rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 to-orange-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-orange-200">
+                            <div class="mb-4 flex items-center justify-between">
+                                <div
+                                    class="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 shadow-sm shadow-orange-200">
+                                    <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <svg class="h-4 w-4 text-orange-300 transition-transform group-hover:translate-x-1" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </div>
+                            <p class="text-xs font-semibold uppercase tracking-wide text-orange-500/70">Lihat</p>
+                            <p class="text-lg font-bold text-orange-800">Laporan</p>
+                            @if(isset($stats['laporan_bulan_ini']))
+                                <p class="mt-1 text-2xl font-extrabold text-orange-600">{{ $stats['laporan_bulan_ini'] }}</p>
+                                <p class="text-xs text-orange-400">transaksi bulan ini</p>
                             @endif
                         </a>
                     @endif

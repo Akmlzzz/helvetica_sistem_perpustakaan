@@ -31,6 +31,12 @@ class PetugasController extends Controller
         if ($fiturAkses->contains('kategori')) {
             $stats['kategori'] = \App\Models\Kategori::count();
         }
+        if ($fiturAkses->contains('laporan')) {
+            // Total peminjaman bulan ini (untuk laporan ringkas)
+            $stats['laporan_bulan_ini'] = \App\Models\Peminjaman::whereMonth('tgl_pinjam', now()->month)
+                ->whereYear('tgl_pinjam', now()->year)
+                ->count();
+        }
 
         return view('petugas.dashboard', compact('fiturAkses', 'stats'));
     }

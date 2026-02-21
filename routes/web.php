@@ -46,15 +46,16 @@ Route::middleware('auth')->group(function () {
         Route::put('/pengguna/{id}', [\App\Http\Controllers\Admin\PenggunaController::class, 'update'])->name('admin.pengguna.update');
         Route::delete('/pengguna/{id}', [\App\Http\Controllers\Admin\PenggunaController::class, 'destroy'])->name('admin.pengguna.destroy');
 
-        // Laporan Management (admin only)
-        Route::get('/laporan', [\App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan.index');
-        Route::get('/laporan/pdf', [\App\Http\Controllers\Admin\LaporanController::class, 'exportPdf'])->name('admin.laporan.pdf');
-        Route::get('/laporan/excel', [\App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('admin.laporan.excel');
-
         // Hak Akses Management (admin only)
         Route::get('/hak-akses', [\App\Http\Controllers\Admin\HakAksesController::class, 'index'])->name('admin.hak-akses.index');
         Route::post('/hak-akses/{id_pengguna}', [\App\Http\Controllers\Admin\HakAksesController::class, 'update'])->name('admin.hak-akses.update');
         Route::post('/hak-akses/{id_pengguna}/toggle', [\App\Http\Controllers\Admin\HakAksesController::class, 'toggle'])->name('admin.hak-akses.toggle');
+
+        // Pengajuan Buku Management (admin only)
+        Route::get('/pengajuan-buku', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'index'])->name('admin.pengajuan-buku.index');
+        Route::get('/pengajuan-buku/{id}', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'show'])->name('admin.pengajuan-buku.show');
+        Route::patch('/pengajuan-buku/{id}/status', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'updateStatus'])->name('admin.pengajuan-buku.status');
+        Route::delete('/pengajuan-buku/{id}', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'destroy'])->name('admin.pengajuan-buku.destroy');
     });
 
     // =========================================================
@@ -91,6 +92,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/denda/{id}', [\App\Http\Controllers\Admin\DendaController::class, 'show'])->name('admin.denda.show');
     });
 
+    // Laporan — admin atau petugas yang punya izin 'laporan'
+    Route::middleware('akses:laporan')->group(function () {
+        Route::get('/laporan', [\App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan.index');
+        Route::get('/laporan/pdf', [\App\Http\Controllers\Admin\LaporanController::class, 'exportPdf'])->name('admin.laporan.pdf');
+        Route::get('/laporan/excel', [\App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('admin.laporan.excel');
+    });
+
     // =========================================================
     // PETUGAS Routes (dashboard & fitur petugas)
     // =========================================================
@@ -114,8 +122,24 @@ Route::middleware('auth')->group(function () {
         // Profile Routes
         Route::get('/anggota/profile', [\App\Http\Controllers\Anggota\AnggotaController::class, 'profile'])->name('anggota.profile');
         Route::put('/anggota/profile', [\App\Http\Controllers\Anggota\AnggotaController::class, 'updateProfile'])->name('anggota.profile.update');
+
+        // Pengajuan Buku Saya
+        Route::get('/anggota/pengajuan-saya', [\App\Http\Controllers\Anggota\AnggotaController::class, 'pengajuanBuku'])->name('anggota.pengajuan-buku.index');
+        Route::get('/anggota/pengajuan-saya/{id}', [\App\Http\Controllers\Anggota\AnggotaController::class, 'showPengajuan'])->name('anggota.pengajuan-buku.show');
     });
 });
 
 // API Routes for AJAX calls
 Route::get('/api/buku/search', [\App\Http\Controllers\Api\BukuApiController::class, 'search'])->name('api.buku.search');
+
+// Pengajuan Buku - Form Publik (bisa diakses anggota yang sudah login)
+Route::middleware('auth')->group(function () {
+    Route::get('/ajukan-buku', [\App\Http\Controllers\PengajuanBukuPublikController::class, 'create'])->name('pengajuan-buku.create');
+    Route::post('/ajukan-buku', [\App\Http\Controllers\PengajuanBukuPublikController::class, 'store'])->name('pengajuan-buku.store');
+
+    // Notifikasi Routes
+    Route::get('/notifikasi/{id}/buka', [\App\Http\Controllers\NotifikasiController::class, 'buka'])->name('notifikasi.buka');
+    Route::patch('/notifikasi/{id}/baca', [\App\Http\Controllers\NotifikasiController::class, 'markAsRead'])->name('notifikasi.baca');
+    Route::patch('/notifikasi/baca-semua', [\App\Http\Controllers\NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.baca-semua');
+    Route::delete('/notifikasi/{id}', [\App\Http\Controllers\NotifikasiController::class, 'destroy'])->name('notifikasi.hapus');
+});

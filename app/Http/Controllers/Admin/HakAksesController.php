@@ -37,7 +37,7 @@ class HakAksesController extends Controller
 
         $request->validate([
             'fitur' => 'nullable|array',
-            'fitur.*' => 'in:kategori,buku,peminjaman,denda',
+            'fitur.*' => 'in:kategori,buku,peminjaman,denda,laporan',
         ]);
 
         DB::beginTransaction();
@@ -83,7 +83,7 @@ class HakAksesController extends Controller
             ->firstOrFail();
 
         $request->validate([
-            'fitur' => 'required|in:kategori,buku,peminjaman,denda',
+            'fitur' => 'required|in:kategori,buku,peminjaman,denda,laporan',
         ]);
 
         $fitur = $request->input('fitur');
