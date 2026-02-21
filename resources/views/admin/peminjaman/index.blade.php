@@ -157,10 +157,10 @@
                                 </a>
                                 @if($item->status_transaksi == 'terlambat')
                                     <button @click="$dispatch('open-denda-modal', {
-                                                                                id: '{{ $item->id_peminjaman }}',
-                                                                                nama: '{{ $item->pengguna->anggota->nama_lengkap ?? $item->pengguna->nama_pengguna }}',
-                                                                                tgl_kembali: '{{ $item->tgl_kembali }}'
-                                                                            })"
+                                                                                            id: '{{ $item->id_peminjaman }}',
+                                                                                            nama: '{{ $item->pengguna->anggota->nama_lengkap ?? $item->pengguna->nama_pengguna }}',
+                                                                                            tgl_kembali: '{{ $item->tgl_kembali }}'
+                                                                                        })"
                                         class="inline-flex items-center justify-center rounded-md border border-red-500 px-3 py-1 text-center font-medium text-red-500 hover:border-red-700 hover:text-red-700 hover:bg-red-50 transition-colors dark:hover:bg-red-900/20">
                                         Denda
                                     </button>
@@ -190,7 +190,7 @@
 
     <!-- Denda Modal -->
     <div x-data="dendaModal()" x-show="isOpen" @open-denda-modal.window="openModal($event.detail)" style="display: none;"
-        class="fixed inset-0 z-999999 overflow-y-auto bg-black/90">
+        class="fixed inset-0 z-999999 overflow-y-auto bg-black/50 backdrop-blur-sm">
         <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
             <div @click.outside="closeModal()"
                 class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md dark:bg-boxdark">

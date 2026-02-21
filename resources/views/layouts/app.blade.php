@@ -96,7 +96,7 @@
     <!-- Global Success Notification Modal -->
     @if(session('success') && !Str::contains(strtolower(session('success')), ['hapus', 'delete']))
         <div x-data="{ show: true }" x-show="show" style="display: none;"
-            class="fixed inset-0 z-999999 flex items-center justify-center bg-black/80 px-4 py-5 overflow-y-auto">
+            class="fixed inset-0 z-999999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-5 overflow-y-auto">
             <div @click.outside="show = false"
                 class="w-full max-w-sm rounded-lg bg-white px-8 py-10 dark:bg-boxdark text-center shadow-2xl transform transition-all animate-fade-in-up">
                 <div
@@ -154,8 +154,11 @@
                 <p class="text-sm text-red-100">{{ session('success') }}</p>
             </div>
             <button @click="show = false" class="ml-2 hover:text-red-200 transition-colors">
-                <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.725 4.275a.75.75 0 00-1.05 0L9 7.95 5.325 4.275a.75.75 0 00-1.05 1.05L7.95 9l-3.675 3.675a.75.75 0 001.05 1.05L9 10.05l3.675 3.675a.75.75 0 001.05-1.05L10.05 9l3.675-3.675a.75.75 0 000-1.05z" fill="currentColor"/>
+                <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M13.725 4.275a.75.75 0 00-1.05 0L9 7.95 5.325 4.275a.75.75 0 00-1.05 1.05L7.95 9l-3.675 3.675a.75.75 0 001.05 1.05L9 10.05l3.675 3.675a.75.75 0 001.05-1.05L10.05 9l3.675-3.675a.75.75 0 000-1.05z"
+                        fill="currentColor" />
                 </svg>
             </button>
         </div>

@@ -226,7 +226,7 @@
     </div>
     <!-- Custom Delete Confirmation Modal -->
     <div x-data="deleteModal()" x-show="isOpen" @open-delete-modal.window="openModal($event.detail)" style="display: none;"
-        class="fixed inset-0 z-999999 flex items-center justify-center bg-black/90 px-4 py-5 overflow-y-auto">
+        class="fixed inset-0 z-999999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-5 overflow-y-auto">
         <div @click.outside="closeModal()"
             class="w-full max-w-md rounded-lg bg-white px-8 py-10 dark:bg-boxdark md:px-10 md:py-12 text-center">
             <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">

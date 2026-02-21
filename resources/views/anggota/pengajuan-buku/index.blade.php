@@ -35,14 +35,14 @@
             // For accurate stats, query from DB for current user
             $stats = \App\Models\PengajuanBuku::where('id_pengguna', auth()->id())
                 ->selectRaw("
-                                COUNT(*) as total,
-                                SUM(CASE WHEN status='menunggu' THEN 1 ELSE 0 END) as menunggu,
-                                SUM(CASE WHEN status='disetujui' THEN 1 ELSE 0 END) as disetujui,
-                                SUM(CASE WHEN status='ditolak' THEN 1 ELSE 0 END) as ditolak
-                            ")->first();
+                                            COUNT(*) as total,
+                                            SUM(CASE WHEN status='menunggu' THEN 1 ELSE 0 END) as menunggu,
+                                            SUM(CASE WHEN status='disetujui' THEN 1 ELSE 0 END) as disetujui,
+                                            SUM(CASE WHEN status='ditolak' THEN 1 ELSE 0 END) as ditolak
+                                        ")->first();
         @endphp
 
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {{-- Total --}}
             <div class="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 flex items-center gap-4">
                 <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gray-100">
@@ -166,7 +166,7 @@
                                         {{-- Icon buku kecil --}}
                                         <div
                                             class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg
-                                                    {{ $item->status === 'disetujui' ? 'bg-green-100' : ($item->status === 'ditolak' ? 'bg-red-100' : 'bg-amber-100') }}">
+                                                            {{ $item->status === 'disetujui' ? 'bg-green-100' : ($item->status === 'ditolak' ? 'bg-red-100' : 'bg-amber-100') }}">
                                             <svg class="w-4 h-4 {{ $item->status === 'disetujui' ? 'text-green-600' : ($item->status === 'ditolak' ? 'text-red-500' : 'text-amber-600') }}"
                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

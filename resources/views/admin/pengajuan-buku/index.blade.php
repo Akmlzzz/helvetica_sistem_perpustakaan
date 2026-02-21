@@ -163,19 +163,19 @@
                                     Detail
                                 </a>
 
-                                <form method="POST" action="{{ route('admin.pengajuan-buku.destroy', $item->id_pengajuan) }}"
-                                    onsubmit="return confirm('Hapus pengajuan ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="inline-flex items-center gap-1 rounded-lg border border-red-300 px-3 py-1.5 text-xs font-semibold text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all">
-                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                        Hapus
-                                    </button>
-                                </form>
+                                 <button type="button"
+                                    @click="$dispatch('open-delete-modal', { 
+                                        action: '{{ route('admin.pengajuan-buku.destroy', $item->id_pengajuan) }}', 
+                                        title: 'Hapus Pengajuan?', 
+                                        message: 'Yakin ingin menghapus pengajuan buku &quot;{{ addslashes($item->judul_buku) }}&quot;? Tindakan ini tidak dapat dibatalkan.' 
+                                    })"
+                                    class="inline-flex items-center gap-1 rounded-lg border border-red-300 px-3 py-1.5 text-xs font-semibold text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all">
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Hapus
+                                </button>
                             </div>
                         </div>
                     @empty
@@ -199,4 +199,59 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal Konfirmasi Hapus Custom --}}
+    <div x-data="deleteModal()" x-show="isOpen" @open-delete-modal.window="openModal($event.detail)"
+        style="display: none;"
+        class="fixed inset-0 z-999999 flex items-center justify-center bg-black/50 px-4 py-5 overflow-y-auto backdrop-blur-sm">
+        <div @click.outside="closeModal()"
+            class="w-full max-w-md rounded-2xl bg-white px-8 py-10 shadow-2xl text-center">
+            {{-- Icon Warning --}}
+            <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50 text-red-500">
+                <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                    </path>
+                </svg>
+            </div>
+
+            {{-- Text --}}
+            <h3 class="mb-2 text-xl font-bold text-gray-900" x-text="title"></h3>
+            <p class="mb-10 text-sm text-gray-500 leading-relaxed" x-text="message"></p>
+
+            {{-- Action Buttons --}}
+            <form :action="actionUrl" method="POST" class="flex items-center justify-center gap-3">
+                @csrf
+                @method('DELETE')
+                <button type="button" @click="closeModal()"
+                    class="flex-1 rounded-xl border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-all">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="flex-1 rounded-xl bg-red-600 px-6 py-3 text-sm font-semibold text-white hover:bg-red-700 shadow-lg shadow-red-200 transition-all">
+                    Ya, Hapus
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function deleteModal() {
+            return {
+                isOpen: false,
+                actionUrl: '',
+                title: 'Hapus?',
+                message: 'Yakin ingin menghapus data ini?',
+                openModal(data) {
+                    this.actionUrl = data.action;
+                    this.title = data.title || 'Hapus Data?';
+                    this.message = data.message || 'Yakin ingin menghapus data ini?';
+                    this.isOpen = true;
+                },
+                closeModal() {
+                    this.isOpen = false;
+                }
+            }
+        }
+    </script>
 @endsection

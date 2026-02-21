@@ -2,40 +2,40 @@
 
 @section('content')
     <div x-data="{
-                    activeTab: 'peminjaman',
-                    scannedMemberId: '',
-                    scannedBookId: '',
-                    tempBooks: [],
-                    showFineModal: false,
-                    fineData: null,
+                        activeTab: 'peminjaman',
+                        scannedMemberId: '',
+                        scannedBookId: '',
+                        tempBooks: [],
+                        showFineModal: false,
+                        fineData: null,
 
-                    addBook(isbn) {
-                        // Mock adding book to temp list
-                        if(!isbn) return;
-                        this.tempBooks.push({
-                            id: Date.now(),
-                            isbn: isbn,
-                            title: 'Judul Buku Contoh (' + isbn + ')',
-                            author: 'Penulis Contoh'
-                        });
-                        this.scannedBookId = '';
-                    },
+                        addBook(isbn) {
+                            // Mock adding book to temp list
+                            if(!isbn) return;
+                            this.tempBooks.push({
+                                id: Date.now(),
+                                isbn: isbn,
+                                title: 'Judul Buku Contoh (' + isbn + ')',
+                                author: 'Penulis Contoh'
+                            });
+                            this.scannedBookId = '';
+                        },
 
-                    removeBook(idx) {
-                        this.tempBooks.splice(idx, 1);
-                    },
+                        removeBook(idx) {
+                            this.tempBooks.splice(idx, 1);
+                        },
 
-                    processReturn(id) {
-                        // Mock return process
-                        // If late, show fine modal
-                        // else submit return
-                        this.fineData = {
-                            overdue_days: 3,
-                            amount: 15000
-                        };
-                        this.showFineModal = true;
-                    }
-                }">
+                        processReturn(id) {
+                            // Mock return process
+                            // If late, show fine modal
+                            // else submit return
+                            this.fineData = {
+                                overdue_days: 3,
+                                amount: 15000
+                            };
+                            this.showFineModal = true;
+                        }
+                    }">
 
         <!-- Page Header -->
         <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -388,7 +388,8 @@
         </div>
 
         <!-- Fine Modal (Mock) -->
-        <div x-show="showFineModal" class="fixed inset-0 z-999 flex items-center justify-center bg-black bg-opacity-50"
+        <div x-show="showFineModal"
+            class="fixed inset-0 z-999 flex items-center justify-center bg-black/50 backdrop-blur-sm"
             style="display: none;">
             <div
                 class="w-full max-w-lg rounded-sm border border-stroke bg-white p-8 shadow-default dark:border-strokedark dark:bg-boxdark">

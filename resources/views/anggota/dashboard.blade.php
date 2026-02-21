@@ -2,14 +2,14 @@
 
 @section('content')
     <div x-data="{
-                                                                showDetailModal: false,
-                                                                selectedBook: null,
+                                                                    showDetailModal: false,
+                                                                    selectedBook: null,
 
-                                                                openModal(book) {
-                                                                    this.selectedBook = book;
-                                                                    this.showDetailModal = true;
-                                                                }
-                                                            }">
+                                                                    openModal(book) {
+                                                                        this.selectedBook = book;
+                                                                        this.showDetailModal = true;
+                                                                    }
+                                                                }">
         <!-- Header & Filter -->
         <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -154,8 +154,8 @@
 
         <!-- Modal Detail Buku -->
         <div x-show="showDetailModal"
-            class="fixed inset-0 z-999 flex items-center justify-center bg-black bg-opacity-50 blur-sm"
-            style="display: none;" x-transition>
+            class="fixed inset-0 z-999 flex items-center justify-center bg-black/50 backdrop-blur-sm" style="display: none;"
+            x-transition>
             <div @click.outside="showDetailModal = false"
                 class="w-full max-w-3xl rounded-lg border border-stroke bg-white p-8 shadow-default dark:border-strokedark dark:bg-boxdark relative">
                 <button @click="showDetailModal = false"

@@ -9,7 +9,8 @@
                         Profil Saya
                     </h3>
                 </div>
-                <form action="{{ route('anggota.profile.update') }}" method="POST" x-data="{ showModal: false }" @submit.prevent="showModal = true">
+                <form action="{{ route('anggota.profile.update') }}" method="POST" x-data="{ showModal: false }"
+                    @submit.prevent="showModal = true">
                     @csrf
                     @method('PUT')
                     <div class="p-6.5">
@@ -26,7 +27,8 @@
                                 <label class="mb-2.5 block text-black dark:text-white">
                                     Nama Lengkap
                                 </label>
-                                <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $anggota->nama_lengkap) }}"
+                                <input type="text" name="nama_lengkap"
+                                    value="{{ old('nama_lengkap', $anggota->nama_lengkap) }}"
                                     class="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
                                 @error('nama_lengkap')
                                     <span class="text-danger text-sm">{{ $message }}</span>
@@ -61,7 +63,8 @@
                                 <label class="mb-2.5 block text-black dark:text-white">
                                     Username
                                 </label>
-                                <input type="text" name="nama_pengguna" value="{{ old('nama_pengguna', $user->nama_pengguna) }}"
+                                <input type="text" name="nama_pengguna"
+                                    value="{{ old('nama_pengguna', $user->nama_pengguna) }}"
                                     class="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
                                 @error('nama_pengguna')
                                     <span class="text-danger text-sm">{{ $message }}</span>
@@ -88,7 +91,7 @@
 
                     <!-- Modal Confirmation -->
                     <div x-show="showModal" x-transition.opacity
-                        class="fixed inset-0 z-99999 flex items-center justify-center bg-black/50 px-4 py-5"
+                        class="fixed inset-0 z-99999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-5"
                         style="display: none;">
                         <div @click.outside="showModal = false"
                             class="w-full max-w-125 rounded-lg bg-white py-12 px-8 text-center dark:bg-boxdark md:py-15 md:px-17.5">
@@ -127,10 +130,12 @@
     <!-- Success Popup -->
     @if (session('success'))
         <div x-data="{ showSuccess: true }" x-show="showSuccess" x-init="setTimeout(() => showSuccess = false, 3000)"
-            x-transition.opacity class="fixed inset-0 z-99999 flex items-center justify-center bg-black/50 px-4 py-5">
+            x-transition.opacity
+            class="fixed inset-0 z-99999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-5">
             <div @click.outside="showSuccess = false"
                 class="w-full max-w-125 rounded-lg bg-white py-12 px-8 text-center dark:bg-boxdark md:py-15 md:px-17.5">
-                <div class="mx-auto mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-success/10 text-success">
+                <div
+                    class="mx-auto mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-success/10 text-success">
                     <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
