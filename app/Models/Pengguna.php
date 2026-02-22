@@ -24,6 +24,8 @@ class Pengguna extends Authenticatable implements CanResetPassword
         'email',
         'kata_sandi',
         'level_akses',
+        'status',
+        'nomor_anggota',
     ];
 
     protected $hidden = [
@@ -111,5 +113,68 @@ class Pengguna extends Authenticatable implements CanResetPassword
     public function hakAkses()
     {
         return $this->hasMany(HakAkses::class, 'id_pengguna', 'id_pengguna');
+    }
+
+    /**
+     * Check if user is pending verification
+     */
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    /**
+     * Check if user is active
+     */
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    /**
+     * Check if user is rejected
+     */
+    public function isRejected(): bool
+    {
+        return $this->status === 'rejected';
+    }
+
+    /**
+     * Generate unique member number
+     */
+    public static function generateNomorAnggota(): string
+    {
+        $year = date('Y');
+        $lastMember = self::whereNotNull('nomor_anggota')
+            ->orderBy('id_pengguna', 'desc')
+            ->first();
+        
+        if ($lastMember) {
+            $lastNumber = explode('-', $lastMember->nomor_anggota)[1] ?? 0;
+            $newNumber = (int)$lastNumber + 1;
+        } else {
+            $newNumber = 1;
+        }
+        
+        return "ID-{$newNumber}-PX-{$year}";
+    }
+
+    /**
+     * Approve member and generate member number
+     */
+    public function approve(): void
+    {
+        $this->status = 'active';
+        $this->nomor_anggota = self::generateNomorAnggota();
+        $this->save();
+    }
+
+    /**
+     * Reject member
+     */
+    public function reject(): void
+    {
+        $this->status = 'rejected';
+        $this->save();
     }
 }

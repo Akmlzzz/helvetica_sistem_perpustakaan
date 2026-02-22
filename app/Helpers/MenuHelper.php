@@ -105,6 +105,11 @@ class MenuHelper
                             'icon' => 'inbox',
                             'path' => '/ajukan-buku',
                         ],
+                        [
+                            'name' => 'Kartu Anggota',
+                            'icon' => 'shield',
+                            'path' => '/anggota/kartu-anggota',
+                        ],
                     ],
                 ],
             ];
@@ -114,6 +119,7 @@ class MenuHelper
         // MENU ADMIN (default)
         // ─────────────────────────────────────
         $unreadPengajuan = \App\Models\PengajuanBuku::where('sudah_dibaca', false)->count();
+        $pendingAnggota = \App\Models\Pengguna::where('level_akses', 'anggota')->where('status', 'pending')->count();
 
         return [
             'menu' => [
@@ -139,6 +145,12 @@ class MenuHelper
                         'icon' => 'inbox',
                         'path' => '/pengajuan-buku',
                         'badge' => $unreadPengajuan > 0 ? $unreadPengajuan : null,
+                    ],
+                    [
+                        'name' => 'Verifikasi Anggota',
+                        'icon' => 'shield',
+                        'path' => '/verifikasi-anggota',
+                        'badge' => $pendingAnggota > 0 ? $pendingAnggota : null,
                     ],
                     [
                         'name' => 'Kelola Pengguna',

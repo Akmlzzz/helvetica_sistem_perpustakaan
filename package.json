@@ -21,6 +21,7 @@
         "alpinejs": "^3.15.8",
         "apexcharts": "^5.3.6",
         "flatpickr": "^4.6.13",
-        "prismjs": "^1.30.0"
+        "prismjs": "^1.30.0",
+        "qrcode": "^1.5.4"
     }
 }

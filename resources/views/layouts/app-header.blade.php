@@ -33,6 +33,64 @@
 
         <div class="flex items-center gap-3 2xl:gap-7">
 
+            <!-- ===== PENDING MEMBER NOTIFICATION (ANGGOTA ONLY) ===== -->
+            @if(Auth::user() && Auth::user()->isAnggota() && Auth::user()->isPending())
+                <div class="relative" x-data="{ pendingOpen: false }" @click.outside="pendingOpen = false">
+                    <button class="relative flex items-center justify-center w-10 h-10 rounded-full bg-yellow-100 hover:bg-yellow-200 transition-colors duration-200 focus:outline-none"
+                            @click.stop="pendingOpen = !pendingOpen" title="Status Verifikasi">
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-yellow-500 rounded-full animate-pulse">!</span>
+                    </button>
+
+                    <!-- Pending Notification Dropdown -->
+                    <div x-show="pendingOpen" x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="transform opacity-0 scale-95 translate-y-2"
+                        x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+                        x-transition:leave-end="transform opacity-0 scale-95 translate-y-2"
+                        class="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-yellow-200 z-50 overflow-hidden"
+                        style="display: none;">
+
+                        <!-- Header -->
+                        <div class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600">
+                            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-semibold text-white">Menunggu Verifikasi</h3>
+                                <p class="text-xs text-yellow-100">Akun Anda sedang diverifikasi</p>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-4">
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-yellow-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900 mb-1">Akun Anda Menunggu Verifikasi</p>
+                                        <p class="text-xs text-gray-600 mb-3">Mohon menunggu, admin akan memverifikasi akun Anda segera. Anda akan mendapatkan notifikasi ketika akun telah disetujui.</p>
+                                        <div class="flex items-center gap-2 text-xs text-gray-500">
+                                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                            <span>Daftar: {{ Auth::user()->dibuat_pada->format('d M Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!-- ===== NOTIFICATION BELL ===== -->
             @php
                 $notifCount = \App\Models\Notifikasi::where('id_pengguna', Auth::id())
@@ -42,6 +100,14 @@
                     ->orderBy('created_at', 'desc')
                     ->take(8)
                     ->get();
+                
+                // Tambahkan count untuk anggota pending (admin only)
+                $pendingAnggotaCount = 0;
+                if (Auth::user() && Auth::user()->isAdmin()) {
+                    $pendingAnggotaCount = \App\Models\Pengguna::where('level_akses', 'anggota')
+                        ->where('status', 'pending')
+                        ->count();
+                }
             @endphp
 
             <div class="relative" x-data="{ notifOpen: false }" @click.outside="notifOpen = false">
@@ -52,10 +118,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
-                    @if($notifCount > 0)
+                    @if($notifCount > 0 || $pendingAnggotaCount > 0)
                         <span id="notif-badge"
                             class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse">
-                            {{ $notifCount > 9 ? '9+' : $notifCount }}
+                            {{ ($notifCount + $pendingAnggotaCount) > 9 ? '9+' : ($notifCount + $pendingAnggotaCount) }}
                         </span>
                     @endif
                 </button>
@@ -99,6 +165,29 @@
 
                     <!-- List Notifikasi -->
                     <div class="max-h-80 overflow-y-auto divide-y divide-gray-50" id="notif-list">
+                        <!-- Pending Members Notification (Admin Only) -->
+                        @if(Auth::user() && Auth::user()->isAdmin() && $pendingAnggotaCount > 0)
+                            <div class="px-4 py-3 bg-yellow-50 border-b border-yellow-200">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                                            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-gray-900">Anggota Menunggu Verifikasi</p>
+                                            <p class="text-xs text-yellow-600">{{ $pendingAnggotaCount }} anggota baru</p>
+                                        </div>
+                                    </div>
+                                    <a href="{{ route('admin.verifikasi-anggota.index') }}" 
+                                       class="text-xs text-yellow-600 hover:text-yellow-700 font-medium">
+                                        Verifikasi Sekarang →
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+                        
                         @forelse($notifList as $notif)
                             <a href="{{ route('notifikasi.buka', $notif->id_notifikasi) }}"
                                 class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors duration-150 {{ !$notif->sudah_dibaca ? 'bg-blue-50/50' : '' }} block relative group">

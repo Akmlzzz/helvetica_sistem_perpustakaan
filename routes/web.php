@@ -56,6 +56,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/pengajuan-buku/{id}', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'show'])->name('admin.pengajuan-buku.show');
         Route::patch('/pengajuan-buku/{id}/status', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'updateStatus'])->name('admin.pengajuan-buku.status');
         Route::delete('/pengajuan-buku/{id}', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'destroy'])->name('admin.pengajuan-buku.destroy');
+
+        // Verifikasi Anggota Management (admin only)
+        Route::get('/verifikasi-anggota', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'index'])->name('admin.verifikasi-anggota.index');
+        Route::get('/verifikasi-anggota/{id}', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'show'])->name('admin.verifikasi-anggota.show');
+        Route::post('/verifikasi-anggota/{id}/approve', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'approve'])->name('admin.verifikasi-anggota.approve');
+        Route::post('/verifikasi-anggota/{id}/reject', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'reject'])->name('admin.verifikasi-anggota.reject');
+        Route::get('/verifikasi-anggota/all', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'allMembers'])->name('admin.verifikasi-anggota.all');
+        Route::post('/verifikasi-anggota/{id}/toggle', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'toggleStatus'])->name('admin.verifikasi-anggota.toggle');
     });
 
     // =========================================================
@@ -126,6 +134,9 @@ Route::middleware('auth')->group(function () {
         // Pengajuan Buku Saya
         Route::get('/anggota/pengajuan-saya', [\App\Http\Controllers\Anggota\AnggotaController::class, 'pengajuanBuku'])->name('anggota.pengajuan-buku.index');
         Route::get('/anggota/pengajuan-saya/{id}', [\App\Http\Controllers\Anggota\AnggotaController::class, 'showPengajuan'])->name('anggota.pengajuan-buku.show');
+
+        // Kartu Anggota
+        Route::get('/anggota/kartu-anggota', [\App\Http\Controllers\Anggota\AnggotaController::class, 'kartuAnggota'])->name('anggota.kartu-anggota');
     });
 });
 

@@ -82,6 +82,7 @@ class AuthController extends Controller
                 'email' => $validated['email'],
                 'kata_sandi' => Hash::make($validated['kata_sandi']),
                 'level_akses' => 'anggota', // Default registration is always 'anggota'
+                'status' => 'pending', // Default status for new members
             ]);
 
             // 2. Create Anggota (Profile)
@@ -97,7 +98,7 @@ class AuthController extends Controller
             // Auto login after register
             Auth::login($pengguna);
 
-            return redirect($pengguna->isAdmin() ? '/dashboard' : '/');
+            return redirect()->route('anggota.dashboard');
 
         } catch (\Exception $e) {
             DB::rollBack();

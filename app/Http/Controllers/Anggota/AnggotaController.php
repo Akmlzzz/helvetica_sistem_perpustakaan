@@ -178,4 +178,15 @@ class AnggotaController extends Controller
 
         return view('anggota.pengajuan-buku.show', compact('pengajuan'));
     }
+
+    /**
+     * Tampilkan kartu anggota
+     */
+    public function kartuAnggota()
+    {
+        $user = auth()->user();
+        $anggota = $user->anggota;
+        
+        return view('anggota.kartu-anggota', compact('user', 'anggota'));
+    }
 }
