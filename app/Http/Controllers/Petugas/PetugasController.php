@@ -80,8 +80,8 @@ class PetugasController extends Controller
                 }
             }
 
-            // Direct borrowing
-            $kodeBooking = 'BK-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(4));
+            // Direct borrowing (max 12 chars)
+            $kodeBooking = 'BK' . date('ymd') . substr(strtoupper(\Illuminate\Support\Str::random(4)), 0, 3);
             $peminjaman = \App\Models\Peminjaman::create([
                 'id_pengguna' => $request->id_pengguna,
                 'id_buku' => $request->buku_ids[0], // Simplified for now, or handle multiple

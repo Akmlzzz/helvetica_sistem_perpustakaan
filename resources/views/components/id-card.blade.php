@@ -94,7 +94,7 @@
 
             <!-- Card Shine Effect -->
             <div
-                class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-full hover:translate-x-0 transition-transform duration-1000 pointer-events-none">
+                class="absolute inset-0 bg-linear-to-tr from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-full hover:translate-x-0 transition-transform duration-1000 pointer-events-none">
             </div>
         </div>
 

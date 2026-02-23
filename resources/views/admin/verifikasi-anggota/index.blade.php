@@ -159,7 +159,7 @@
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                                        <div class="shrink-0 h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center">
                                             <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
                                                 {{ strtoupper(substr($member->nama_pengguna, 0, 2)) }}
                                             </span>
@@ -238,7 +238,7 @@
      x-show="isOpen" 
      @open-approve-modal.window="openModal($event.detail)"
      style="display: none;"
-     class="fixed inset-0 z-[999999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-6">
+     class="fixed inset-0 z-999999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-6">
      
     <div @click.stop 
          x-transition:enter="transition ease-out duration-200"

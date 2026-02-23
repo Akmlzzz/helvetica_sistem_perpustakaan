@@ -81,6 +81,7 @@ Route::middleware('auth')->group(function () {
     // Buku — admin atau petugas yang punya izin 'buku'
     Route::middleware('akses:buku')->group(function () {
         Route::get('/buku', [\App\Http\Controllers\Admin\BukuController::class, 'index'])->name('admin.buku.index');
+        Route::get('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'show'])->name('admin.buku.show');
         Route::post('/buku', [\App\Http\Controllers\Admin\BukuController::class, 'store'])->name('admin.buku.store');
         Route::put('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'update'])->name('admin.buku.update');
         Route::delete('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'destroy'])->name('admin.buku.destroy');
@@ -123,9 +124,11 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     Route::middleware([\App\Http\Middleware\AnggotaMiddleware::class])->group(function () {
         Route::get('/anggota/dashboard', [\App\Http\Controllers\Anggota\AnggotaController::class, 'index'])->name('anggota.dashboard');
+        Route::get('/anggota/buku/{id}', [\App\Http\Controllers\Anggota\AnggotaController::class, 'detailBuku'])->name('anggota.buku.detail');
         Route::get('/anggota/pinjaman', [\App\Http\Controllers\Anggota\AnggotaController::class, 'pinjaman'])->name('anggota.pinjaman');
         Route::get('/anggota/riwayat', [\App\Http\Controllers\Anggota\AnggotaController::class, 'riwayat'])->name('anggota.riwayat');
-        Route::post('/anggota/booking', [\App\Http\Controllers\Anggota\AnggotaController::class, 'storeBooking'])->name('anggota.booking.store');
+        Route::post('/anggota/pinjam', [\App\Http\Controllers\Anggota\AnggotaController::class, 'storeBooking'])->name('anggota.booking.store');
+        Route::post('/anggota/pinjaman/{id}/perpanjang', [\App\Http\Controllers\Anggota\AnggotaController::class, 'perpanjang'])->name('anggota.pinjaman.perpanjang');
 
         // Profile Routes
         Route::get('/anggota/profile', [\App\Http\Controllers\Anggota\AnggotaController::class, 'profile'])->name('anggota.profile');

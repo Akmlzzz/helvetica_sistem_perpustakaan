@@ -16,11 +16,7 @@ class BukuController extends Controller
 
         if ($request->has('search')) {
             $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('judul_buku', 'like', "%{$search}%")
-                    ->orWhere('penulis', 'like', "%{$search}%")
-                    ->orWhere('isbn', 'like', "%{$search}%");
-            });
+            $query->search($search);
         }
 
         if ($request->has('kategori') && $request->kategori != '') {
@@ -55,10 +51,14 @@ class BukuController extends Controller
     {
         $request->validate([
             'judul_buku' => 'required|string|max:255',
-            'isbn' => 'nullable|string|max:20',
+            'isbn' => 'nullable|string|max:20|regex:/^[0-9\-\s]+$/',
             'penulis' => 'nullable|string|max:100',
-            'penerbit' => 'nullable|string|max:100',
+            'penerbit' => 'nullable|string|max:255',
             'stok' => 'required|integer|min:0',
+            'sinopsis' => 'nullable|string',
+            'jumlah_halaman' => 'nullable|integer|min:1|max:10000',
+            'tahun_terbit' => 'nullable|integer|digits:4|min:1900|max:' . date('Y'),
+            'bahasa' => 'nullable|string|in:id,en,ar,zh,fr,de,ja,ko',
             'kategori' => 'nullable|array',
             'kategori.*' => 'exists:kategori,id_kategori',
             'sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -85,10 +85,14 @@ class BukuController extends Controller
     {
         $request->validate([
             'judul_buku' => 'required|string|max:255',
-            'isbn' => 'nullable|string|max:20',
+            'isbn' => 'nullable|string|max:20|regex:/^[0-9\-\s]+$/',
             'penulis' => 'nullable|string|max:100',
-            'penerbit' => 'nullable|string|max:100',
+            'penerbit' => 'nullable|string|max:255',
             'stok' => 'required|integer|min:0',
+            'sinopsis' => 'nullable|string',
+            'jumlah_halaman' => 'nullable|integer|min:1|max:10000',
+            'tahun_terbit' => 'nullable|integer|digits:4|min:1900|max:' . date('Y'),
+            'bahasa' => 'nullable|string|in:id,en,ar,zh,fr,de,ja,ko',
             'kategori' => 'nullable|array',
             'kategori.*' => 'exists:kategori,id_kategori',
             'sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -129,5 +133,18 @@ class BukuController extends Controller
         $buku->delete();
 
         return redirect()->route('admin.buku.index')->with('success', 'Buku berhasil dihapus!');
+    }
+
+    public function show($id)
+    {
+        $buku = Buku::with('kategori')->findOrFail($id);
+        $relatedBooks = Buku::whereHas('kategori', function($query) use ($buku) {
+            $query->whereIn('kategori.id_kategori', $buku->kategori->pluck('id_kategori'));
+        })
+        ->where('id_buku', '!=', $buku->id_buku)
+        ->limit(6)
+        ->get();
+
+        return view('admin.buku.show', compact('buku', 'relatedBooks'));
     }
 }

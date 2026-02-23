@@ -11,12 +11,24 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        // Modify enum column to add 'laporan'
+        // For SQLite, we need to recreate the table since SQLite doesn't support MODIFY COLUMN
+        if (DB::getDriverName() === 'sqlite') {
+            // SQLite approach: skip this migration as enum constraints are not enforced in SQLite
+            // The 'laporan' value will be handled at application level
+            return;
+        }
+        
+        // MySQL approach: Modify enum column to add 'laporan'
         DB::statement("ALTER TABLE hak_akses MODIFY COLUMN fitur ENUM('kategori', 'buku', 'peminjaman', 'denda', 'laporan') NOT NULL");
     }
 
     public function down(): void
     {
+        if (DB::getDriverName() === 'sqlite') {
+            // SQLite approach: skip this migration
+            return;
+        }
+        
         // Hapus 'laporan' dari enum (pastikan tidak ada baris yang pakai 'laporan' sebelum rollback)
         DB::statement("DELETE FROM hak_akses WHERE fitur = 'laporan'");
         DB::statement("ALTER TABLE hak_akses MODIFY COLUMN fitur ENUM('kategori', 'buku', 'peminjaman', 'denda') NOT NULL");
