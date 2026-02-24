@@ -46,7 +46,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Check if user is admin
+     * Cek dia admin apa bukan
      */
     public function isAdmin(): bool
     {
@@ -54,7 +54,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Check if user is petugas (officer)
+     * Cek dia petugas atau bukan
      */
     public function isPetugas(): bool
     {
@@ -62,7 +62,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Check if user is anggota (member)
+     * Cek dia anggota biasa atau bukan
      */
     public function isAnggota(): bool
     {
@@ -70,7 +70,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Check if user is regular user (anggota or petugas)
+     * Cek user biasa (anggota/petugas)
      */
     public function isUser(): bool
     {
@@ -116,7 +116,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Check if user is pending verification
+     * Cek apa masih nunggu verifikasi admin
      */
     public function isPending(): bool
     {
@@ -124,7 +124,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Check if user is active
+     * Cek kalo udah aktif
      */
     public function isActive(): bool
     {
@@ -132,7 +132,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Check if user is rejected
+     * Cek kalo ditolak admin
      */
     public function isRejected(): bool
     {
@@ -140,7 +140,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Generate unique member number
+     * Buat kode nomor anggota otomatis
      */
     public static function generateNomorAnggota(): string
     {
@@ -148,19 +148,19 @@ class Pengguna extends Authenticatable implements CanResetPassword
         $lastMember = self::whereNotNull('nomor_anggota')
             ->orderBy('id_pengguna', 'desc')
             ->first();
-        
+
         if ($lastMember) {
             $lastNumber = explode('-', $lastMember->nomor_anggota)[1] ?? 0;
-            $newNumber = (int)$lastNumber + 1;
+            $newNumber = (int) $lastNumber + 1;
         } else {
             $newNumber = 1;
         }
-        
+
         return "ID-{$newNumber}-PX-{$year}";
     }
 
     /**
-     * Approve member and generate member number
+     * ACC anggota baru + kasih nomor anggota
      */
     public function approve(): void
     {
@@ -170,7 +170,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Reject member
+     * Tolak anggota baru
      */
     public function reject(): void
     {

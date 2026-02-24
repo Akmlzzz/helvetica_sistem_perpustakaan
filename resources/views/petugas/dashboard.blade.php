@@ -2,40 +2,39 @@
 
 @section('content')
     <div x-data="{
-                        activeTab: 'peminjaman',
-                        scannedMemberId: '',
-                        scannedBookId: '',
-                        tempBooks: [],
-                        showFineModal: false,
-                        fineData: null,
+                                activeTab: 'peminjaman',
+                                scannedMemberId: '',
+                                scannedBookId: '',
+                                tempBooks: [],
+                                showFineModal: false,
+                                fineData: null,
 
-                        addBook(isbn) {
-                            // Mock adding book to temp list
-                            if(!isbn) return;
-                            this.tempBooks.push({
-                                id: Date.now(),
-                                isbn: isbn,
-                                title: 'Judul Buku Contoh (' + isbn + ')',
-                                author: 'Penulis Contoh'
-                            });
-                            this.scannedBookId = '';
-                        },
+                                addBook(isbn) {
+                                    // Cek kalo inputnya kosong
+                                    if(!isbn) return;
+                                    this.tempBooks.push({
+                                        id: Date.now(),
+                                        isbn: isbn,
+                                        title: 'Buku Contoh (' + isbn + ')',
+                                        author: 'Penulis'
+                                    });
+                                    this.scannedBookId = '';
+                                },
 
-                        removeBook(idx) {
-                            this.tempBooks.splice(idx, 1);
-                        },
+                                removeBook(idx) {
+                                    this.tempBooks.splice(idx, 1);
+                                },
 
-                        processReturn(id) {
-                            // Mock return process
-                            // If late, show fine modal
-                            // else submit return
-                            this.fineData = {
-                                overdue_days: 3,
-                                amount: 15000
-                            };
-                            this.showFineModal = true;
-                        }
-                    }">
+                                processReturn(id) {
+                                    // Contoh logika buat balikin buku
+                                    // Kalo telat nanti munculin modal denda
+                                    this.fineData = {
+                                        overdue_days: 3,
+                                        amount: 15000
+                                    };
+                                    this.showFineModal = true;
+                                }
+                            }">
 
         <!-- Page Header -->
         <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -360,7 +359,7 @@
                                         <p class="text-black dark:text-white">01 Jan 2024</p>
                                     </td>
                                     <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p class="text-danger">08 Jan 2024</p> <!-- Late -->
+                                        <p class="text-danger">08 Jan 2024</p> <!-- Telat nih -->
                                     </td>
                                     <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                                         <p
@@ -387,7 +386,7 @@
             </div>
         </div>
 
-        <!-- Fine Modal (Mock) -->
+        <!-- Modal Denda -->
         <div x-show="showFineModal"
             class="fixed inset-0 z-999 flex items-center justify-center bg-black/50 backdrop-blur-sm"
             style="display: none;">

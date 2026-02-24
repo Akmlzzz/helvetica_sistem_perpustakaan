@@ -60,11 +60,11 @@ class PetugasController extends Controller
             'id_pengguna' => 'required|exists:pengguna,id_pengguna',
             'buku_ids' => 'required|array|min:1',
             'buku_ids.*' => 'exists:buku,id_buku',
-            'kode_booking' => 'nullable|string', // Optional if processing from booking
+            'kode_booking' => 'nullable|string', // opsional kalo dari booking online
         ]);
 
         \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
-            // If there's a booking, update it
+            // Kalo ada kode booking, kita update data lamanya
             if ($request->filled('kode_booking')) {
                 $peminjaman = \App\Models\Peminjaman::where('kode_booking', $request->kode_booking)
                     ->where('status_transaksi', 'booking')
@@ -80,7 +80,7 @@ class PetugasController extends Controller
                 }
             }
 
-            // Direct borrowing (max 12 chars)
+            // Kalo pinjam langsung (gak lewat booking)
             $kodeBooking = 'BK' . date('ymd') . substr(strtoupper(\Illuminate\Support\Str::random(4)), 0, 3);
             $peminjaman = \App\Models\Peminjaman::create([
                 'id_pengguna' => $request->id_pengguna,
@@ -112,7 +112,7 @@ class PetugasController extends Controller
         \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
             $peminjaman = \App\Models\Peminjaman::findOrFail($request->id_peminjaman);
 
-            // Calculate Denda
+            // Cek ada denda apa enggak
             $tglKembali = \Carbon\Carbon::parse($peminjaman->tgl_kembali);
             $now = now();
 
@@ -131,7 +131,7 @@ class PetugasController extends Controller
                 'status_transaksi' => 'dikembalikan',
             ]);
 
-            // Restore stock
+            // Balikin stok buku
             $details = \App\Models\DetailPeminjaman::where('id_peminjaman', $peminjaman->id_peminjaman)->get();
             foreach ($details as $detail) {
                 \App\Models\Buku::where('id_buku', $detail->id_buku)->increment('stok');

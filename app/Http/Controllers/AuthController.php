@@ -76,16 +76,15 @@ class AuthController extends Controller
         DB::beginTransaction();
 
         try {
-            // 1. Create Pengguna (Account)
+            // Simpan data ke tabel pengguna dulu
             $pengguna = Pengguna::create([
                 'nama_pengguna' => $validated['nama_pengguna'],
                 'email' => $validated['email'],
                 'kata_sandi' => Hash::make($validated['kata_sandi']),
-                'level_akses' => 'anggota', // Default registration is always 'anggota'
-                'status' => 'pending', // Default status for new members
+                'level_akses' => 'anggota', // tiap daftar baru otomatis jadi anggota
+                'status' => 'pending', // menunggu verifikasi admin
             ]);
 
-            // 2. Create Anggota (Profile)
             Anggota::create([
                 'id_pengguna' => $pengguna->id_pengguna,
                 'nama_lengkap' => $validated['nama_lengkap'],
@@ -95,14 +94,13 @@ class AuthController extends Controller
 
             DB::commit();
 
-            // Auto login after register
             Auth::login($pengguna);
 
             return redirect()->route('anggota.dashboard');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->withErrors(['error' => 'Terjadi kesalahan saat pendaftaran: ' . $e->getMessage()]);
+            return back()->withInput()->withErrors(['error' => 'Waduh, ada masalah pas daftar: ' . $e->getMessage()]);
         }
     }
 

@@ -220,4 +220,54 @@
 
     <!-- Include Modal and Scripts -->
     @include('admin.buku.partials.modal')
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div x-data="deleteModal()" x-show="isOpen" @open-delete-modal.window="openModal($event.detail)" style="display: none;"
+        class="fixed inset-0 z-999999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-5 overflow-y-auto">
+        <div @click.outside="closeModal()"
+            class="w-full max-w-md rounded-lg bg-white px-8 py-10 dark:bg-boxdark md:px-10 md:py-12 text-center">
+            <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                <svg class="h-10 w-10 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                    </path>
+                </svg>
+            </div>
+            <h3 class="mb-4 text-xl font-bold text-black dark:text-white" x-text="title"></h3>
+            <p class="mb-10 text-gray-500 dark:text-gray-400" x-text="message"></p>
+
+            <form :action="actionUrl" method="POST" class="flex items-center justify-center gap-4">
+                @csrf
+                @method('DELETE')
+                <button type="button" @click="closeModal()"
+                    class="flex-1 rounded-lg border border-stroke px-6 py-3 font-medium text-black hover:bg-gray-100 dark:border-strokedark dark:text-white dark:hover:bg-white/5 transition-colors">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="flex-1 rounded-lg bg-red-600 px-6 py-3 font-medium text-white hover:bg-red-700 shadow-md transition-colors">
+                    Ya, Hapus
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function deleteModal() {
+            return {
+                isOpen: false,
+                actionUrl: '',
+                title: 'Hapus?',
+                message: 'Yakin ingin menghapus data ini?',
+                openModal(data) {
+                    this.actionUrl = data.action;
+                    this.title = data.title || 'Hapus Buku?';
+                    this.message = data.message || 'Yakin ingin menghapus buku ini?';
+                    this.isOpen = true;
+                },
+                closeModal() {
+                    this.isOpen = false;
+                }
+            }
+        }
+    </script>
 @endsection

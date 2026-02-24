@@ -38,6 +38,15 @@ class AnggotaController extends Controller
             });
         }
 
+        // Sorting
+        $sort = $request->get('sort', 'terbaru');
+        match ($sort) {
+            'terlama' => $query->orderBy('dibuat_pada', 'asc'),
+            'az' => $query->orderBy('judul_buku', 'asc'),
+            'za' => $query->orderBy('judul_buku', 'desc'),
+            default => $query->orderBy('dibuat_pada', 'desc'), // terbaru
+        };
+
         $buku = $query->paginate(12)->withQueryString();
         $kategori = \App\Models\Kategori::all();
 
