@@ -113,10 +113,12 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     Route::middleware([\App\Http\Middleware\PetugasMiddleware::class])->group(function () {
         Route::get('/petugas/dashboard', [\App\Http\Controllers\Petugas\PetugasController::class, 'index'])->name('petugas.dashboard');
-        Route::get('/petugas/booking', [\App\Http\Controllers\Petugas\PetugasController::class, 'booking'])->name('petugas.booking');
         Route::get('/petugas/katalog', [\App\Http\Controllers\Petugas\PetugasController::class, 'katalog'])->name('petugas.katalog');
-        Route::post('/petugas/peminjaman', [\App\Http\Controllers\Petugas\PetugasController::class, 'storePeminjaman'])->name('petugas.peminjaman.store');
+        Route::post('/petugas/proses-booking', [\App\Http\Controllers\Petugas\PetugasController::class, 'prosesBooking'])->name('petugas.booking.proses');
         Route::post('/petugas/pengembalian', [\App\Http\Controllers\Petugas\PetugasController::class, 'returnBuku'])->name('petugas.pengembalian.store');
+        // Halaman terpisah untuk Proses Booking & Pengembalian
+        Route::get('/petugas/booking', [\App\Http\Controllers\Petugas\PetugasController::class, 'bookingPage'])->name('petugas.booking.index');
+        Route::get('/petugas/pengembalian', [\App\Http\Controllers\Petugas\PetugasController::class, 'pengembalianPage'])->name('petugas.pengembalian.index');
     });
 
     // =========================================================
@@ -140,6 +142,11 @@ Route::middleware('auth')->group(function () {
 
         // Kartu Anggota
         Route::get('/anggota/kartu-anggota', [\App\Http\Controllers\Anggota\AnggotaController::class, 'kartuAnggota'])->name('anggota.kartu-anggota');
+
+        // Koleksi Pribadi (Wishlist)
+        Route::get('/anggota/koleksi', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'index'])->name('anggota.koleksi.index');
+        Route::post('/anggota/koleksi/{id_buku}', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'store'])->name('anggota.koleksi.store');
+        Route::delete('/anggota/koleksi/{id_buku}', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'destroy'])->name('anggota.koleksi.destroy');
     });
 });
 

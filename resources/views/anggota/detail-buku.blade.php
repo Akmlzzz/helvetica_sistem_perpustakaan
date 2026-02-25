@@ -61,7 +61,117 @@
                     </div>
 
                     {{-- Tombol Aksi --}}
-                    @if($sedangMeminjam)
+                    {{-- Wishlist Button --}}
+                    @php
+                        $inWishlist = \App\Models\KoleksiPribadi::where('id_pengguna', auth()->user()->id_pengguna)->where('id_buku', $buku->id_buku)->exists();
+                    @endphp
+                    <div x-data="{
+                            inWishlist: {{ $inWishlist ? 'true' : 'false' }},
+                            loading: false,
+                            toggleWishlist() {
+                                if (this.loading) return;
+                                this.loading = true;
+
+                                const isAdding = !this.inWishlist;
+                                const url = isAdding 
+                                    ? '{{ route('anggota.koleksi.store', $buku->id_buku) }}' 
+                                    : '{{ route('anggota.koleksi.destroy', $buku->id_buku) }}';
+
+                                const method = isAdding ? 'POST' : 'DELETE';
+
+                                fetch(url, {
+                                    method: method,
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        this.inWishlist = !this.inWishlist;
+                                        // Optional: show toast notification here
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error))
+                                .finally(() => {
+                                    this.loading = false;
+                                });
+                            }
+                        }">
+                        <button @click="toggleWishlist" :disabled="loading"
+                            :class="inWishlist ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-100' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'"
+                            class="w-full flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition shadow-sm mb-3">
+
+                            <template x-if="loading">
+                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                                </svg>
+                            </template>
+
+                            <template x-if="!loading && inWishlist">
+                                <span class="flex items-center gap-2">
+                                    <svg class="h-4 w-4 fill-current" viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg>
+                                    Hapus dari Koleksi
+                                </span>
+                            </template>
+
+                            <template x-if="!loading && !inWishlist">
+                                <span class="flex items-center gap-2">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                    Tambah ke Koleksi
+                                </span>
+                            </template>
+                        </button>
+                    </div>
+
+                    @if(!$akunTerverifikasi)
+                        {{-- Akun belum diverifikasi --}}
+                        <div class="rounded-xl border-2 border-amber-300 bg-amber-50 p-4 text-center">
+                            <div class="mb-2 flex items-center justify-center">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
+                                    <svg class="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <p class="text-xs font-bold text-amber-800 leading-snug mb-1">
+                                @if(auth()->user()->status === 'pending')
+                                    Akun Menunggu Verifikasi
+                                @else
+                                    Akun Tidak Aktif
+                                @endif
+                            </p>
+                            <p class="text-[11px] text-amber-700 leading-snug mb-3">
+                                @if(auth()->user()->status === 'pending')
+                                    Akun Anda sedang diproses admin. Anda hanya dapat melihat katalog.
+                                @else
+                                    Akun Anda ditolak. Hubungi petugas untuk info lebih lanjut.
+                                @endif
+                            </p>
+                            <a href="{{ route('anggota.profile') }}"
+                                class="inline-flex items-center gap-1 rounded-lg bg-amber-600 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-amber-700 transition">
+                                Lihat Status Akun →
+                            </a>
+                        </div>
+                        <button disabled
+                            class="w-full rounded-xl bg-gray-200 py-3 text-sm font-bold text-gray-400 cursor-not-allowed mt-2">
+                            Peminjaman Tidak Tersedia
+                        </button>
+                    @elseif($sedangMeminjam)
+
                         <div class="rounded-xl bg-yellow-50 border border-yellow-200 p-3">
                             <p class="text-xs font-medium text-yellow-800 text-center">
                                 Sedang dipinjam.
@@ -274,8 +384,8 @@
                             </h2>
                             <div
                                 class="prose prose-sm max-w-none text-gray-600 leading-relaxed
-                                                                        [&_p]:mb-3 [&_strong]:font-semibold [&_em]:italic
-                                                                        [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
+                                                                                                [&_p]:mb-3 [&_strong]:font-semibold [&_em]:italic
+                                                                                                [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
                                 {!! $buku->sinopsis !!}
                             </div>
                         </div>

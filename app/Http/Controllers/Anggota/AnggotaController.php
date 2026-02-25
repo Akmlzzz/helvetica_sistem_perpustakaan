@@ -77,6 +77,9 @@ class AnggotaController extends Controller
             ->whereIn('status_transaksi', ['booking', 'dipinjam'])
             ->exists();
 
+        // Cek status verifikasi akun
+        $akunTerverifikasi = Auth::user()->status === 'active';
+
         // Ambil buku terkait (kategori sama)
         $kategoriIds = $buku->kategori->pluck('id_kategori');
         $bukuTerkait = Buku::with('kategori')
@@ -87,7 +90,7 @@ class AnggotaController extends Controller
             ->limit(4)
             ->get();
 
-        return view('anggota.detail-buku', compact('buku', 'sedangMeminjam', 'bukuTerkait'));
+        return view('anggota.detail-buku', compact('buku', 'sedangMeminjam', 'bukuTerkait', 'akunTerverifikasi'));
     }
 
     /**
@@ -158,6 +161,17 @@ class AnggotaController extends Controller
      */
     public function storeBooking(Request $request)
     {
+        // Cek status verifikasi akun anggota
+        $user = Auth::user();
+        if ($user->status !== 'active') {
+            $pesan = match ($user->status) {
+                'pending' => 'Akun Anda belum diverifikasi oleh admin. Silakan tunggu proses verifikasi.',
+                'rejected' => 'Akun Anda ditolak oleh admin. Hubungi petugas untuk informasi lebih lanjut.',
+                default => 'Akun Anda tidak dapat melakukan peminjaman saat ini.',
+            };
+            return redirect()->back()->with('error', $pesan);
+        }
+
         $request->validate([
             'id_buku' => 'required|exists:buku,id_buku',
             'durasi_pinjam' => 'required|integer|min:1|max:14',
@@ -193,14 +207,15 @@ class AnggotaController extends Controller
                 'tgl_pinjam' => $tglPinjam,
                 'durasi_pinjam' => $durasi,
                 'tgl_jatuh_tempo' => $tglJatuhTempo,
-                'status_transaksi' => 'dipinjam',
+                'status_transaksi' => 'booking',
             ]);
 
+            // Stok dikurangi saat booking, bukan saat diambil (reservasi)
             Buku::where('id_buku', $request->id_buku)->decrement('stok');
         });
 
         return redirect()->route('anggota.pinjaman')
-            ->with('success', "Buku berhasil dipinjam! Kode Booking Anda: {$kodeBooking}. Jatuh tempo: {$tglJatuhTempo->format('d M Y')}");
+            ->with('success', "Booking berhasil! Kode Booking Anda: <strong>{$kodeBooking}</strong>. Tunjukkan kode ini ke petugas untuk mengambil buku. Jatuh tempo: {$tglJatuhTempo->format('d M Y')}");
     }
 
     /**

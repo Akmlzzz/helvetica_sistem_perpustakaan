@@ -38,6 +38,11 @@ class Buku extends Model
         return $this->hasMany(Peminjaman::class, 'id_buku');
     }
 
+    public function peminjamanAktif()
+    {
+        return $this->hasMany(Peminjaman::class, 'id_buku')->whereIn('status_transaksi', ['booking', 'dipinjam']);
+    }
+
     public function getFormattedTahunTerbitAttribute()
     {
         return $this->tahun_terbit ? $this->tahun_terbit : 'Tidak diketahui';
@@ -72,12 +77,12 @@ class Buku extends Model
 
     public function scopeSearch($query, $search)
     {
-        return $query->where(function($q) use ($search) {
+        return $query->where(function ($q) use ($search) {
             $q->where('judul_buku', 'like', "%{$search}%")
-              ->orWhere('penulis', 'like', "%{$search}%")
-              ->orWhere('penerbit', 'like', "%{$search}%")
-              ->orWhere('isbn', 'like', "%{$search}%")
-              ->orWhere('sinopsis', 'like', "%{$search}%");
+                ->orWhere('penulis', 'like', "%{$search}%")
+                ->orWhere('penerbit', 'like', "%{$search}%")
+                ->orWhere('isbn', 'like', "%{$search}%")
+                ->orWhere('sinopsis', 'like', "%{$search}%");
         });
     }
 }

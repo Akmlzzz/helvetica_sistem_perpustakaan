@@ -567,7 +567,7 @@
                                 <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
                             </svg>
                         </a>
-                        <a href="#"
+                        <a href="https://www.instagram.com/biblio.official/?hl=en"
                             class="w-10 h-10 rounded-full bg-[#F5F5F5] flex items-center justify-center text-[#084734] hover:bg-[#87D800] transition">
                             <span class="sr-only">Instagram</span>
                             <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"

@@ -3,6 +3,28 @@
 @section('content')
     <div class="flex flex-col gap-6">
 
+        {{-- ===== ALERTS ===== --}}
+        @if(session('success'))
+            <div class="flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-5 py-4 shadow-sm">
+                <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500">
+                    <svg class="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-green-800">{!! session('success') !!}</p>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-5 py-4 shadow-sm">
+                <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-500">
+                    <svg class="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-red-800">{!! session('error') !!}</p>
+            </div>
+        @endif
+
         {{-- Header --}}
         <div>
             <h2 class="text-2xl font-bold text-black">Pinjaman Saya</h2>
@@ -52,11 +74,32 @@
                                 <h4 class="font-bold text-black text-base line-clamp-1">{{ $item->buku?->judul_buku ?? 'Judul Tidak Diketahui' }}</h4>
                                 <p class="text-sm text-gray-500 mb-2">{{ $item->buku?->penulis ?? '-' }}</p>
 
+                                {{-- Banner Kode Booking menonjol (hanya saat status booking) --}}
+                                @if($status === 'booking')
+                                    <div class="mb-3 rounded-xl border-2 border-[#004236] bg-[#004236]/5 p-3">
+                                        <p class="text-[10px] font-bold uppercase tracking-widest text-[#004236] mb-1.5">🎫 Tunjukkan kode ini ke petugas:</p>
+                                        <div class="flex items-center justify-between gap-3">
+                                            <span class="font-mono text-2xl font-black tracking-widest text-[#004236]">{{ $item->kode_booking }}</span>
+                                            <button
+                                                onclick="navigator.clipboard.writeText('{{ $item->kode_booking }}').then(() => { this.textContent = '✓ Tersalin!'; setTimeout(() => this.textContent = 'Salin', 2000); })"
+                                                class="shrink-0 rounded-lg border border-[#004236] bg-white px-2.5 py-1.5 text-[11px] font-bold text-[#004236] hover:bg-[#004236] hover:text-white transition">
+                                                Salin
+                                            </button>
+                                        </div>
+                                        <p class="mt-2 text-[10px] text-[#004236]/70">
+                                            Datang ke perpustakaan &amp; tunjukkan kode ini untuk mengambil buku.
+                                            Berlaku hingga <strong>{{ $item->tgl_jatuh_tempo ? \Carbon\Carbon::parse($item->tgl_jatuh_tempo)->format('d M Y') : '-' }}</strong>.
+                                        </p>
+                                    </div>
+                                @endif
+
                                 <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500">
-                                    {{-- Kode Booking --}}
+                                    {{-- Kode Booking (mini, untuk status selain booking) --}}
+                                    @if($status !== 'booking')
                                     <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 font-mono font-bold text-gray-700">
                                         🎫 {{ $item->kode_booking }}
                                     </span>
+                                    @endif
 
                                     {{-- Tgl Pinjam --}}
                                     @if($item->tgl_pinjam)
@@ -83,6 +126,7 @@
                                     <span class="text-gray-400">{{ $item->durasi_pinjam }} hari</span>
                                     @endif
                                 </div>
+
                             </div>
 
                             {{-- Status & Aksi --}}
@@ -198,6 +242,10 @@
         <div class="rounded-2xl border border-gray-200 bg-white shadow-sm p-5">
             <h3 class="font-bold text-black mb-3 text-sm">Keterangan Status</h3>
             <div class="flex flex-wrap gap-3 text-xs">
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1.5 font-bold text-blue-700">
+                    <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                    BOOKING — Menunggu pengambilan di perpustakaan
+                </span>
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-3 py-1.5 font-bold text-yellow-700">
                     <span class="h-2 w-2 rounded-full bg-yellow-500"></span>
                     AKTIF — Sedang dipinjam, belum jatuh tempo
@@ -208,7 +256,7 @@
                 </span>
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1.5 font-bold text-red-700">
                     <span class="h-2 w-2 rounded-full bg-red-500"></span>
-                    TERLAMBAT — Melewati batas waktu
+                    TERLAMBAT — Melewati batas waktu, kena denda Rp 2.000/hari
                 </span>
             </div>
         </div>

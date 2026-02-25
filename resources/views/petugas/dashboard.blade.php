@@ -1,67 +1,55 @@
 @extends('layouts.app')
 
 @section('content')
-    <div x-data="{
-                                activeTab: 'peminjaman',
-                                scannedMemberId: '',
-                                scannedBookId: '',
-                                tempBooks: [],
-                                showFineModal: false,
-                                fineData: null,
+    <div class="mx-auto">
 
-                                addBook(isbn) {
-                                    // Cek kalo inputnya kosong
-                                    if(!isbn) return;
-                                    this.tempBooks.push({
-                                        id: Date.now(),
-                                        isbn: isbn,
-                                        title: 'Buku Contoh (' + isbn + ')',
-                                        author: 'Penulis'
-                                    });
-                                    this.scannedBookId = '';
-                                },
+        {{-- ===== ALERTS ===== --}}
+        @if(session('success'))
+            <div class="mb-5 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-5 py-4 shadow-sm">
+                <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500">
+                    <svg class="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-green-800">{!! session('success') !!}</p>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-5 py-4 shadow-sm">
+                <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-500">
+                    <svg class="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                <p class="text-sm font-medium text-red-800">{!! session('error') !!}</p>
+            </div>
+        @endif
 
-                                removeBook(idx) {
-                                    this.tempBooks.splice(idx, 1);
-                                },
-
-                                processReturn(id) {
-                                    // Contoh logika buat balikin buku
-                                    // Kalo telat nanti munculin modal denda
-                                    this.fineData = {
-                                        overdue_days: 3,
-                                        amount: 15000
-                                    };
-                                    this.showFineModal = true;
-                                }
-                            }">
-
-        <!-- Page Header -->
+        {{-- ===== PAGE HEADER ===== --}}
         <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="text-title-md2 font-bold text-black">Layanan Sirkulasi</h2>
+                <h2 class="text-2xl font-bold text-gray-800">Layanan Sirkulasi</h2>
                 <p class="text-sm text-gray-500 mt-1">Selamat datang, <span
                         class="font-semibold text-[#004236]">{{ auth()->user()->nama_pengguna }}</span></p>
             </div>
             <nav>
-                <ol class="flex items-center gap-2">
-                    <li><a class="font-medium text-gray-500" href="/petugas/dashboard">Dashboard /</a></li>
-                    <li class="font-medium text-[#004236]">Sirkulasi</li>
+                <ol class="flex items-center gap-2 text-sm">
+                    <li><span class="text-gray-400">Dashboard</span></li>
+                    <li class="text-gray-300">/</li>
+                    <li class="font-semibold text-[#004236]">Sirkulasi</li>
                 </ol>
             </nav>
         </div>
 
-        {{-- ===== FITUR AKSES (Dinamis berdasarkan izin dari admin) ===== --}}
+        {{-- ===== STAT CARDS FITUR AKSES ===== --}}
         @if($fiturAkses->isNotEmpty())
             <div class="mb-8">
                 <div class="mb-3 flex items-center gap-2">
                     <div class="h-5 w-1 rounded-full bg-[#004236]"></div>
                     <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Fitur yang Dapat Anda Akses</h3>
                 </div>
-
                 <div class="grid grid-cols-2 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
-                    {{-- KATEGORI --}}
                     @if($fiturAkses->contains('kategori'))
                         <a href="{{ route('admin.kategori.index') }}"
                             class="group relative overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-blue-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-blue-200">
@@ -87,7 +75,6 @@
                         </a>
                     @endif
 
-                    {{-- BUKU --}}
                     @if($fiturAkses->contains('buku'))
                         <a href="{{ route('admin.buku.index') }}"
                             class="group relative overflow-hidden rounded-2xl border border-green-100 bg-gradient-to-br from-green-50 to-green-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-green-200">
@@ -113,7 +100,6 @@
                         </a>
                     @endif
 
-                    {{-- PEMINJAMAN --}}
                     @if($fiturAkses->contains('peminjaman'))
                         <a href="{{ route('admin.peminjaman.index') }}"
                             class="group relative overflow-hidden rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50 to-purple-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-purple-200">
@@ -134,12 +120,12 @@
                             <p class="text-lg font-bold text-purple-800">Peminjaman</p>
                             @if(isset($stats['peminjaman_aktif']))
                                 <p class="mt-1 text-2xl font-extrabold text-purple-600">{{ $stats['peminjaman_aktif'] }}</p>
-                                <p class="text-xs text-purple-400">dipinjam &bull; {{ $stats['peminjaman_booking'] ?? 0 }} booking</p>
+                                <p class="text-xs text-purple-400">aktif &bull; {{ $stats['peminjaman_booking'] ?? 0 }} menunggu booking
+                                </p>
                             @endif
                         </a>
                     @endif
 
-                    {{-- DENDA --}}
                     @if($fiturAkses->contains('denda'))
                         <a href="{{ route('admin.denda.index') }}"
                             class="group relative overflow-hidden rounded-2xl border border-red-100 bg-gradient-to-br from-red-50 to-red-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-red-200">
@@ -165,7 +151,6 @@
                         </a>
                     @endif
 
-                    {{-- LAPORAN --}}
                     @if($fiturAkses->contains('laporan'))
                         <a href="{{ route('admin.laporan.index') }}"
                             class="group relative overflow-hidden rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 to-orange-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-orange-200">
@@ -193,224 +178,526 @@
 
                 </div>
             </div>
-
-            {{-- Divider --}}
-            <div class="mb-6 flex items-center gap-3">
-                <div class="h-5 w-1 rounded-full bg-[#004236]"></div>
-                <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Layanan Sirkulasi Langsung</h3>
-            </div>
         @endif
 
-        <!-- Tabs -->
-        <div class="mb-6 flex gap-4 border-b border-stroke dark:border-strokedark">
-            <button @click="activeTab = 'peminjaman'"
-                :class="activeTab === 'peminjaman' ? 'border-primary text-primary' : 'border-transparent hover:text-primary'"
-                class="border-b-2 py-2 px-4 font-medium transition-colors">
-                Peminjaman
-            </button>
-            <button @click="activeTab = 'pengembalian'"
-                :class="activeTab === 'pengembalian' ? 'border-primary text-primary' : 'border-transparent hover:text-primary'"
-                class="border-b-2 py-2 px-4 font-medium transition-colors">
-                Pengembalian
-            </button>
+        {{-- ===== DIVIDER ===== --}}
+        <div class="mb-6 flex items-center gap-3">
+            <div class="h-5 w-1 rounded-full bg-[#004236]"></div>
+            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Layanan Sirkulasi Langsung</h3>
         </div>
 
-        <!-- Peminjaman Section -->
-        <div x-show="activeTab === 'peminjaman'" class="grid grid-cols-1 gap-9 xl:grid-cols-2">
-            <!-- Input Section -->
-            <div class="flex flex-col gap-9">
-                <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                    <div class="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-                        <h3 class="font-medium text-black dark:text-white">
-                            Input Data Peminjaman
-                        </h3>
-                    </div>
-                    <form action="#" method="POST">
-                        <div class="p-6.5">
-                            <div class="mb-4.5">
-                                <label class="mb-2.5 block text-black dark:text-white">
-                                    ID Anggota <span class="text-meta-1">*</span>
-                                </label>
-                                <input type="text" x-model="scannedMemberId" placeholder="Scan Kartu / Ketik ID Anggota"
-                                    class="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-                            </div>
+        {{-- ===== TABS ===== --}}
+        <div x-data="{ activeTab: '{{ session('error') || old('kode_booking') ? 'booking' : 'pengembalian' }}' }">
 
-                            <div class="mb-4.5">
-                                <label class="mb-2.5 block text-black dark:text-white">
-                                    Scan ISBN / Judul Buku
-                                </label>
-                                <div class="flex gap-2">
-                                    <input type="text" x-model="scannedBookId" @keyup.enter.prevent="addBook(scannedBookId)"
-                                        placeholder="Scan Barcode Buku"
-                                        class="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-                                    <button type="button" @click="addBook(scannedBookId)"
-                                        class="flex justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                                        <svg class="fill-current" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            <div class="mb-6 flex gap-1 rounded-xl border border-gray-200 bg-gray-50 p-1">
+                {{-- Tab 1: Proses Booking --}}
+                <button @click="activeTab = 'booking'" :class="activeTab === 'booking'
+                        ? 'bg-white shadow-sm text-[#004236] font-bold'
+                        : 'text-gray-500 hover:text-gray-700'"
+                    class="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm transition-all duration-200">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    Proses Booking
+                    @if($bookingAktif->count() > 0)
+                        <span class="rounded-full bg-[#004236] px-2 py-0.5 text-xs font-bold text-white">
+                            {{ $bookingAktif->count() }}
+                        </span>
+                    @endif
+                </button>
+
+                {{-- Tab 2: Pengembalian --}}
+                <button @click="activeTab = 'pengembalian'" :class="activeTab === 'pengembalian'
+                        ? 'bg-white shadow-sm text-[#004236] font-bold'
+                        : 'text-gray-500 hover:text-gray-700'"
+                    class="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm transition-all duration-200">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                    </svg>
+                    Pengembalian
+                </button>
+            </div>
+
+            {{-- ============================================================== --}}
+            {{-- TAB 1: PROSES BOOKING --}}
+            {{-- ============================================================== --}}
+            <div x-show="activeTab === 'booking'" x-transition:enter="transition ease-out duration-150"
+                x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0">
+
+                <div class="grid grid-cols-1 gap-6 xl:grid-cols-5">
+
+                    {{-- Form Input Kode Booking --}}
+                    <div class="xl:col-span-2">
+                        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                            <div
+                                class="border-b border-gray-100 bg-gradient-to-r from-[#004236]/5 to-transparent px-6 py-4">
+                                <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                    <svg class="h-5 w-5 text-[#004236]" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 3.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                                    </svg>
+                                    Input Kode Booking
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1">Masukkan kode booking dari anggota untuk memproses
+                                    pengambilan buku</p>
+                            </div>
+                            <div class="p-6">
+                                <form action="{{ route('petugas.booking.proses') }}" method="POST">
+                                    @csrf
+                                    <div class="mb-5">
+                                        <label for="kode_booking" class="mb-2 block text-sm font-semibold text-gray-700">
+                                            Kode Booking <span class="text-red-500">*</span>
+                                        </label>
+                                        <input type="text" id="kode_booking" name="kode_booking"
+                                            value="{{ old('kode_booking') }}" placeholder="Contoh: BK250224ABCD" autofocus
+                                            class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-gray-800 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal placeholder:text-gray-400 outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10 @error('kode_booking') border-red-400 bg-red-50 @enderror">
+                                        @error('kode_booking')
+                                            <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
+                                        @enderror
+                                        <p class="mt-1.5 text-xs text-gray-400">Kode booking diberikan otomatis saat anggota
+                                            melakukan booking online</p>
+                                    </div>
+
+                                    <button type="submit"
+                                        class="w-full rounded-xl bg-[#004236] py-3 text-sm font-bold text-white transition hover:bg-[#003028] flex items-center justify-center gap-2 shadow-sm hover:shadow-md">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
+                                        Proses — Serahkan Buku
                                     </button>
+                                </form>
+
+                                {{-- Info cara kerja --}}
+                                <div class="mt-5 rounded-xl bg-blue-50 border border-blue-100 p-4">
+                                    <p class="text-xs font-bold text-blue-700 mb-2 flex items-center gap-1">
+                                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Cara Kerja Sistem Booking:
+                                    </p>
+                                    <ol class="text-xs text-blue-600 space-y-1 list-decimal list-inside">
+                                        <li>Anggota booking buku secara online</li>
+                                        <li>Stok buku langsung dikurangi (reservasi)</li>
+                                        <li>Anggota datang & tunjukkan kode booking</li>
+                                        <li>Petugas input kode → status menjadi <strong>Dipinjam</strong></li>
+                                    </ol>
                                 </div>
                             </div>
-
-                            <button
-                                class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                                Proses Pinjam
-                            </button>
                         </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Daftar Sementara List -->
-            <div class="flex flex-col gap-9">
-                <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                    <div class="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-                        <h3 class="font-medium text-black dark:text-white">
-                            Daftar Buku (Draft)
-                        </h3>
                     </div>
-                    <div class="p-6.5">
-                        <template x-if="tempBooks.length === 0">
-                            <p class="text-center text-gray-500 py-4">Belum ada buku yang ditambahkan.</p>
-                        </template>
-                        <ul class="flex flex-col gap-3">
-                            <template x-for="(book, index) in tempBooks" :key="book.id">
-                                <li
-                                    class="flex items-center justify-between rounded border border-stroke bg-gray-50 p-3 dark:border-strokedark dark:bg-meta-4">
-                                    <div>
-                                        <h5 class="font-medium text-black dark:text-white" x-text="book.title"></h5>
-                                        <p class="text-sm" x-text="'ISBN: ' + book.isbn"></p>
-                                    </div>
-                                    <button @click="removeBook(index)" class="text-meta-1 hover:text-danger">
-                                        <svg class="fill-current" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+
+                    {{-- Daftar Booking Menunggu --}}
+                    <div class="xl:col-span-3">
+                        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                            <div
+                                class="border-b border-gray-100 bg-gradient-to-r from-amber-50 to-transparent px-6 py-4 flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                        <svg class="h-5 w-5 text-amber-500" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
-                                    </button>
-                                </li>
-                            </template>
-                        </ul>
+                                        Booking Menunggu Diambil
+                                    </h3>
+                                    <p class="text-xs text-gray-500 mt-0.5">Anggota sudah booking, buku belum diambil</p>
+                                </div>
+                                <span class="rounded-full bg-amber-100 px-3 py-1 text-sm font-bold text-amber-700">
+                                    {{ $bookingAktif->count() }} antrian
+                                </span>
+                            </div>
+                            <div class="divide-y divide-gray-50">
+                                @forelse($bookingAktif as $item)
+                                    <div class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition">
+                                        {{-- Icon Buku --}}
+                                        <div
+                                            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100">
+                                            <svg class="h-5 w-5 text-amber-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                                            </svg>
+                                        </div>
+                                        {{-- Info --}}
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-semibold text-gray-800 truncate">
+                                                {{ $item->buku?->judul_buku ?? '-' }}
+                                            </p>
+                                            <p class="text-xs text-gray-500 truncate">
+                                                {{ $item->pengguna?->anggota?->nama_lengkap ?? $item->pengguna?->nama_pengguna ?? '-' }}
+                                            </p>
+                                            <div class="mt-1 flex flex-wrap items-center gap-2">
+                                                <span
+                                                    class="inline-flex items-center rounded-md bg-gray-100 px-2 py-0.5 font-mono text-xs font-bold text-gray-700">
+                                                    {{ $item->kode_booking }}
+                                                </span>
+                                                @if($item->tgl_booking)
+                                                <span class="text-xs text-gray-400">
+                                                    Booking: {{ $item->tgl_booking->format('d M Y') }}
+                                                </span>
+                                                @endif
+                                                @if($item->tgl_jatuh_tempo)
+                                                <span class="text-xs text-red-500 font-medium">
+                                                    Jatuh tempo: {{ $item->tgl_jatuh_tempo->format('d M Y') }}
+                                                </span>
+                                                @else
+                                                <span class="text-xs text-gray-400">Jatuh tempo: -</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="flex flex-col items-center justify-center py-16 text-center">
+                                        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+                                            <svg class="h-8 w-8 text-gray-300" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                            </svg>
+                                        </div>
+                                        <p class="text-sm font-semibold text-gray-400">Tidak ada booking aktif</p>
+                                        <p class="text-xs text-gray-300 mt-1">Semua buku sudah diambil anggota</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
-        </div>
 
-        <!-- Pengembalian Section -->
-        <div x-show="activeTab === 'pengembalian'" class="grid grid-cols-1 gap-9">
-            <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                <div class="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-                    <h3 class="font-medium text-black dark:text-white">
-                        Peminjaman Aktif / Pengembalian
-                    </h3>
-                </div>
-                <div class="p-6.5">
-                    <div class="mb-4.5 flex gap-4">
-                        <input type="text" placeholder="Cari Kode Peminjaman / Nama Anggota / ISBN"
-                            class="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-                        <button
-                            class="flex justify-center rounded bg-primary px-6 py-3 font-medium text-gray hover:bg-opacity-90">
-                            Cari
-                        </button>
+            {{-- ============================================================== --}}
+            {{-- TAB 2: PENGEMBALIAN BUKU --}}
+            {{-- ============================================================== --}}
+            <div x-show="activeTab === 'pengembalian'" x-transition:enter="transition ease-out duration-150"
+                x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0">
+
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                    <div
+                        class="border-b border-gray-100 px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <h3 class="font-bold text-gray-800">Peminjaman Aktif</h3>
+                            <p class="text-xs text-gray-500 mt-0.5">Daftar buku yang sedang dipinjam — klik tombol untuk
+                                proses pengembalian</p>
+                        </div>
+                        {{-- Search --}}
+                        <form method="GET" action="{{ route('petugas.dashboard') }}" class="flex gap-2">
+                            <input type="hidden" name="search_return" value="">
+                            <input type="text" name="search_return" value="{{ $searchReturn }}"
+                                placeholder="Cari nama / kode / buku..."
+                                class="w-64 rounded-xl border border-gray-300 bg-gray-50 px-4 py-2 text-sm outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10">
+                            <button type="submit"
+                                class="rounded-xl bg-[#004236] px-4 py-2 text-sm font-semibold text-white hover:bg-[#003028] transition">
+                                Cari
+                            </button>
+                            @if($searchReturn)
+                                <a href="{{ route('petugas.dashboard') }}"
+                                    class="rounded-xl border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition">
+                                    Reset
+                                </a>
+                            @endif
+                        </form>
                     </div>
 
-                    <!-- Table -->
-                    <div class="max-w-full overflow-x-auto">
-                        <table class="w-full table-auto">
+                    {{-- Tabel --}}
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
                             <thead>
-                                <tr class="bg-gray-2 text-left dark:bg-meta-4">
-                                    <th class="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                                        Kode
+                                <tr class="border-b border-gray-100 bg-gray-50 text-left">
+                                    <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">Kode</th>
+                                    <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">Anggota
                                     </th>
-                                    <th class="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                                        Anggota
+                                    <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">Buku</th>
+                                    <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">Tgl
+                                        Pinjam</th>
+                                    <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">Jatuh
+                                        Tempo</th>
+                                    <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">Status
                                     </th>
-                                    <th class="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                                        Buku
-                                    </th>
-                                    <th class="py-4 px-4 font-medium text-black dark:text-white">
-                                        Tgl Pinjam
-                                    </th>
-                                    <th class="py-4 px-4 font-medium text-black dark:text-white">
-                                        Batas Kembali
-                                    </th>
-                                    <th class="py-4 px-4 font-medium text-black dark:text-white">
-                                        Status
-                                    </th>
-                                    <th class="py-4 px-4 font-medium text-black dark:text-white">
-                                        Aksi
-                                    </th>
+                                    <th class="px-4 py-3 text-xs font-bold uppercase tracking-wider text-gray-500">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- Mock Data Row -->
-                                <tr>
-                                    <td class="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                                        <h5 class="font-medium text-black dark:text-white">PJ-2301001</h5>
-                                    </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p class="text-black dark:text-white">Ahmad Fulan</p>
-                                    </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p class="text-black dark:text-white">Belajar Laravel 10</p>
-                                    </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p class="text-black dark:text-white">01 Jan 2024</p>
-                                    </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p class="text-danger">08 Jan 2024</p> <!-- Telat nih -->
-                                    </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p
-                                            class="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-sm font-medium text-danger">
-                                            Terlambat
-                                        </p>
-                                    </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <div class="flex items-center space-x-3.5">
-                                            <button @click="processReturn(1)" class="hover:text-primary">
-                                                <svg class="fill-current" width="18" height="18" viewBox="0 0 24 24"
-                                                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                            <tbody class="divide-y divide-gray-50">
+                                @forelse($peminjamanAktif as $p)
+                                    @php
+                                        $jatuhTempo = $p->tgl_jatuh_tempo ?? $p->tgl_kembali;
+                                        $hariTerlambat = 0;
+                                        $isLate = false;
+                                        if ($jatuhTempo) {
+                                            $jatuhTempoCarbon = $jatuhTempo instanceof \Carbon\Carbon
+                                                ? $jatuhTempo
+                                                : \Carbon\Carbon::parse((string) $jatuhTempo);
+                                            $isLate = \Carbon\Carbon::today()->gt($jatuhTempoCarbon);
+                                            if ($isLate) {
+                                                $hariTerlambat = (int) \Carbon\Carbon::today()->diffInDays($jatuhTempoCarbon);
+                                            }
+                                        }
+                                    @endphp
+                                    <tr class="hover:bg-gray-50 transition {{ $isLate ? 'bg-red-50/30' : '' }}">
+                                        {{-- Kode --}}
+                                        <td class="px-6 py-4">
+                                            <span
+                                                class="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-1 font-mono text-xs font-bold text-gray-700">
+                                                {{ $p->kode_booking }}
+                                            </span>
+                                        </td>
+                                        {{-- Anggota --}}
+                                        <td class="px-4 py-4">
+                                            <p class="text-sm font-semibold text-gray-800">
+                                                {{ $p->pengguna?->anggota?->nama_lengkap ?? $p->pengguna?->nama_pengguna ?? '-' }}
+                                            </p>
+                                            <p class="text-xs text-gray-400">{{ $p->pengguna?->nomor_anggota ?? '-' }}</p>
+                                        </td>
+                                        {{-- Buku --}}
+                                        <td class="px-4 py-4">
+                                            <p class="text-sm font-medium text-gray-800 max-w-[200px] truncate">
+                                                {{ $p->buku?->judul_buku ?? '-' }}
+                                            </p>
+                                            <p class="text-xs text-gray-400">{{ $p->buku?->penulis ?? '-' }}</p>
+                                        </td>
+                                        {{-- Tgl Pinjam --}}
+                                        <td class="px-4 py-4">
+                                            <p class="text-sm text-gray-600 whitespace-nowrap">
+                                                {{ $p->tgl_pinjam ? $p->tgl_pinjam->format('d M Y') : '-' }}
+                                            </p>
+                                        </td>
+                                        {{-- Jatuh Tempo --}}
+                                        <td class="px-4 py-4">
+                                            @if($jatuhTempo)
+                                                @php
+                                                    $jtCarbon = isset($jatuhTempoCarbon) ? $jatuhTempoCarbon
+                                                        : (($jatuhTempo instanceof \Carbon\Carbon) ? $jatuhTempo : \Carbon\Carbon::parse((string) $jatuhTempo));
+                                                @endphp
+                                                <p class="text-sm font-semibold whitespace-nowrap {{ $isLate ? 'text-red-600' : 'text-gray-700' }}">
+                                                    {{ $jtCarbon->format('d M Y') }}
+                                                </p>
+                                                @if($isLate)
+                                                    <p class="text-xs font-bold text-red-500">+{{ $hariTerlambat }} hari terlambat</p>
+                                                    <p class="text-xs text-red-400">Denda: Rp
+                                                        {{ number_format($hariTerlambat * 2000, 0, ',', '.') }}</p>
+                                                @else
+                                                    @php $sisaHari = (int) \Carbon\Carbon::today()->diffInDays($jtCarbon, false); @endphp
+                                                    <p class="text-xs {{ $sisaHari <= 2 ? 'text-amber-500 font-bold' : 'text-gray-400' }}">
+                                                        {{ $sisaHari > 0 ? "Sisa {$sisaHari} hari" : 'Jatuh tempo hari ini' }}
+                                                    </p>
+                                                @endif
+                                            @else
+                                                <span class="text-sm text-gray-400">-</span>
+                                            @endif
+                                        </td>
+                                        {{-- Status --}}
+                                        <td class="px-4 py-4">
+                                            @if($p->status_transaksi === 'terlambat')
+                                                <span
+                                                    class="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-bold text-red-700">
+                                                    <span class="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                                                    Terlambat
+                                                </span>
+                                            @elseif($p->status_transaksi === 'dipinjam')
+                                                <span
+                                                    class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-bold text-blue-700">
+                                                    <span class="h-1.5 w-1.5 rounded-full bg-blue-500"></span>
+                                                    Dipinjam
+                                                </span>
+                                            @elseif($p->status_transaksi === 'booking')
+                                                <span
+                                                    class="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700">
+                                                    <span class="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                    Booking
+                                                </span>
+                                            @endif
+                                        </td>
+                                        {{-- Aksi --}}
+                                        <td class="px-4 py-4">
+                                            <button x-data @click="$dispatch('open-return-modal', {
+                                                        id: '{{ $p->id_peminjaman }}',
+                                                        buku: '{{ addslashes($p->buku->judul_buku ?? '-') }}',
+                                                        anggota: '{{ addslashes($p->pengguna->anggota->nama_lengkap ?? $p->pengguna->nama_pengguna ?? '-') }}',
+                                                        kode: '{{ $p->kode_booking }}',
+                                                        terlambat: {{ $isLate ? 'true' : 'false' }},
+                                                        hariTerlambat: {{ $hariTerlambat }},
+                                                        denda: {{ $hariTerlambat * 2000 }},
+                                                    })"
+                                                class="inline-flex items-center gap-1.5 rounded-xl border border-[#004236] bg-white px-3 py-1.5 text-xs font-bold text-[#004236] transition hover:bg-[#004236] hover:text-white">
+                                                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                                                 </svg>
+                                                Kembalikan
                                             </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="py-16 text-center">
+                                            <div class="flex flex-col items-center gap-3">
+                                                <div
+                                                    class="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
+                                                    <svg class="h-7 w-7 text-gray-300" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                </div>
+                                                <p class="text-sm font-semibold text-gray-400">
+                                                    {{ $searchReturn ? 'Tidak ada hasil untuk "' . $searchReturn . '"' : 'Tidak ada peminjaman aktif' }}
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Modal Denda -->
-        <div x-show="showFineModal"
-            class="fixed inset-0 z-999 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-            style="display: none;">
-            <div
-                class="w-full max-w-lg rounded-sm border border-stroke bg-white p-8 shadow-default dark:border-strokedark dark:bg-boxdark">
-                <h3 class="mb-4 text-xl font-bold text-black dark:text-white">Konfirmasi Pengembalian</h3>
-                <div class="mb-6">
-                    <p class="mb-2">Terdeteksi keterlambatan pengembalian:</p>
-                    <div class="bg-danger bg-opacity-10 p-4 rounded text-danger">
-                        <p class="font-bold">Terlambat: <span x-text="fineData?.overdue_days"></span> Hari</p>
-                        <p class="font-bold text-lg">Denda: Rp <span x-text="fineData?.amount"></span></p>
-                    </div>
-                </div>
-                <div class="flex justify-end gap-4">
-                    <button @click="showFineModal = false"
-                        class="rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white">
-                        Batal
-                    </button>
-                    <button class="rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90">
-                        Konfirmasi & Lunas
-                    </button>
+                    {{-- Pagination --}}
+                    @if($peminjamanAktif->hasPages())
+                        <div class="border-t border-gray-100 px-6 py-4">
+                            {{ $peminjamanAktif->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
-        </div>
+
+        </div>{{-- end x-data tabs --}}
 
     </div>
+
+    {{-- ===================================================================== --}}
+    {{-- MODAL KONFIRMASI PENGEMBALIAN --}}
+    {{-- ===================================================================== --}}
+    <div x-data="{
+            show: false,
+            id: '',
+            buku: '',
+            anggota: '',
+            kode: '',
+            terlambat: false,
+            hariTerlambat: 0,
+            denda: 0,
+        }" @open-return-modal.window="
+            id            = $event.detail.id;
+            buku          = $event.detail.buku;
+            anggota       = $event.detail.anggota;
+            kode          = $event.detail.kode;
+            terlambat     = $event.detail.terlambat;
+            hariTerlambat = $event.detail.hariTerlambat;
+            denda         = $event.detail.denda;
+            show          = true;
+        " x-show="show" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        class="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+        style="display:none;">
+
+        <div @click.outside="show = false" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+            class="w-full max-w-md rounded-2xl bg-white p-0 shadow-2xl overflow-hidden">
+
+            {{-- Modal Header --}}
+            <div class="relative bg-gradient-to-br from-[#004236] to-[#00644f] px-6 pt-6 pb-8">
+                <button @click="show = false"
+                    class="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20">
+                        <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Konfirmasi Pengembalian</h3>
+                        <p class="text-xs text-white/70">Pastikan buku sudah diterima fisik</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Modal Body --}}
+            <div class="-mt-4 rounded-t-2xl bg-white px-6 pt-5 pb-6">
+
+                {{-- Detail Peminjaman --}}
+                <div class="mb-4 space-y-2.5">
+                    <div class="flex items-start justify-between gap-4">
+                        <span class="text-xs text-gray-500 whitespace-nowrap">Buku</span>
+                        <span class="text-sm font-bold text-gray-800 text-right" x-text="buku"></span>
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <span class="text-xs text-gray-500">Anggota</span>
+                        <span class="text-sm font-semibold text-gray-700" x-text="anggota"></span>
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <span class="text-xs text-gray-500">Kode Booking</span>
+                        <span class="font-mono text-sm font-bold text-gray-700 bg-gray-100 px-2 py-0.5 rounded"
+                            x-text="kode"></span>
+                    </div>
+                </div>
+
+                {{-- Alert Denda jika terlambat --}}
+                <template x-if="terlambat">
+                    <div class="mb-4 rounded-xl border border-red-200 bg-red-50 p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="h-4 w-4 text-red-600 shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <p class="text-sm font-bold text-red-700">Terdapat Keterlambatan!</p>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-red-600">Hari terlambat:</span>
+                                <span class="font-bold text-red-700" x-text="hariTerlambat + ' hari'"></span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-red-600">Denda (Rp 2.000/hari):</span>
+                                <span class="font-bold text-red-700 text-base"
+                                    x-text="'Rp ' + denda.toLocaleString('id-ID')"></span>
+                            </div>
+                        </div>
+                        <p class="mt-2 text-xs text-red-500">Denda akan otomatis tercatat dan anggota wajib melunasinya.</p>
+                    </div>
+                </template>
+
+                {{-- Alert sukses jika tepat waktu --}}
+                <template x-if="!terlambat">
+                    <div class="mb-4 rounded-xl border border-green-200 bg-green-50 p-3">
+                        <p class="text-sm text-green-700 flex items-center gap-2">
+                            <svg class="h-4 w-4 text-green-600 shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Buku dikembalikan <strong>tepat waktu</strong>. Tidak ada denda.
+                        </p>
+                    </div>
+                </template>
+
+                {{-- Form Action --}}
+                <form :action="`/petugas/pengembalian`" method="POST">
+                    @csrf
+                    <input type="hidden" name="id_peminjaman" :value="id">
+
+                    <div class="flex gap-3">
+                        <button type="button" @click="show = false"
+                            class="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="flex-1 rounded-xl bg-[#004236] py-3 text-sm font-bold text-white hover:bg-[#003028] transition shadow">
+                            Konfirmasi Kembali
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
