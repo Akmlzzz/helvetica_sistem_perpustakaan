@@ -64,6 +64,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/verifikasi-anggota/{id}/reject', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'reject'])->name('admin.verifikasi-anggota.reject');
         Route::get('/verifikasi-anggota/all', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'allMembers'])->name('admin.verifikasi-anggota.all');
         Route::post('/verifikasi-anggota/{id}/toggle', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'toggleStatus'])->name('admin.verifikasi-anggota.toggle');
+
+        // Hero Banner Management
+        Route::resource('hero-banners', \App\Http\Controllers\Admin\HeroBannerController::class)->names('admin.hero-banners');
     });
 
     // =========================================================

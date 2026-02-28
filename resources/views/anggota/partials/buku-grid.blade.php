@@ -7,6 +7,7 @@
         <div class="relative aspect-2/3 w-full overflow-hidden bg-gray-100">
             @if($item->sampul)
                 <img src="{{ Storage::url($item->sampul) }}" alt="{{ $item->judul_buku }}" loading="lazy"
+                    style="image-rendering: -webkit-optimize-contrast;"
                     class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
             @else
                 <div class="flex h-full w-full items-center justify-center bg-linear-to-br from-[#e8f4f0] to-[#c8e6d8]">

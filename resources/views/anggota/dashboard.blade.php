@@ -3,6 +3,9 @@
 @section('content')
     <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
 
+        {{-- Hero Carousel --}}
+        <x-hero-carousel :banners="$banners" />
+
         {{-- Header --}}
         <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -90,7 +93,7 @@
             </form>
 
             {{-- Grid Buku --}}
-            <div id="buku-grid" class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            <div id="buku-grid" class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 @forelse($buku as $item)
                     <a href="{{ route('anggota.buku.detail', $item->id_buku) }}"
                         class="group flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
@@ -180,11 +183,11 @@
 
     @push('scripts')
     <script>
-        (function() {
+        document.addEventListener('DOMContentLoaded', function() {
             let searchTimeout = null;
-            let currentSearch = @json(request('search', ''));
-            let currentKategori = @json(request('kategori', ''));
-            let currentSort = @json(request('sort', 'terbaru'));
+            let currentSearch = "{{ request('search', '') }}";
+            let currentKategori = "{{ request('kategori', '') }}";
+            let currentSort = "{{ request('sort', 'terbaru') }}";
 
             const searchInput = document.getElementById('katalog-search');
             const spinner = document.getElementById('search-spinner');
@@ -281,7 +284,7 @@
 
             // Init: bind pagination yang sudah di-render server
             bindPaginationLinks();
-        })();
+        });
     </script>
     @endpush
 @endsection

@@ -49,6 +49,9 @@ class AnggotaController extends Controller
 
         $buku = $query->paginate(12)->withQueryString();
         $kategori = \App\Models\Kategori::all();
+        $banners = \App\Models\HeroBanner::where('is_active', true)
+                    ->orderBy('order_priority', 'asc')
+                    ->get();
 
         // Jika AJAX request, kembalikan JSON partial
         if ($request->ajax() || $request->has('ajax')) {
@@ -60,7 +63,7 @@ class AnggotaController extends Controller
             ]);
         }
 
-        return view('anggota.dashboard', compact('buku', 'kategori'));
+        return view('anggota.dashboard', compact('buku', 'kategori', 'banners'));
     }
 
 
@@ -225,12 +228,14 @@ class AnggotaController extends Controller
     {
         $userId = Auth::id();
 
+        // Riwayat peminjaman yang sudah dikembalikan
         $history = Peminjaman::with(['buku', 'denda'])
             ->where('id_pengguna', $userId)
             ->where('status_transaksi', 'dikembalikan')
             ->orderBy('tgl_kembali', 'desc')
             ->get();
 
+        // Tagihan denda yang sudah tercatat (biasanya setelah dikembalikan)
         $tagihanDenda = \App\Models\Denda::with(['peminjaman.buku'])
             ->whereHas('peminjaman', function ($q) use ($userId) {
                 $q->where('id_pengguna', $userId);
@@ -238,7 +243,20 @@ class AnggotaController extends Controller
             ->where('status_pembayaran', 'belum_lunas')
             ->get();
 
-        return view('anggota.riwayat', compact('history', 'tagihanDenda'));
+        // Estimasi denda berjalan (untuk buku yang sedang dipinjam tapi terlambat)
+        $dendaBerjalan = Peminjaman::with('buku')
+            ->where('id_pengguna', $userId)
+            ->whereIn('status_transaksi', ['dipinjam', 'terlambat'])
+            ->whereDate('tgl_jatuh_tempo', '<', Carbon::today())
+            ->get()
+            ->map(function ($loan) {
+                $hariTerlambat = Carbon::today()->diffInDays($loan->tgl_jatuh_tempo);
+                $loan->estimasi_denda = $hariTerlambat * 2000; // Rp 2.000 per hari
+                $loan->hari_terlambat = $hariTerlambat;
+                return $loan;
+            });
+
+        return view('anggota.riwayat', compact('history', 'tagihanDenda', 'dendaBerjalan'));
     }
 
     public function profile()

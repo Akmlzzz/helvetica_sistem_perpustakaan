@@ -26,7 +26,64 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
         {{-- ====== KIRI: Tabel Riwayat Peminjaman (2/3) ====== --}}
-        <div class="xl:col-span-2">
+        <div class="xl:col-span-2 space-y-6">
+
+            {{-- NEW: Denda Berjalan / Keterlambatan Saat Ini --}}
+            @if(isset($dendaBerjalan) && $dendaBerjalan->count() > 0)
+                <div class="rounded-[20px] border border-red-100 bg-white shadow-sm overflow-hidden">
+                    <div class="flex items-center justify-between px-6 py-5 border-b border-red-100 bg-red-50/50">
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-600">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-red-700 text-base">Keterlambatan Aktif</h3>
+                                <p class="text-xs text-red-500 mt-0.5">Buku yang belum dikembalikan & melewati jatuh tempo</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b border-red-100">
+                                        <th class="text-left py-3 px-3 font-semibold text-red-500 text-xs uppercase tracking-wide">Buku</th>
+                                        <th class="text-left py-3 px-3 font-semibold text-red-500 text-xs uppercase tracking-wide">Jatuh Tempo</th>
+                                        <th class="text-left py-3 px-3 font-semibold text-red-500 text-xs uppercase tracking-wide">Terlambat</th>
+                                        <th class="text-right py-3 px-3 font-semibold text-red-500 text-xs uppercase tracking-wide">Estimasi Denda</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-red-50">
+                                    @foreach($dendaBerjalan as $loan)
+                                        <tr>
+                                            <td class="py-4 px-3">
+                                                <p class="font-semibold text-black text-sm">{{ $loan->buku->judul_buku }}</p>
+                                                <p class="text-xs text-gray-400">{{ $loan->kode_booking }}</p>
+                                            </td>
+                                            <td class="py-4 px-3 text-gray-600">
+                                                {{ $loan->tgl_jatuh_tempo ? \Carbon\Carbon::parse($loan->tgl_jatuh_tempo)->format('d M Y') : '-' }}
+                                            </td>
+                                            <td class="py-4 px-3">
+                                                <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">
+                                                    {{ $loan->hari_terlambat }} Hari
+                                                </span>
+                                            </td>
+                                            <td class="py-4 px-3 text-right font-bold text-red-600">
+                                                Rp {{ number_format($loan->estimasi_denda, 0, ',', '.') }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 rounded-lg bg-red-50 p-3 text-xs text-red-600">
+                            * Denda dihitung Rp 2.000 per hari keterlambatan. Total denda final akan dihitung saat pengembalian buku.
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="rounded-[20px] border border-gray-100 bg-white shadow-sm overflow-hidden">
                 <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
                     <div>
@@ -131,95 +188,73 @@
             </div>
         </div>
 
-        {{-- ====== KANAN: Widget Tagihan Denda (1/3) ====== --}}
-        <div class="flex flex-col gap-6">
+        {{-- ====== KANAN: Tagihan Denda (1/3) ====== --}}
+        <div class="xl:col-span-1 space-y-6">
 
-            {{-- Total Denda Summary Card --}}
-            @php $totalDenda = $tagihanDenda->sum('jumlah_denda'); @endphp
-            <div class="rounded-[20px] border bg-white shadow-sm overflow-hidden {{ $totalDenda > 0 ? 'border-red-200' : 'border-gray-100' }}">
-                <div class="px-6 py-5 border-b {{ $totalDenda > 0 ? 'border-red-100 bg-red-50' : 'border-gray-100' }}">
-                    <h3 class="font-bold text-black text-base">Tagihan Denda</h3>
-                    <p class="text-xs text-gray-400 mt-0.5">Denda yang harus diselesaikan</p>
+            {{-- Summary Card --}}
+            <div class="rounded-[20px] border border-gray-100 bg-white p-6 shadow-sm">
+                <h3 class="font-bold text-gray-500 text-sm uppercase tracking-wide">Total Tagihan Denda</h3>
+                <div class="mt-2 flex items-baseline gap-2">
+                    @php
+                        $totalDenda = $tagihanDenda->sum('jumlah_denda');
+                        $totalEstimasi = isset($dendaBerjalan) ? $dendaBerjalan->sum('estimasi_denda') : 0;
+                        $grandTotal = $totalDenda + $totalEstimasi;
+                    @endphp
+                    <span class="text-3xl font-bold text-black">Rp {{ number_format($grandTotal, 0, ',', '.') }}</span>
                 </div>
+                
+                @if($totalEstimasi > 0)
+                <div class="mt-2 text-xs text-red-500 flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    Termasuk estimasi Rp {{ number_format($totalEstimasi, 0, ',', '.') }} dari keterlambatan aktif
+                </div>
+                @endif
+                
+                <p class="text-xs text-gray-400 mt-4">
+                    * Harap lunasi denda di petugas perpustakaan agar akun tidak dibekukan.
+                </p>
+            </div>
 
+            {{-- List Tagihan Resmi --}}
+            <div class="rounded-[20px] border border-gray-100 bg-white shadow-sm overflow-hidden">
+                <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+                    <h3 class="font-bold text-black text-base">Rincian Tagihan</h3>
+                    <span class="text-xs font-semibold bg-red-100 text-red-600 px-3 py-1 rounded-full">
+                        {{ $tagihanDenda->count() }} item
+                    </span>
+                </div>
                 <div class="p-6">
                     @if($tagihanDenda->count() > 0)
-                        <div class="flex flex-col gap-3 mb-5">
+                        <div class="space-y-4">
                             @foreach($tagihanDenda as $denda)
-                                <div class="flex items-start gap-3 rounded-xl border border-red-100 bg-red-50 p-3">
-                                    <div class="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-red-100">
-                                        <svg class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                                        </svg>
+                                <div class="flex items-start justify-between border-b border-gray-50 pb-4 last:border-0 last:pb-0">
+                                    <div>
+                                        <p class="font-semibold text-black text-sm line-clamp-1" title="{{ $denda->peminjaman->buku->judul_buku }}">
+                                            {{ $denda->peminjaman->buku->judul_buku }}
+                                        </p>
+                                        <p class="text-xs text-gray-400 mt-0.5">Kode: {{ $denda->peminjaman->kode_booking }}
+                                        </p>
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-semibold text-black line-clamp-1">
-                                            {{ $denda->peminjaman?->buku?->judul_buku ?? 'Buku tidak diketahui' }}
-                                        </p>
-                                        <p class="text-xs text-gray-500 mt-0.5">
-                                            Kembali: {{ $denda->peminjaman?->tgl_kembali ? \Carbon\Carbon::parse($denda->peminjaman->tgl_kembali)->format('d M Y') : '-' }}
-                                        </p>
-                                        <p class="text-sm font-bold text-red-600 mt-1">
-                                            Rp {{ number_format($denda->jumlah_denda, 0, ',', '.') }}
-                                        </p>
+                                    <div class="text-right">
+                                        <span class="block font-bold text-red-600 text-sm">Rp {{ number_format($denda->jumlah_denda, 0, ',', '.') }}</span>
+                                        <span class="text-[10px] text-red-400">Belum Lunas</span>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-
-                        {{-- Total --}}
-                        <div class="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 border border-gray-100">
-                            <span class="text-sm font-medium text-gray-600">Total Tagihan</span>
-                            <span class="text-lg font-bold text-red-600">Rp {{ number_format($totalDenda, 0, ',', '.') }}</span>
-                        </div>
-
-                        {{-- Info bayar --}}
-                        <div class="mt-4 flex items-start gap-2 rounded-xl border border-amber-100 bg-amber-50 p-3">
-                            <svg class="h-4 w-4 mt-0.5 text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <p class="text-xs text-amber-700 leading-relaxed">
-                                Silakan bayar denda langsung di meja petugas perpustakaan atau hubungi staff terkait.
-                            </p>
-                        </div>
                     @else
-                        <div class="flex flex-col items-center justify-center py-8 text-center">
-                            <div class="rounded-full bg-green-50 p-4 mb-3">
-                                <svg class="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                                </svg>
+                        <div class="text-center py-8">
+                            <div class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-500 mb-3">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             </div>
-                            <p class="font-bold text-black text-sm">Tidak ada denda!</p>
-                            <p class="text-xs text-gray-400 mt-1">Anda tidak memiliki tagihan denda saat ini.</p>
+                            <p class="text-sm font-medium text-gray-900">Tidak ada tagihan</p>
+                            <p class="text-xs text-gray-500 mt-1">Anda tidak memiliki denda yang harus dibayar.</p>
                         </div>
                     @endif
                 </div>
             </div>
 
-            {{-- Stats Card --}}
-            <div class="rounded-[20px] border border-gray-100 bg-white shadow-sm p-6">
-                <h4 class="font-bold text-black text-sm mb-4">Statistik Peminjaman</h4>
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Total Dipinjam</span>
-                        <span class="font-bold text-black">{{ $history->count() }} buku</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Pernah Kena Denda</span>
-                        <span class="font-bold {{ $history->filter(fn($l) => $l->denda)->count() > 0 ? 'text-red-500' : 'text-black' }}">
-                            {{ $history->filter(fn($l) => $l->denda)->count() }} kali
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Total Denda Dibayar</span>
-                        <span class="font-bold text-gray-500">
-                            Rp {{ number_format($history->filter(fn($l) => $l->denda && $l->denda->status_pembayaran === 'lunas')->sum(fn($l) => $l->denda->jumlah_denda), 0, ',', '.') }}
-                        </span>
-                    </div>
-                </div>
-            </div>
         </div>
-
     </div>
 </div>
 @endsection
