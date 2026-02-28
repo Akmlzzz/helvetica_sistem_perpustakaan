@@ -167,3 +167,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/notifikasi/baca-semua', [\App\Http\Controllers\NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.baca-semua');
     Route::delete('/notifikasi/{id}', [\App\Http\Controllers\NotifikasiController::class, 'destroy'])->name('notifikasi.hapus');
 });
+
+// AI Chatbot Route
+Route::middleware('auth')->post('/api/ai/chat', [\App\Http\Controllers\AiChatController::class, 'chat'])->name('api.ai.chat');

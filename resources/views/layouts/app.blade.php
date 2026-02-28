@@ -163,6 +163,8 @@
             </button>
         </div>
     @endif
+
+    <x-chatbot-widget />
 </body>
 
 @stack('scripts')

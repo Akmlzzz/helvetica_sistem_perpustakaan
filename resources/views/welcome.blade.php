@@ -691,6 +691,9 @@
 
         });
     </script>
+    @auth
+        <x-chatbot-widget />
+    @endauth
 </body>
 
 </html>
