@@ -66,10 +66,13 @@ class AiChatController extends Controller
             2. Jika mereka sudah memberikan riwayat bacaan, gunakan itu untuk menyarankan buku yang serupa dari katalog yang tersedia di atas.
             3. Berikan alasan 'Mengapa' Anda merekomendasikan buku tersebut (misal: 'Karena Anda suka genre fiksi, mungkin buku X cocok untuk Anda').
             4. Gunakan bahasa Indonesia yang asyik, tidak kaku, tapi tetap sopan.
-            5. Batasi balasan Anda agar tetap ringkas namun informatif (maksimal 3 paragraf).
-            6. Akhiri dengan ajakan untuk mengecek katalog lengkap jika mereka belum sreg.";
+            5. Batasi balasan Anda agar tetap ringkas namun informatif.
+            6. Akhiri dengan ajakan untuk mengecek katalog lengkap jika mereka belum sreg.
+            7. FORMAT JAWABAN WAJIB MENGGUNAKAN MARKDOWN: 
+               - Gunakan huruf tebal (**teks**) untuk judul buku atau poin penting.
+               - Gunakan daftar berpoin (`- `) atau penomoran (`1. `) untuk menyajikan lebih dari 1 pilihan.
+               - Beri baris baru (enter/newline) antar paragraf atau antar list agar rapi dan tidak menyatu. Jangan tulis semua dalam 1 paragraf panjang.";
 
-        // Trim API Key in case there are hidden newline/carriage return characters from .env
         $apiKey = trim($apiKey);
 
         try {
@@ -88,14 +91,21 @@ class AiChatController extends Controller
                             'temperature' => 0.7,
                             'topK' => 40,
                             'topP' => 0.95,
-                            'maxOutputTokens' => 1024,
+                            'maxOutputTokens' => 4096,
                         ]
                     ]);
 
             if ($response->successful()) {
                 $data = $response->json();
                 $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya sedang tidak bisa merespons saat ini.';
-                return response()->json(['reply' => $reply]);
+
+                // Parse markdown into HTML securely
+                $htmlReply = \Illuminate\Support\Str::markdown($reply, [
+                    'html_input' => 'strip',
+                    'allow_unsafe_links' => false,
+                ]);
+
+                return response()->json(['reply' => $htmlReply]);
             }
 
             Log::error('Gemini API Error: ' . $response->body());

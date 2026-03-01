@@ -93,7 +93,7 @@
                 </div>
                 <div>
                     <h4 class="text-sm font-bold">Pustakawan AI</h4>
-                    <p class="text-[10px] text-white/70">Online &bull; Kecerdasan Buatan</p>
+                    <p class="text-[10px] text-white/70">Gemini 2.5 Flash &bull;</p>
                 </div>
             </div>
         </div>
@@ -114,7 +114,12 @@
                     <!-- Bubble Text -->
                     <div class="max-w-[80%] rounded-2xl px-4 py-2.5 text-xs shadow-sm"
                         :class="msg.role === 'user' ? 'bg-[#004236] text-white rounded-tr-none' : 'bg-white text-gray-700 border border-gray-100 rounded-tl-none'">
-                        <p class="leading-relaxed" x-text="msg.text"></p>
+                        <template x-if="msg.role === 'user'">
+                            <p class="leading-relaxed whitespace-pre-wrap" x-text="msg.text"></p>
+                        </template>
+                        <template x-if="msg.role === 'ai'">
+                            <div class="leading-relaxed ai-chat-content" x-html="msg.text"></div>
+                        </template>
                     </div>
                 </div>
             </template>
@@ -146,7 +151,42 @@
                     </svg>
                 </button>
             </form>
-            <p class="mt-2 text-[9px] text-center text-gray-400">Didukung oleh Google Gemini 1.5 Flash</p>
+            <p class="mt-2 text-[9px] text-center text-gray-400">AI bisa membuat kesalahan!</p>
         </div>
     </div>
 </div>
+
+<style>
+    .ai-chat-content p {
+        margin-bottom: 0.5rem;
+    }
+
+    .ai-chat-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    .ai-chat-content ul {
+        list-style-type: disc;
+        margin-left: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .ai-chat-content ol {
+        list-style-type: decimal;
+        margin-left: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .ai-chat-content li {
+        margin-bottom: 0.25rem;
+    }
+
+    .ai-chat-content strong {
+        font-weight: 600;
+        color: #004236;
+    }
+
+    .ai-chat-content em {
+        font-style: italic;
+    }
+</style>

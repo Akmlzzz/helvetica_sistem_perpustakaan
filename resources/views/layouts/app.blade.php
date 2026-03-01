@@ -165,6 +165,7 @@
     @endif
 
     <x-chatbot-widget />
+    <x-music-player />
 </body>
 
 @stack('scripts')
