@@ -116,4 +116,65 @@ class AiChatController extends Controller
             return response()->json(['error' => 'Terjadi kesalahan sistem.'], 500);
         }
     }
+
+    public function summary(Request $request)
+    {
+        $request->validate([
+            'id_buku' => 'required|exists:buku,id_buku',
+        ]);
+
+        $buku = Buku::with('kategori')->findOrFail($request->id_buku);
+        $apiKey = trim(config('services.gemini.key'));
+
+        if (!$apiKey) {
+            return response()->json(['error' => 'AI tidak terkonfigurasi.'], 500);
+        }
+
+        $kategori = $buku->kategori->pluck('nama_kategori')->implode(', ');
+        $sinopsis = \Illuminate\Support\Str::limit(strip_tags($buku->sinopsis ?? ''), 500);
+        $prompt = "Buatkan ringkasan lengkap dalam bahasa Indonesia (3 paragraf, setiap paragraf min 3 kalimat PENUH) untuk buku berikut:\n"
+            . "Judul: {$buku->judul_buku}\n"
+            . "Penulis: {$buku->penulis}\n"
+            . "Kategori: {$kategori}\n"
+            . "Sinopsis: {$sinopsis}\n\n"
+            . "PENTING: Jawaban harus SELESAI dan tidak terpotong di tengah kalimat. Gunakan Markdown (**tebal**) untuk poin penting.";
+
+        try {
+            $response = Http::withoutVerifying()
+                ->timeout(60)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}", [
+                    'contents' => [
+                        ['parts' => [['text' => $prompt]]]
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 0.7,
+                        'maxOutputTokens' => 4096,
+                    ]
+                ]);
+
+            if ($response->successful()) {
+                $data = $response->json();
+                $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+
+                if (!$reply) {
+                    Log::error('Gemini Summary: empty response', ['body' => $response->body()]);
+                    return response()->json(['error' => 'AI tidak menghasilkan ringkasan.'], 500);
+                }
+
+                $htmlReply = \Illuminate\Support\Str::markdown($reply, [
+                    'html_input' => 'strip',
+                    'allow_unsafe_links' => false,
+                ]);
+
+                return response()->json(['summary' => $htmlReply]);
+            }
+
+            Log::error('Gemini Summary API error', ['status' => $response->status(), 'body' => $response->body()]);
+            return response()->json(['error' => 'Gagal: HTTP ' . $response->status()], 500);
+        } catch (\Exception $e) {
+            Log::error('Gemini Summary Exception: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

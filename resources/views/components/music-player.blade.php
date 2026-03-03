@@ -5,21 +5,24 @@
     currentTrackIndex: 0,
     duration: 0,
     currentTime: 0,
-    tracks: [
-        { title: 'Midnight Library', artist: 'Lofi Ambient', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-        { title: 'Rainy Day Reading', artist: 'Piano & Rain', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
-        { title: 'Nature Whispers', artist: 'Forest Sounds', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
-        { title: 'Classical Study', artist: 'Soft Strings', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' }
-    ],
+    tracks: [],
     get currentTrack() {
-        return this.tracks[this.currentTrackIndex];
+        return this.tracks[this.currentTrackIndex] ?? { title: 'No Track', artist: '-', url: '' };
     },
     init() {
         this.$watch('volume', value => {
             this.$refs.audio.volume = value / 100;
         });
+        // Load tracks from server
+        fetch('/api/musik')
+            .then(res => res.json())
+            .then(data => {
+                this.tracks = data.map(t => ({ title: t.judul, artist: t.artis, url: t.url }));
+            })
+            .catch(() => { this.tracks = []; });
     },
     togglePlay() {
+        if (!this.currentTrack.url) return;
         if (this.playing) {
             this.$refs.audio.pause();
         } else {
@@ -28,10 +31,12 @@
         this.playing = !this.playing;
     },
     nextTrack() {
+        if (!this.tracks.length) return;
         this.currentTrackIndex = (this.currentTrackIndex + 1) % this.tracks.length;
         this.loadAndPlay();
     },
     prevTrack() {
+        if (!this.tracks.length) return;
         this.currentTrackIndex = (this.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length;
         this.loadAndPlay();
     },
@@ -98,14 +103,24 @@
 
             <div class="relative z-10">
                 <p class="text-[10px] font-bold uppercase tracking-widest text-[#cef17b]/80 mb-1">Now Playing</p>
-                <h4 class="text-lg font-bold truncate" x-text="currentTrack.title"></h4>
-                <p class="text-xs text-white/70" x-text="currentTrack.artist"></p>
+                <template x-if="tracks.length > 0">
+                    <div>
+                        <h4 class="text-lg font-bold truncate" x-text="currentTrack.title"></h4>
+                        <p class="text-xs text-white/70" x-text="currentTrack.artist"></p>
+                    </div>
+                </template>
+                <template x-if="tracks.length === 0">
+                    <div>
+                        <h4 class="text-base font-bold text-white/60">Playlist Kosong</h4>
+                        <p class="text-xs text-white/40">Admin belum menambahkan lagu.</p>
+                    </div>
+                </template>
             </div>
 
             <!-- Progress Bar -->
             <div class="mt-4 h-1.5 w-full bg-black/20 rounded-full overflow-hidden">
                 <div class="h-full bg-[#cef17b] transition-all duration-300"
-                    :style="`width: ${(currentTime / duration) * 100}%` "></div>
+                    :style="`width: ${duration ? (currentTime / duration) * 100 : 0}%` "></div>
             </div>
             <div class="flex justify-between mt-1 px-0.5">
                 <span class="text-[9px] text-white/50" x-text="formatTime(currentTime)"></span>
@@ -118,7 +133,8 @@
             <!-- Main Buttons -->
             <div class="flex items-center justify-center gap-6">
                 <!-- Previous -->
-                <button @click="prevTrack()" class="text-gray-400 hover:text-[#084734] transition-colors">
+                <button @click="prevTrack()" class="text-gray-400 hover:text-[#084734] transition-colors"
+                    :disabled="tracks.length === 0">
                     <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
                     </svg>
@@ -126,7 +142,8 @@
 
                 <!-- Play/Pause -->
                 <button @click="togglePlay()"
-                    class="flex h-12 w-12 items-center justify-center rounded-full bg-[#084734] text-white shadow-lg hover:shadow-[#084734]/20 transition-all hover:scale-105 active:scale-95">
+                    class="flex h-12 w-12 items-center justify-center rounded-full bg-[#084734] text-white shadow-lg hover:shadow-[#084734]/20 transition-all hover:scale-105 active:scale-95 disabled:opacity-40"
+                    :disabled="tracks.length === 0">
                     <svg x-show="!playing" class="h-6 w-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z" />
                     </svg>
@@ -137,7 +154,8 @@
                 </button>
 
                 <!-- Next -->
-                <button @click="nextTrack()" class="text-gray-400 hover:text-[#084734] transition-colors">
+                <button @click="nextTrack()" class="text-gray-400 hover:text-[#084734] transition-colors"
+                    :disabled="tracks.length === 0">
                     <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
                     </svg>
@@ -146,7 +164,7 @@
 
             <!-- Volume Control -->
             <div class="flex items-center gap-3">
-                <svg @click="volume = 0" class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
+                <svg @click="volume = 0" class="h-4 w-4 text-gray-400 cursor-pointer" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
@@ -155,8 +173,8 @@
                     <input type="range" x-model="volume" min="0" max="100"
                         class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#084734] hover:bg-gray-300 transition-colors">
                 </div>
-                <svg @click="volume = 100" class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
+                <svg @click="volume = 100" class="h-4 w-4 text-gray-400 cursor-pointer" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                 </svg>
@@ -165,9 +183,12 @@
             <!-- Playlist Snippet -->
             <div class="border-t border-gray-100 pt-4">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Library Playlists</p>
+                <template x-if="tracks.length === 0">
+                    <p class="text-xs text-gray-400 text-center py-4">Belum ada lagu. Tambahkan di dashboard admin.</p>
+                </template>
                 <div class="space-y-2">
                     <template x-for="(track, index) in tracks" :key="index">
-                        <button @click="currentTrackIndex = index; loadAndPlay()"
+                        <button @click="currentTrackIndex = index; loadAndPlay(); playing = true;"
                             class="w-full flex items-center justify-between text-left px-3 py-2 rounded-xl transition-all"
                             :class="currentTrackIndex === index ? 'bg-[#084734]/5 text-[#084734] font-bold' : 'text-gray-500 hover:bg-gray-50'">
                             <span class="text-xs truncate" x-text="track.title"></span>
@@ -185,8 +206,7 @@
         <!-- Footer -->
         <div class="bg-gray-50 px-5 py-3 border-t border-gray-100 flex items-center justify-center gap-1.5">
             <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
-            <p class="text-[9px] text-gray-400 font-medium uppercase tracking-tight">Audio Quality: Lossless High
-                Fidelity</p>
+            <p class="text-[9px] text-gray-400 font-medium uppercase tracking-tight">Biblio Ambient Player</p>
         </div>
     </div>
 </div>

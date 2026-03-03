@@ -150,6 +150,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/anggota/koleksi', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'index'])->name('anggota.koleksi.index');
         Route::post('/anggota/koleksi/{id_buku}', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'store'])->name('anggota.koleksi.store');
         Route::delete('/anggota/koleksi/{id_buku}', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'destroy'])->name('anggota.koleksi.destroy');
+
+        // Ulasan Buku
+        Route::post('/anggota/ulasan', [\App\Http\Controllers\Anggota\UlasanController::class, 'store'])->name('anggota.ulasan.store');
     });
 });
 
@@ -168,5 +171,28 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifikasi/{id}', [\App\Http\Controllers\NotifikasiController::class, 'destroy'])->name('notifikasi.hapus');
 });
 
-// AI Chatbot Route
-Route::middleware('auth')->post('/api/ai/chat', [\App\Http\Controllers\AiChatController::class, 'chat'])->name('api.ai.chat');
+// AI Chatbot Routes
+Route::middleware('auth')->group(function () {
+    Route::post('/api/ai/chat', [\App\Http\Controllers\AiChatController::class, 'chat'])->name('api.ai.chat');
+    Route::post('/api/ai/summary', [\App\Http\Controllers\AiChatController::class, 'summary'])->name('api.ai.summary');
+});
+
+// Music Player Management (Admin only)
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'index'])->name('musik.index');
+    Route::post('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'store'])->name('musik.store');
+    Route::put('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'update'])->name('musik.update');
+    Route::delete('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'destroy'])->name('musik.destroy');
+    Route::patch('/musik/{musik}/toggle', [\App\Http\Controllers\Admin\MusikController::class, 'toggleAktif'])->name('musik.toggle');
+});
+
+// Public API: get active tracks for music player
+Route::get('/api/musik', function () {
+    return response()->json(
+        \App\Models\Musik::aktif()->get()->map(fn($m) => [
+            'judul' => $m->judul,
+            'artis' => $m->artis,
+            'url' => $m->audio_url, // accessor: prioritas file upload > URL
+        ])
+    );
+})->name('api.musik');

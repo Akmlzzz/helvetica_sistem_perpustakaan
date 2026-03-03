@@ -6,10 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Notifikasi;
 use App\Models\PengajuanBuku;
 use App\Models\Kategori;
+use App\Services\MakeWebhookService;
 use Illuminate\Http\Request;
 
 class PengajuanBukuController extends Controller
 {
+    protected $webhookService;
+
+    public function __construct(MakeWebhookService $webhookService)
+    {
+        $this->webhookService = $webhookService;
+    }
+
     /**
      * Tampilkan semua pengajuan buku (admin)
      */
@@ -93,6 +101,20 @@ class PengajuanBukuController extends Controller
                 'pesan' => $pesanStatus,
                 'id_pengajuan' => $pengajuan->id_pengajuan,
                 'sudah_dibaca' => false,
+            ]);
+
+            // AI Notification via Make.com
+            $this->webhookService->send('pengajuan_buku_status_update', [
+                'user' => [
+                    'nama' => $pengajuan->pengguna->nama_pengguna ?? $pengajuan->nama_pengusul,
+                    'email' => $pengajuan->pengguna->email ?? null,
+                ],
+                'buku' => [
+                    'judul' => $pengajuan->judul_buku,
+                    'penulis' => $pengajuan->nama_penulis,
+                ],
+                'status_baru' => $request->status,
+                'catatan_admin' => $request->catatan_admin,
             ]);
         }
 

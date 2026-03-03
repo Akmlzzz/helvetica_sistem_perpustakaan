@@ -4,9 +4,57 @@
 <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
 
     {{-- Page Header --}}
-    <div class="mb-6">
-        <h2 class="text-title-md2 font-bold text-black">Riwayat & Denda</h2>
-        <p class="text-sm text-gray-500 mt-1">Lihat riwayat peminjaman buku dan tagihan denda Anda.</p>
+    <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <h2 class="text-3xl font-black text-black tracking-tight">Perjalanan Membaca</h2>
+            <p class="text-gray-500 mt-1">Jejak literasi dan aktivitas Anda di Biblio Digital Library.</p>
+        </div>
+        <div class="px-4 py-2 bg-[#e8f4f0] rounded-2xl border border-[#c8e6d8] flex items-center gap-2">
+            <svg class="h-5 w-5 text-[#0f4c3a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002-2z" />
+            </svg>
+            <span class="text-xs font-bold text-[#0f4c3a] uppercase tracking-widest">MEMBER SEJAK {{ $stats['member_since'] }}</span>
+        </div>
+    </div>
+
+    {{-- Stats Overview --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+            <div class="h-10 w-10 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+            <p class="text-2xl font-black text-black">{{ $stats['total_buku'] }}</p>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Buku Selesai</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+            <div class="h-10 w-10 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-4">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <p class="text-2xl font-black text-black">{{ $stats['buku_terlambat'] }}</p>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Pernah Terlambat</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+            <div class="h-10 w-10 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-4">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <p class="text-2xl font-black text-black">Rp {{ number_format($stats['total_denda'], 0, ',', '.') }}</p>
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Total Denda Bayar</p>
+        </div>
+        <div class="bg-[#0f4c3a] p-6 rounded-3xl border border-[#0f4c3a] shadow-lg hover:shadow-xl transition-all">
+            <div class="h-10 w-10 bg-white/20 text-white rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <p class="text-2xl font-black text-white">Aktif</p>
+            <p class="text-xs font-bold text-white/60 uppercase tracking-widest mt-1">Status Keanggotaan</p>
+        </div>
     </div>
 
     {{-- Flash Messages --}}
@@ -113,7 +161,7 @@
                                             <td class="py-4 px-3">
                                                 <div class="flex items-center gap-3">
                                                     {{-- Sampul mini --}}
-                                                    <div class="h-12 w-9 flex-shrink-0 rounded-md overflow-hidden bg-gray-100">
+                                                    <div class="h-12 w-9 shrink-0 rounded-md overflow-hidden bg-gray-100">
                                                         @if($loan->buku?->sampul)
                                                             <img src="{{ Storage::url($loan->buku->sampul) }}" alt="{{ $loan->buku->judul_buku }}" class="h-full w-full object-cover">
                                                         @else

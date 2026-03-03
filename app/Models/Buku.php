@@ -38,6 +38,16 @@ class Buku extends Model
         return $this->hasMany(Peminjaman::class, 'id_buku');
     }
 
+    public function ulasan()
+    {
+        return $this->hasMany(UlasanBuku::class, 'id_buku');
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return round($this->ulasan()->avg('rating'), 1) ?: 0;
+    }
+
     public function peminjamanAktif()
     {
         return $this->hasMany(Peminjaman::class, 'id_buku')->whereIn('status_transaksi', ['booking', 'dipinjam']);

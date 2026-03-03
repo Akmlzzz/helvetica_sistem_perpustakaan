@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Services\MakeWebhookService;
+use Carbon\Carbon;
 
 class CheckOverdueLoans extends Command
 {
@@ -23,8 +25,9 @@ class CheckOverdueLoans extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(MakeWebhookService $webhookService)
     {
+        // 1. Check for OVERDUE loans
         $overdueLoans = \App\Models\Peminjaman::whereIn('status_transaksi', ['dipinjam', 'terlambat'])
             ->whereDate('tgl_jatuh_tempo', '<', now())
             ->with(['pengguna', 'buku'])
@@ -46,7 +49,7 @@ class CheckOverdueLoans extends Command
             }
 
             $daysOverdue = now()->diffInDays($loan->tgl_jatuh_tempo);
-            
+
             // Notify officers (Petugas & Admin)
             foreach ($officers as $officer) {
                 // Check if notification already exists for today to prevent spam
@@ -68,7 +71,7 @@ class CheckOverdueLoans extends Command
             }
 
             // Notify Member (Anggota)
-             $memberExists = \App\Models\Notifikasi::where('id_pengguna', $loan->id_pengguna)
+            $memberExists = \App\Models\Notifikasi::where('id_pengguna', $loan->id_pengguna)
                 ->where('tipe', 'keterlambatan')
                 ->where('pesan', 'like', "%{$loan->kode_booking}%")
                 ->whereDate('created_at', now())
@@ -83,8 +86,43 @@ class CheckOverdueLoans extends Command
                     'sudah_dibaca' => false,
                 ]);
             }
+
+            // AI Notification via Make.com (Fine Reminder)
+            $webhookService->send('pengingat_denda', [
+                'user' => [
+                    'nama' => $loan->pengguna->nama_pengguna ?? 'Member',
+                    'telepon' => $loan->pengguna->telepon ?? null,
+                ],
+                'buku' => [
+                    'judul' => $loan->buku->judul_buku,
+                ],
+                'total_denda' => $daysOverdue * 2000,
+                'rincian_denda' => "Keterlambatan {$daysOverdue} hari",
+            ]);
         }
 
         $this->info("Checked " . $overdueLoans->count() . " overdue loans and sent notifications.");
+
+        // 2. Check for UPCOMING DEADLINES (e.g., in 24 hours)
+        $upcomingLoans = \App\Models\Peminjaman::where('status_transaksi', 'dipinjam')
+            ->whereDate('tgl_jatuh_tempo', Carbon::tomorrow())
+            ->with(['pengguna', 'buku'])
+            ->get();
+
+        foreach ($upcomingLoans as $loan) {
+            $webhookService->send('pengingat_deadline', [
+                'user' => [
+                    'nama' => $loan->pengguna->nama_pengguna ?? 'Member',
+                    'telepon' => $loan->pengguna->telepon ?? null,
+                ],
+                'buku' => [
+                    'judul' => $loan->buku->judul_buku,
+                ],
+                'sisa_waktu' => '24 jam',
+                'deadline_formal' => $loan->tgl_jatuh_tempo->format('d M Y'),
+            ]);
+        }
+
+        $this->info("Checked " . $upcomingLoans->count() . " upcoming deadlines.");
     }
 }

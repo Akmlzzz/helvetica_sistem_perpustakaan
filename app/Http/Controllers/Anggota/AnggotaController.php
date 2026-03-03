@@ -50,8 +50,8 @@ class AnggotaController extends Controller
         $buku = $query->paginate(12)->withQueryString();
         $kategori = \App\Models\Kategori::all();
         $banners = \App\Models\HeroBanner::where('is_active', true)
-                    ->orderBy('order_priority', 'asc')
-                    ->get();
+            ->orderBy('order_priority', 'asc')
+            ->get();
 
         // Jika AJAX request, kembalikan JSON partial
         if ($request->ajax() || $request->has('ajax')) {
@@ -72,7 +72,13 @@ class AnggotaController extends Controller
      */
     public function detailBuku($id)
     {
-        $buku = Buku::with('kategori')->findOrFail($id);
+        $buku = Buku::with([
+            'kategori',
+            'ulasan' => function ($q) {
+                $q->latest('dibuat_pada');
+            },
+            'ulasan.anggota'
+        ])->findOrFail($id);
 
         // Cek apakah anggota sedang meminjam buku ini
         $sedangMeminjam = Peminjaman::where('id_pengguna', Auth::id())
@@ -256,7 +262,15 @@ class AnggotaController extends Controller
                 return $loan;
             });
 
-        return view('anggota.riwayat', compact('history', 'tagihanDenda', 'dendaBerjalan'));
+        // Statistik Sederhana
+        $stats = [
+            'total_buku' => $history->count(),
+            'total_denda' => $totalDendaOfficial = $tagihanDenda->sum('jumlah_denda'),
+            'buku_terlambat' => $history->filter(fn($l) => $l->denda && $l->denda->jumlah_denda > 0)->count(),
+            'member_since' => Auth::user()->dibuat_pada->locale('id')->isoFormat('MMMM YYYY'),
+        ];
+
+        return view('anggota.riwayat', compact('history', 'tagihanDenda', 'dendaBerjalan', 'stats'));
     }
 
     public function profile()

@@ -7,12 +7,21 @@ use App\Models\Peminjaman;
 use App\Models\Buku;
 use App\Models\Denda;
 use App\Models\Pengguna;
+use App\Models\KoleksiPribadi;
+use App\Services\MakeWebhookService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PetugasController extends Controller
 {
+    protected $webhookService;
+
+    public function __construct(MakeWebhookService $webhookService)
+    {
+        $this->webhookService = $webhookService;
+    }
+
     public function index(Request $request)
     {
         $user = auth()->user();
@@ -246,7 +255,33 @@ class PetugasController extends Controller
 
             // Restore stok buku
             if ($peminjaman->id_buku) {
-                Buku::where('id_buku', $peminjaman->id_buku)->increment('stok');
+                $buku = Buku::where('id_buku', $peminjaman->id_buku)->first();
+                $wasOutOfStock = ($buku && $buku->stok <= 0);
+
+                if ($buku) {
+                    $buku->increment('stok');
+                }
+
+                // AI Notification (Back-in-Stock)
+                if ($wasOutOfStock) {
+                    $interestedUsers = KoleksiPribadi::where('id_buku', $peminjaman->id_buku)
+                        ->with(['pengguna', 'buku'])
+                        ->get();
+
+                    foreach ($interestedUsers as $koleksi) {
+                        $this->webhookService->send('stok_tersedia', [
+                            'user' => [
+                                'nama' => $koleksi->pengguna->nama_pengguna ?? 'Member',
+                                'telepon' => $koleksi->pengguna->telepon ?? null,
+                            ],
+                            'buku' => [
+                                'judul' => $koleksi->buku->judul_buku,
+                                'id_buku' => $koleksi->id_buku,
+                            ],
+                            'as_requested_in' => 'Koleksi Pribadi'
+                        ]);
+                    }
+                }
             }
 
             $namaBuku = $peminjaman->buku->judul_buku ?? '-';

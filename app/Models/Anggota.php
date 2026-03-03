@@ -26,4 +26,9 @@ class Anggota extends Model
     {
         return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
+
+    public function ulasan()
+    {
+        return $this->hasMany(UlasanBuku::class, 'id_anggota');
+    }
 }

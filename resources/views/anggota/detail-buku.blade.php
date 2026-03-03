@@ -66,41 +66,41 @@
                         $inWishlist = \App\Models\KoleksiPribadi::where('id_pengguna', auth()->user()->id_pengguna)->where('id_buku', $buku->id_buku)->exists();
                     @endphp
                     <div x-data="{
-                            inWishlist: {{ $inWishlist ? 'true' : 'false' }},
-                            loading: false,
-                            toggleWishlist() {
-                                if (this.loading) return;
-                                this.loading = true;
+                                        inWishlist: {{ $inWishlist ? 'true' : 'false' }},
+                                        loading: false,
+                                        toggleWishlist() {
+                                            if (this.loading) return;
+                                            this.loading = true;
 
-                                const isAdding = !this.inWishlist;
-                                const url = isAdding 
-                                    ? '{{ route('anggota.koleksi.store', $buku->id_buku) }}' 
-                                    : '{{ route('anggota.koleksi.destroy', $buku->id_buku) }}';
+                                            const isAdding = !this.inWishlist;
+                                            const url = isAdding 
+                                                ? '{{ route('anggota.koleksi.store', $buku->id_buku) }}' 
+                                                : '{{ route('anggota.koleksi.destroy', $buku->id_buku) }}';
 
-                                const method = isAdding ? 'POST' : 'DELETE';
+                                            const method = isAdding ? 'POST' : 'DELETE';
 
-                                fetch(url, {
-                                    method: method,
-                                    headers: {
-                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                        'X-Requested-With': 'XMLHttpRequest',
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json'
-                                    }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.success) {
-                                        this.inWishlist = !this.inWishlist;
-                                        // Optional: show toast notification here
-                                    }
-                                })
-                                .catch(error => console.error('Error:', error))
-                                .finally(() => {
-                                    this.loading = false;
-                                });
-                            }
-                        }">
+                                            fetch(url, {
+                                                method: method,
+                                                headers: {
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                    'X-Requested-With': 'XMLHttpRequest',
+                                                    'Accept': 'application/json',
+                                                    'Content-Type': 'application/json'
+                                                }
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    this.inWishlist = !this.inWishlist;
+                                                    // Optional: show toast notification here
+                                                }
+                                            })
+                                            .catch(error => console.error('Error:', error))
+                                            .finally(() => {
+                                                this.loading = false;
+                                            });
+                                        }
+                                    }">
                         <button @click="toggleWishlist" :disabled="loading"
                             :class="inWishlist ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-100' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'"
                             class="w-full flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition shadow-sm mb-3">
@@ -371,6 +371,108 @@
                         @endif
                     </div>
 
+                    {{-- AI Magic Summary --}}
+                    <div class="mb-5" x-data="{ 
+                                showAi: false, 
+                                loading: false, 
+                                summary: '', 
+                                getSummary() {
+                                    if (this.summary) {
+                                        this.showAi = true;
+                                        return;
+                                    }
+                                    this.loading = true;
+                                    this.showAi = true;
+                                    fetch('{{ route('api.ai.summary') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                        },
+                                        body: JSON.stringify({ id_buku: {{ $buku->id_buku }} })
+                                    })
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if (data.summary) this.summary = data.summary;
+                                        else this.summary = 'Gagal mendapatkan ringkasan AI.';
+                                    })
+                                    .catch(() => this.summary = 'Terjadi kesalahan koneksi.')
+                                    .finally(() => this.loading = false);
+                                }
+                            }">
+                        <button @click="getSummary"
+                            class="w-full flex items-center justify-between gap-3 p-4 rounded-2xl bg-linear-to-r from-[#0f4c3a] to-[#1a6b54] text-white shadow-md hover:shadow-lg transition-all group overflow-hidden relative">
+                            <div class="flex items-center gap-3 relative z-10">
+                                <div
+                                    class="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-md group-hover:scale-110 transition-transform">
+                                    <svg class="h-6 w-6 text-yellow-300 animate-pulse" fill="currentColor"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="text-left">
+                                    <span class="block text-sm font-bold">AI Magic Summary</span>
+                                    <span
+                                        class="block text-[10px] text-white/70 uppercase tracking-widest font-medium">Bantu
+                                        pahami isi buku dalam sekejap</span>
+                                </div>
+                            </div>
+                            <svg class="h-5 w-5 text-white/50 group-hover:translate-x-1 transition-transform relative z-10"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+
+                            {{-- Decorative Background element --}}
+                            <div
+                                class="absolute -right-4 -top-4 h-24 w-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all">
+                            </div>
+                        </button>
+
+                        {{-- AI Summary Modal/Panel --}}
+                        <div x-show="showAi" x-transition
+                            class="mt-4 bg-[#f0f9f6] rounded-3xl border border-[#c8e6d8] p-6 shadow-inner relative overflow-hidden"
+                            style="display: none;">
+                            <button @click="showAi = false"
+                                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+
+                            <template x-if="loading">
+                                <div class="flex flex-col items-center py-8">
+                                    <div class="flex gap-1 mb-3">
+                                        <div class="h-2 w-2 bg-[#0f4c3a] rounded-full animate-bounce"
+                                            style="animation-delay: 0.1s"></div>
+                                        <div class="h-2 w-2 bg-[#0f4c3a] rounded-full animate-bounce"
+                                            style="animation-delay: 0.2s"></div>
+                                        <div class="h-2 w-2 bg-[#0f4c3a] rounded-full animate-bounce"
+                                            style="animation-delay: 0.3s"></div>
+                                    </div>
+                                    <p class="text-xs font-bold text-[#0f4c3a] uppercase tracking-widest">AI sedang
+                                        membaca...</p>
+                                </div>
+                            </template>
+
+                            <template x-if="!loading && summary">
+                                <div
+                                    class="prose prose-sm max-w-none text-gray-700 leading-relaxed prose-headings:text-[#0f4c3a] prose-strong:text-black">
+                                    <div x-html="summary"></div>
+                                    <div class="mt-6 pt-4 border-t border-[#c8e6d8] flex items-center justify-between">
+                                        <p class="text-[10px] text-gray-400 italic">Dihasilkan oleh Biblio AI Assistant</p>
+                                        <div class="flex gap-2">
+                                            <span class="text-[9px] font-black text-[#0f4c3a] opacity-50">#AI</span>
+                                            <span class="text-[9px] font-black text-[#0f4c3a] opacity-50">#REKAP</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
                     {{-- Sinopsis --}}
                     @if($buku->sinopsis)
                         <div>
@@ -384,8 +486,8 @@
                             </h2>
                             <div
                                 class="prose prose-sm max-w-none text-gray-600 leading-relaxed
-                                                                                                [&_p]:mb-3 [&_strong]:font-semibold [&_em]:italic
-                                                                                                [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
+                                                                                                                        [&_p]:mb-3 [&_strong]:font-semibold [&_em]:italic
+                                                                                                                        [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
                                 {!! $buku->sinopsis !!}
                             </div>
                         </div>
@@ -394,6 +496,164 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    {{-- Reviews Section --}}
+    <div class="mt-8 border-t border-gray-100 pt-8" id="ulasan-section">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-black flex items-center gap-2">
+                    Ulasan & Rating
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">Apa kata mereka tentang buku ini?</p>
+            </div>
+            @if($buku->ulasan->count() > 0)
+                <div class="flex items-center gap-3 bg-[#e8f4f0] p-3 rounded-2xl border border-[#c8e6d8]">
+                    <div class="text-center">
+                        <span class="text-3xl font-black text-[#0f4c3a]">{{ $buku->average_rating }}</span>
+                        <div class="flex text-yellow-400">
+                            @for($i = 1; $i <= 5; $i++)
+                                <svg class="h-3 w-3 {{ $i <= round($buku->average_rating) ? 'fill-current' : 'fill-gray-300' }}"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                            @endfor
+                        </div>
+                    </div>
+                    <div class="border-l border-[#c8e6d8] pl-3">
+                        <span
+                            class="block text-xs font-bold text-[#0f4c3a] uppercase tracking-tighter">{{ $buku->ulasan->count() }}
+                            ULASAN</span>
+                        <span class="block text-[10px] text-gray-500">DARI PEMBACA</span>
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {{-- Form Column --}}
+            <div class="lg:col-span-1">
+                @php
+                    $userReview = $buku->ulasan->where('id_anggota', auth()->user()->anggota->id_anggota)->first();
+                @endphp
+
+                @if(!$userReview)
+                    <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm sticky top-4">
+                        <h3 class="text-lg font-bold text-gray-800 mb-1">Tulis Ulasan</h3>
+                        <p class="text-xs text-gray-400 mb-6">Bagikan pendapat Anda</p>
+
+                        <form action="{{ route('anggota.ulasan.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="id_buku" value="{{ $buku->id_buku }}">
+
+                            <div class="mb-6" x-data="{ rating: 0, hover: 0 }">
+                                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Rating
+                                    Anda</label>
+                                <div class="flex items-center gap-2">
+                                    <template x-for="i in 5">
+                                        <button type="button" @click="rating = i" @mouseenter="hover = i"
+                                            @mouseleave="hover = 0"
+                                            class="transition-transform hover:scale-110 focus:outline-none">
+                                            <svg class="h-8 w-8 transition-colors duration-150"
+                                                :class="(hover || rating) >= i ? 'text-yellow-400 fill-current' : 'text-gray-200 fill-current'"
+                                                viewBox="0 0 20 20">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                        </button>
+                                    </template>
+                                </div>
+                                <input type="hidden" name="rating" x-model="rating" required>
+                                @error('rating') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Pesan
+                                    Ulasan</label>
+                                <textarea name="ulasan" rows="4" required
+                                    class="w-full rounded-2xl border-gray-100 bg-gray-50 p-4 text-sm focus:border-[#0f4c3a] focus:ring-0 transition-all placeholder:text-gray-400"
+                                    placeholder="Apa yang Anda suka dari buku ini?"></textarea>
+                                @error('ulasan') <p class="text-red-500 text-[10px] mt-1">{{ $message }}</p> @enderror
+                            </div>
+
+                            <button type="submit"
+                                class="w-full rounded-2xl bg-[#0f4c3a] py-4 text-sm font-bold text-white transition hover:bg-[#0a382b] shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                                Kirim Ulasan
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <div
+                        class="bg-gradient-to-br from-[#0f4c3a] to-[#0a382b] rounded-3xl p-6 text-white shadow-lg sticky top-4">
+                        <div class="h-12 w-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md">
+                            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1">Ulasan Terkirim</h3>
+                        <p class="text-xs text-white/70 leading-relaxed">Terima kasih telah berbagi pengalaman membaca Anda
+                            dengan komunitas kami!</p>
+                    </div>
+                @endif
+            </div>
+
+            {{-- List Column --}}
+            <div class="lg:col-span-2 space-y-6">
+                @forelse($buku->ulasan as $ulasan)
+                    <div
+                        class="bg-white rounded-3xl p-6 border border-gray-50 shadow-sm hover:shadow-md transition-all duration-300">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="h-12 w-12 flex-shrink-0 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center text-[#0f4c3a] font-black text-xl border border-gray-100 shadow-inner">
+                                    {{ substr($ulasan->anggota->nama_lengkap, 0, 1) }}
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-800 flex items-center gap-2">
+                                        {{ $ulasan->anggota->nama_lengkap }}
+                                        @if($ulasan->id_anggota === auth()->user()->anggota->id_anggota)
+                                            <span
+                                                class="text-[9px] bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded font-black uppercase tracking-widest">SAYA</span>
+                                        @endif
+                                    </h4>
+                                    <p class="text-[10px] text-gray-400 font-medium">
+                                        {{ $ulasan->dibuat_pada->locale('id')->diffForHumans() }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex gap-0.5">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <svg class="h-4 w-4 {{ $i <= $ulasan->rating ? 'text-yellow-400' : 'text-gray-100' }} fill-current"
+                                        viewBox="0 0 20 20">
+                                        <path
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                @endfor
+                            </div>
+                        </div>
+                        <div class="bg-gray-50/50 rounded-2xl p-4 border border-gray-50">
+                            <p class="text-sm text-gray-600 leading-relaxed">"{{ $ulasan->ulasan }}"</p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-20 bg-gray-50/50 rounded-[40px] border-2 border-dashed border-gray-100">
+                        <div class="mx-auto w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-sm mb-6">
+                            <svg class="h-10 w-10 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                        </div>
+                        <p class="text-base font-bold text-gray-400">Belum ada ulasan.</p>
+                        <p class="text-sm text-gray-400 mt-2">Berikan ulasan pertama untuk buku ini!</p>
+                    </div>
+                @endforelse
+            </div>
         </div>
     </div>
 

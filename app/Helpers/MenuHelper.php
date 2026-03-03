@@ -150,6 +150,7 @@ class MenuHelper
                             ['name' => 'Peminjaman', 'path' => '/peminjaman', 'new' => false],
                             ['name' => 'Denda', 'path' => '/denda', 'new' => false],
                             ['name' => 'Hero Banner', 'path' => '/hero-banners', 'new' => true],
+                            ['name' => 'Musik Player', 'path' => '/admin/musik', 'new' => false],
                         ],
                     ],
                     [
