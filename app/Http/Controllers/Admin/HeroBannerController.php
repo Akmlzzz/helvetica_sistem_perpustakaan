@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\HeroBanner;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,7 +24,8 @@ class HeroBannerController extends Controller
      */
     public function create()
     {
-        return view('admin.hero-banners.create');
+        $kategori = Kategori::orderBy('nama_kategori')->get();
+        return view('admin.hero-banners.create', compact('kategori'));
     }
 
     /**
@@ -36,13 +38,23 @@ class HeroBannerController extends Controller
             'char_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'bg_img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'synopsis' => 'nullable|string',
+            'synopsis_color' => 'nullable|string',
             'tags' => 'nullable|string',
             'target_link' => 'nullable|string',
             'order_priority' => 'integer',
             'is_active' => 'boolean',
         ]);
 
-        $data = $request->only(['synopsis', 'tags', 'target_link', 'order_priority', 'is_active']);
+        $data = $request->only(['synopsis', 'synopsis_color', 'target_link', 'order_priority', 'is_active']);
+
+        // Decode tags JSON string sent from Alpine.js
+        $tagsInput = $request->input('tags');
+        if ($tagsInput) {
+            $decoded = json_decode($tagsInput, true);
+            $data['tags'] = is_array($decoded) ? $decoded : [];
+        } else {
+            $data['tags'] = [];
+        }
 
         if ($request->hasFile('title_img')) {
             $data['title_img'] = $request->file('title_img')->store('hero/titles', 'public');
@@ -70,7 +82,8 @@ class HeroBannerController extends Controller
     public function edit(string $id)
     {
         $banner = HeroBanner::findOrFail($id);
-        return view('admin.hero-banners.edit', compact('banner'));
+        $kategori = Kategori::orderBy('nama_kategori')->get();
+        return view('admin.hero-banners.edit', compact('banner', 'kategori'));
     }
 
     /**
@@ -85,26 +98,39 @@ class HeroBannerController extends Controller
             'char_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'bg_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'synopsis' => 'nullable|string',
+            'synopsis_color' => 'nullable|string',
             'tags' => 'nullable|string',
             'target_link' => 'nullable|string',
             'order_priority' => 'integer',
         ]);
 
-        $data = $request->only(['synopsis', 'tags', 'target_link', 'order_priority']);
+        $data = $request->only(['synopsis', 'synopsis_color', 'target_link', 'order_priority']);
         $data['is_active'] = $request->has('is_active');
 
+        // Decode tags JSON string sent from Alpine.js
+        $tagsInput = $request->input('tags');
+        if ($tagsInput) {
+            $decoded = json_decode($tagsInput, true);
+            $data['tags'] = is_array($decoded) ? $decoded : [];
+        } else {
+            $data['tags'] = [];
+        }
+
         if ($request->hasFile('title_img')) {
-            if ($banner->title_img) Storage::disk('public')->delete($banner->title_img);
+            if ($banner->title_img)
+                Storage::disk('public')->delete($banner->title_img);
             $data['title_img'] = $request->file('title_img')->store('hero/titles', 'public');
         }
 
         if ($request->hasFile('char_img')) {
-            if ($banner->char_img) Storage::disk('public')->delete($banner->char_img);
+            if ($banner->char_img)
+                Storage::disk('public')->delete($banner->char_img);
             $data['char_img'] = $request->file('char_img')->store('hero/chars', 'public');
         }
 
         if ($request->hasFile('bg_img')) {
-            if ($banner->bg_img) Storage::disk('public')->delete($banner->bg_img);
+            if ($banner->bg_img)
+                Storage::disk('public')->delete($banner->bg_img);
             $data['bg_img'] = $request->file('bg_img')->store('hero/backgrounds', 'public');
         }
 
@@ -119,11 +145,14 @@ class HeroBannerController extends Controller
     public function destroy(string $id)
     {
         $banner = HeroBanner::findOrFail($id);
-        
-        if ($banner->title_img) Storage::disk('public')->delete($banner->title_img);
-        if ($banner->char_img) Storage::disk('public')->delete($banner->char_img);
-        if ($banner->bg_img) Storage::disk('public')->delete($banner->bg_img);
-        
+
+        if ($banner->title_img)
+            Storage::disk('public')->delete($banner->title_img);
+        if ($banner->char_img)
+            Storage::disk('public')->delete($banner->char_img);
+        if ($banner->bg_img)
+            Storage::disk('public')->delete($banner->bg_img);
+
         $banner->delete();
 
         return redirect()->route('admin.hero-banners.index')->with('success', 'Banner berhasil dihapus.');

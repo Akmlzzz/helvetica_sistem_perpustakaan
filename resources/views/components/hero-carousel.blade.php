@@ -42,12 +42,12 @@
     <div class="relative w-full h-full">
         @foreach($banners as $index => $banner)
         <div x-show="activeSlide === {{ $index }}"
-            x-transition:enter="transition ease-out duration-700"
-            x-transition:enter-start="opacity-0 transform scale-105"
-            x-transition:enter-end="opacity-100 transform scale-100"
-            x-transition:leave="transition ease-in duration-500"
-            x-transition:leave-start="opacity-100 transform scale-100"
-            x-transition:leave-end="opacity-0 transform scale-95"
+            x-transition:enter="transition ease-out duration-700 transform absolute inset-0"
+            x-transition:enter-start="translate-x-full"
+            x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in duration-500 transform absolute inset-0"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="-translate-x-full"
             class="absolute inset-0 w-full h-full">
 
             <!-- Layer 1: Background -->
@@ -80,8 +80,11 @@
 
                 <!-- Tags -->
                 @if($banner->tags)
+                @php
+                    $tagsArray = is_array($banner->tags) ? $banner->tags : explode(',', (string)$banner->tags);
+                @endphp
                 <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-4">
-                    @foreach(explode(',', $banner->tags) as $tag)
+                    @foreach($tagsArray as $tag)
                     <span class="px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold bg-white/20 backdrop-blur-md rounded-full border border-white/30 text-[#084734]">
                         {{ trim($tag) }}
                     </span>
@@ -91,7 +94,8 @@
 
                 <!-- Synopsis -->
                 @if($banner->synopsis)
-                <p class="text-xs sm:text-sm md:text-base text-[#084734] mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-3 drop-shadow-md">
+                <p class="text-xs sm:text-sm md:text-base mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-3 drop-shadow-md"
+                   style="color: {{ $banner->synopsis_color ?? '#084734' }};">
                     {{ $banner->synopsis }}
                 </p>
                 @endif

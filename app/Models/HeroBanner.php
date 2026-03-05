@@ -16,6 +16,7 @@ class HeroBanner extends Model
         'char_img',
         'bg_img',
         'synopsis',
+        'synopsis_color',
         'tags',
         'target_link',
         'order_priority',
