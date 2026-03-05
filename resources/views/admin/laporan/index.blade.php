@@ -245,9 +245,15 @@
                             <div class="grid grid-cols-6 border-b border-stroke dark:border-gray-800 text-sm">
                                 <div class="p-2.5 xl:p-4 dark:text-white">{{ $row->pengguna->nama_pengguna }}</div>
                                 <div class="p-2.5 xl:p-4 dark:text-white">
-                                    @foreach($row->detail as $dtl)
-                                        <div>• {{ $dtl->buku->judul_buku ?? 'Buku Tidak Ditemukan' }}</div>
-                                    @endforeach
+                                    @if($row->detail && $row->detail->count() > 0)
+                                        @foreach($row->detail as $dtl)
+                                            <div>• {{ $dtl->buku->judul_buku ?? 'Buku Tidak Ditemukan' }}</div>
+                                        @endforeach
+                                    @elseif($row->buku)
+                                        <div>• {{ $row->buku->judul_buku }}</div>
+                                    @else
+                                        <div class="italic text-gray-400">Buku Tidak Ditemukan</div>
+                                    @endif
                                 </div>
                                 <div class="p-2.5 xl:p-4 text-center dark:text-white">
                                     {{ \Carbon\Carbon::parse($row->tgl_pinjam)->format('d-m-Y') }}

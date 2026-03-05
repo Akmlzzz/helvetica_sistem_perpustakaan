@@ -47,13 +47,13 @@ class LaporanController extends Controller
                     ->whereBetween('dibuat_pada', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
                     ->get();
             case 'peminjaman':
-                return Peminjaman::with(['pengguna.anggota', 'detail.buku', 'denda'])
-                    ->whereBetween('tgl_pinjam', [$startDate, $endDate])
+                return Peminjaman::with(['pengguna.anggota', 'buku', 'detail.buku', 'denda'])
+                    ->whereBetween('tgl_pinjam', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
                     ->get();
             case 'denda':
                 return Denda::with(['peminjaman.pengguna.anggota'])
                     ->whereHas('peminjaman', function ($query) use ($startDate, $endDate) {
-                        $query->whereBetween('tgl_kembali', [$startDate, $endDate]);
+                        $query->whereBetween('tgl_kembali', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
                     })
                     ->get();
             default:
@@ -69,7 +69,21 @@ class LaporanController extends Controller
 
         $data = $this->getReportData($type, $startDate, $endDate);
 
-        return view('admin.laporan.print', compact('data', 'startDate', 'endDate', 'type'));
+        $totalPeminjaman = 0;
+        $totalTerlambat = 0;
+        $totalDikembalikan = 0;
+        $totalDipinjam = 0;
+
+        if ($type === 'peminjaman') {
+            $totalPeminjaman = $data->count();
+            $totalTerlambat = $data->where('status_transaksi', 'terlambat')->count();
+            $totalDikembalikan = $data->where('status_transaksi', 'dikembalikan')->count();
+            $totalDipinjam = $data->where('status_transaksi', 'dipinjam')->count();
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan.print', compact('data', 'startDate', 'endDate', 'type', 'totalPeminjaman', 'totalTerlambat', 'totalDikembalikan', 'totalDipinjam'));
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->download('Laporan_' . ucfirst($type) . '_' . $startDate . '_to_' . $endDate . '.pdf');
     }
 
     public function exportExcel(Request $request)
@@ -114,7 +128,14 @@ class LaporanController extends Controller
             } elseif ($type == 'peminjaman') {
                 fputcsv($file, ['ID Peminjaman', 'Peminjam', 'Buku', 'Tgl Pinjam', 'Tgl Kembali', 'Status', 'Denda']);
                 foreach ($data as $row) {
-                    $books = $row->detail->pluck('buku.judul_buku')->implode(', ');
+                    if ($row->detail && $row->detail->count() > 0) {
+                        $books = $row->detail->pluck('buku.judul_buku')->filter()->implode(', ');
+                    } elseif ($row->buku) {
+                        $books = $row->buku->judul_buku;
+                    } else {
+                        $books = 'Buku Tidak Ditemukan';
+                    }
+
                     fputcsv($file, [
                         $row->id_peminjaman,
                         $row->pengguna->nama_pengguna,

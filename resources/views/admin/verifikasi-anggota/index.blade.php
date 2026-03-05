@@ -202,7 +202,7 @@
                                         </a>
                                         
                                         <!-- Approve Button -->
-                                        <button @click="openApproveModal({{ $member->id_pengguna }}, '{{ $member->nama_pengguna }}')"
+                                        <button @click="$dispatch('open-approve-modal', { id: {{ $member->id_pengguna }}, name: '{{ addslashes($member->nama_pengguna) }}' })"
                                                 class="inline-flex items-center px-3 py-2 border border-green-300 text-green-700 rounded-lg bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:bg-gray-800 dark:border-green-600 dark:text-green-400 dark:hover:bg-green-700 dark:focus:ring-green-500">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -295,9 +295,6 @@
                     @csrf
                     <button type="submit" 
                             class="rounded-lg border border-transparent bg-green-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
                         Ya, Setujui
                     </button>
                 </form>

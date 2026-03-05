@@ -145,16 +145,16 @@ class Pengguna extends Authenticatable implements CanResetPassword
     public static function generateNomorAnggota(): string
     {
         $year = date('Y');
-        $lastMember = self::whereNotNull('nomor_anggota')
-            ->orderBy('id_pengguna', 'desc')
-            ->first();
+        $maxNumber = self::whereNotNull('nomor_anggota')
+            ->where('nomor_anggota', 'like', "ID-%-PX-{$year}")
+            ->get(['nomor_anggota'])
+            ->map(function ($member) {
+                $parts = explode('-', $member->nomor_anggota);
+                return isset($parts[1]) ? (int) $parts[1] : 0;
+            })
+            ->max();
 
-        if ($lastMember) {
-            $lastNumber = explode('-', $lastMember->nomor_anggota)[1] ?? 0;
-            $newNumber = (int) $lastNumber + 1;
-        } else {
-            $newNumber = 1;
-        }
+        $newNumber = ($maxNumber ?? 0) + 1;
 
         return "ID-{$newNumber}-PX-{$year}";
     }
