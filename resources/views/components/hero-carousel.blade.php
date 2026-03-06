@@ -2,48 +2,48 @@
 
 @if($banners->count() > 0)
     <div x-data="{
-            activeSlide: 0,
-            slides: {{ $banners->count() }},
-            autoplayInterval: null,
+                activeSlide: 0,
+                slides: {{ $banners->count() }},
+                autoplayInterval: null,
 
-            init() {
-                this.startAutoplay();
-            },
+                init() {
+                    this.startAutoplay();
+                },
 
-            startAutoplay() {
-                this.autoplayInterval = setInterval(() => {
-                    this.next();
-                }, 5000);
-            },
+                startAutoplay() {
+                    this.autoplayInterval = setInterval(() => {
+                        this.next();
+                    }, 5000);
+                },
 
-            stopAutoplay() {
-                clearInterval(this.autoplayInterval);
-            },
+                stopAutoplay() {
+                    clearInterval(this.autoplayInterval);
+                },
 
-            next() {
-                this.activeSlide = (this.activeSlide + 1) % this.slides;
-            },
+                next() {
+                    this.activeSlide = (this.activeSlide + 1) % this.slides;
+                },
 
-            prev() {
-                this.activeSlide = (this.activeSlide - 1 + this.slides) % this.slides;
-            },
+                prev() {
+                    this.activeSlide = (this.activeSlide - 1 + this.slides) % this.slides;
+                },
 
-            goTo(index) {
-                this.activeSlide = index;
-                this.stopAutoplay();
-                this.startAutoplay();
-            }
-        }" @mouseenter="stopAutoplay" @mouseleave="startAutoplay"
+                goTo(index) {
+                    this.activeSlide = index;
+                    this.stopAutoplay();
+                    this.startAutoplay();
+                }
+            }" @mouseenter="stopAutoplay" @mouseleave="startAutoplay"
         class="relative w-full h-[350px] sm:h-[400px] md:h-[500px] overflow-hidden rounded-xl mb-6 md:mb-8 group">
 
         <!-- Slides -->
         <div class="relative w-full h-full">
             @foreach($banners as $index => $banner)
                 <div x-show="activeSlide === {{ $index }}"
-                    x-transition:enter="transition ease-out duration-700 transform absolute inset-0"
-                    x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
-                    x-transition:leave="transition ease-in duration-500 transform absolute inset-0"
-                    x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+                    x-transition:enter="transition-opacity ease-out duration-300 absolute inset-0"
+                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition-opacity ease-in duration-300 absolute inset-0"
+                    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
                     class="absolute inset-0 w-full h-full">
 
                     <!-- Layer 1: Background -->
