@@ -88,6 +88,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/buku', [\App\Http\Controllers\Admin\BukuController::class, 'store'])->name('admin.buku.store');
         Route::put('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'update'])->name('admin.buku.update');
         Route::delete('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'destroy'])->name('admin.buku.destroy');
+
+        // Series Buku
+        Route::get('/series', [\App\Http\Controllers\Admin\SeriesController::class, 'index'])->name('admin.series.index');
+        Route::get('/series/{id}', [\App\Http\Controllers\Admin\SeriesController::class, 'show'])->name('admin.series.show');
+        Route::post('/series', [\App\Http\Controllers\Admin\SeriesController::class, 'store'])->name('admin.series.store');
+        Route::put('/series/{id}', [\App\Http\Controllers\Admin\SeriesController::class, 'update'])->name('admin.series.update');
+        Route::delete('/series/{id}', [\App\Http\Controllers\Admin\SeriesController::class, 'destroy'])->name('admin.series.destroy');
     });
 
     // Peminjaman — admin atau petugas yang punya izin 'peminjaman'

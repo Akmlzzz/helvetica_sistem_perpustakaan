@@ -106,10 +106,10 @@
                         title="Lihat detail: {{ $buku->judul_buku }}">
 
                         {{-- Image Buku --}}
-                        <div class="relative aspect-2/3 w-full overflow-hidden bg-gray-100">
+                        <div class="relative aspect-2/3 w-full overflow-hidden bg-gray-50">
                             @if($buku->sampul)
                                 <img src="{{ Storage::url($buku->sampul) }}" alt="{{ $buku->judul_buku }}" loading="lazy"
-                                    class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                                    class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out">
                             @else
                                 <div class="flex h-full w-full items-center justify-center bg-linear-to-br from-[#e8f4f0] to-[#c8e6d8]">
                                     <svg class="h-10 w-10 text-[#0f4c3a] opacity-40" fill="none" stroke="currentColor"
@@ -121,31 +121,46 @@
                             @endif
 
                             {{-- Volume/Status --}}
-                            <div class="absolute top-2 left-2 flex flex-col gap-1">
+                            <div class="absolute top-2 left-2 flex flex-col gap-1 z-10">
                                 @if($buku->nomor_volume)
                                     <span
-                                        class="inline-block rounded bg-brand-primary/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm backdrop-blur-sm self-start whitespace-nowrap">
+                                        class="inline-block rounded-lg bg-brand-primary px-2.5 py-1 text-[10px] font-bold text-white shadow-md border border-white/20 uppercase tracking-wider">
                                         Vol {{ $buku->nomor_volume }}
                                     </span>
                                 @endif
                                 @if($buku->stok == 0)
                                     <span
-                                        class="inline-block rounded bg-red-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm backdrop-blur-sm self-start">
+                                        class="inline-block rounded-lg bg-red-600 px-2.5 py-1 text-[10px] font-bold text-white shadow-md border border-white/20 uppercase tracking-wider">
                                         Habis
                                     </span>
                                 @endif
                             </div>
+
+                            {{-- Hover overlay --}}
+                            <div
+                                class="absolute inset-0 bg-[#0f4c3a]/0 group-hover:bg-[#0f4c3a]/30 transition-all duration-500 flex items-center justify-center">
+                                <div
+                                    class="opacity-0 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-100 scale-90">
+                                    <div
+                                        class="rounded-full bg-white/95 px-4 py-2 text-xs font-bold text-[#0f4c3a] shadow-xl backdrop-blur-md border border-white/20">
+                                        Lihat Detail →
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {{-- Content --}}
-                        <div class="flex flex-col flex-1 p-2 sm:p-3">
-                            <h4 class="text-xs sm:text-sm font-bold text-black line-clamp-2 leading-snug mb-1">
+                        <div class="flex flex-col flex-1 p-3">
+                            <h4
+                                class="text-sm font-bold text-black line-clamp-2 leading-tight mb-1 group-hover:text-brand-primary transition-colors">
                                 {{ $buku->judul_buku }}
                             </h4>
-                            <p class="text-[10px] text-gray-400 mt-auto flex items-center gap-1 justify-between">
-                                Stok: <span
-                                    class="{{ $buku->stok > 0 ? 'text-green-600 font-bold' : 'text-red-500 font-bold' }}">{{ $buku->stok }}</span>
-                            </p>
+                            <div class="mt-auto flex items-center justify-between">
+                                <span
+                                    class="text-[10px] font-semibold px-1.5 py-0.5 rounded-md {{ $buku->stok > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                    Stok: {{ $buku->stok }}
+                                </span>
+                            </div>
                         </div>
                     </a>
                 @endforeach
