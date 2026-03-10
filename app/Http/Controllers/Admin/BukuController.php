@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Buku;
 use App\Models\Kategori;
+use App\Models\Series;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +13,7 @@ class BukuController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Buku::with('kategori');
+        $query = Buku::with(['kategori', 'series']);
 
         if ($request->has('search')) {
             $search = $request->search;
@@ -23,6 +24,10 @@ class BukuController extends Controller
             $query->whereHas('kategori', function ($q) use ($request) {
                 $q->where('kategori.id_kategori', $request->kategori);
             });
+        }
+
+        if ($request->has('series') && $request->series != '') {
+            $query->where('id_series', $request->series);
         }
 
         // Sort
@@ -43,8 +48,9 @@ class BukuController extends Controller
 
         $buku = $query->paginate(10);
         $kategori = Kategori::all();
+        $series = Series::orderBy('nama_series')->get();
 
-        return view('admin.buku.buku', compact('buku', 'kategori'));
+        return view('admin.buku.buku', compact('buku', 'kategori', 'series'));
     }
 
     public function store(Request $request)
@@ -63,6 +69,8 @@ class BukuController extends Controller
             'kategori.*' => 'exists:kategori,id_kategori',
             'sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'lokasi_rak' => 'nullable|string|max:50',
+            'id_series' => 'nullable|exists:series,id_series',
+            'nomor_volume' => 'nullable|integer|min:1',
         ]);
 
         $data = $request->except('kategori');
@@ -97,10 +105,18 @@ class BukuController extends Controller
             'kategori.*' => 'exists:kategori,id_kategori',
             'sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'lokasi_rak' => 'nullable|string|max:50',
+            'id_series' => 'nullable|exists:series,id_series',
+            'nomor_volume' => 'nullable|integer|min:1',
         ]);
 
         $buku = Buku::findOrFail($id);
         $data = $request->except('kategori');
+
+        // Jika id_series tidak dikirim (kosong string), set null
+        if (empty($data['id_series'])) {
+            $data['id_series'] = null;
+            $data['nomor_volume'] = null;
+        }
 
         if ($request->hasFile('sampul')) {
             // Delete old sampul if exists
@@ -137,14 +153,22 @@ class BukuController extends Controller
 
     public function show($id)
     {
-        $buku = Buku::with('kategori')->findOrFail($id);
-        $relatedBooks = Buku::whereHas('kategori', function($query) use ($buku) {
+        $buku = Buku::with(['kategori', 'series'])->findOrFail($id);
+        $relatedBooks = Buku::whereHas('kategori', function ($query) use ($buku) {
             $query->whereIn('kategori.id_kategori', $buku->kategori->pluck('id_kategori'));
         })
-        ->where('id_buku', '!=', $buku->id_buku)
-        ->limit(6)
-        ->get();
+            ->where('id_buku', '!=', $buku->id_buku)
+            ->limit(6)
+            ->get();
 
-        return view('admin.buku.show', compact('buku', 'relatedBooks'));
+        // Series volumes jika buku ini bagian dari series
+        $seriesVolumes = null;
+        if ($buku->id_series) {
+            $seriesVolumes = Buku::where('id_series', $buku->id_series)
+                ->orderBy('nomor_volume')
+                ->get();
+        }
+
+        return view('admin.buku.show', compact('buku', 'relatedBooks', 'seriesVolumes'));
     }
 }

@@ -19,7 +19,12 @@ class AnggotaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Buku::with('kategori');
+        $query = Buku::with(['kategori', 'series'])
+            ->whereIn('id_buku', function ($q) {
+                $q->selectRaw('MIN(id_buku)')
+                    ->from('buku')
+                    ->groupByRaw('IFNULL(id_series, id_buku)');
+            });
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -28,7 +33,11 @@ class AnggotaController extends Controller
                     ->orWhere('penulis', 'like', '%' . $search . '%')
                     ->orWhere('penerbit', 'like', '%' . $search . '%')
                     ->orWhere('isbn', 'like', '%' . $search . '%')
-                    ->orWhere('sinopsis', 'like', '%' . $search . '%');
+                    ->orWhere('sinopsis', 'like', '%' . $search . '%')
+                    ->orWhereHas('series', function ($sQuery) use ($search) {
+                        $sQuery->where('nama_series', 'like', '%' . $search . '%')
+                            ->orWhere('deskripsi', 'like', '%' . $search . '%');
+                    });
             });
         }
 
@@ -36,6 +45,10 @@ class AnggotaController extends Controller
             $query->whereHas('kategori', function ($q) use ($request) {
                 $q->where('nama_kategori', $request->kategori);
             });
+        }
+
+        if ($request->filled('series') && $request->series !== 'all') {
+            $query->where('id_series', $request->series);
         }
 
         // Sorting
@@ -49,6 +62,7 @@ class AnggotaController extends Controller
 
         $buku = $query->paginate(12)->withQueryString();
         $kategori = \App\Models\Kategori::all();
+        $series = \App\Models\Series::orderBy('nama_series', 'asc')->get();
         $banners = \App\Models\HeroBanner::where('is_active', true)
             ->orderBy('order_priority', 'asc')
             ->get();
@@ -63,7 +77,7 @@ class AnggotaController extends Controller
             ]);
         }
 
-        return view('anggota.dashboard', compact('buku', 'kategori', 'banners'));
+        return view('anggota.dashboard', compact('buku', 'kategori', 'series', 'banners'));
     }
 
 
@@ -99,7 +113,26 @@ class AnggotaController extends Controller
             ->limit(4)
             ->get();
 
-        return view('anggota.detail-buku', compact('buku', 'sedangMeminjam', 'bukuTerkait', 'akunTerverifikasi'));
+        // Ambil buku lain dalam series yang sama (jika ada)
+        $seriesBooks = collect();
+        if ($buku->id_series) {
+            $seriesBooks = Buku::where('id_series', $buku->id_series)
+                ->where('id_buku', '!=', $id)
+                ->orderBy('nomor_volume')
+                ->limit(4)
+                ->get();
+        }
+
+        return view('anggota.detail-buku', compact('buku', 'sedangMeminjam', 'bukuTerkait', 'akunTerverifikasi', 'seriesBooks'));
+    }
+
+    /**
+     * Detail Series (Menampilkan daftar buku dalam suatu Series)
+     */
+    public function detailSeries($id)
+    {
+        $series = \App\Models\Series::with(['buku.kategori'])->findOrFail($id);
+        return view('anggota.detail-series', compact('series'));
     }
 
     /**

@@ -130,6 +130,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware([\App\Http\Middleware\AnggotaMiddleware::class])->group(function () {
         Route::get('/anggota/dashboard', [\App\Http\Controllers\Anggota\AnggotaController::class, 'index'])->name('anggota.dashboard');
         Route::get('/anggota/buku/{id}', [\App\Http\Controllers\Anggota\AnggotaController::class, 'detailBuku'])->name('anggota.buku.detail');
+        Route::get('/anggota/series/{id}', [\App\Http\Controllers\Anggota\AnggotaController::class, 'detailSeries'])->name('anggota.series.detail');
         Route::get('/anggota/pinjaman', [\App\Http\Controllers\Anggota\AnggotaController::class, 'pinjaman'])->name('anggota.pinjaman');
         Route::get('/anggota/riwayat', [\App\Http\Controllers\Anggota\AnggotaController::class, 'riwayat'])->name('anggota.riwayat');
         Route::post('/anggota/pinjam', [\App\Http\Controllers\Anggota\AnggotaController::class, 'storeBooking'])->name('anggota.booking.store');

@@ -50,6 +50,7 @@ class MenuHelper
             }
             if ($fiturAkses->contains('buku')) {
                 $fiturTambahan[] = ['name' => 'Data Buku', 'path' => '/buku', 'new' => false];
+                $fiturTambahan[] = ['name' => 'Series Buku', 'path' => '/series', 'new' => false];
             }
             if ($fiturAkses->contains('peminjaman')) {
                 $fiturTambahan[] = ['name' => 'Peminjaman', 'path' => '/peminjaman', 'new' => false];
@@ -147,9 +148,10 @@ class MenuHelper
                         'subItems' => [
                             ['name' => 'Kategori', 'path' => '/kategori', 'new' => false],
                             ['name' => 'Data Buku', 'path' => '/buku', 'new' => false],
+                            ['name' => 'Series Buku', 'path' => '/series', 'new' => true],
                             ['name' => 'Peminjaman', 'path' => '/peminjaman', 'new' => false],
                             ['name' => 'Denda', 'path' => '/denda', 'new' => false],
-                            ['name' => 'Hero Banner', 'path' => '/hero-banners', 'new' => true],
+                            ['name' => 'Hero Banner', 'path' => '/hero-banners', 'new' => false],
                             ['name' => 'Musik Player', 'path' => '/admin/musik', 'new' => false],
                         ],
                     ],

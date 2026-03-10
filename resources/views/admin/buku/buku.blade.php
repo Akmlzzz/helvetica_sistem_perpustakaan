@@ -70,6 +70,19 @@
                         <option value="az" {{ request('sort') == 'az' ? 'selected' : '' }}>A-Z</option>
                     </select>
                 </div>
+
+                <!-- Filter Series -->
+                <div class="relative w-full sm:w-48">
+                    <select name="series" onchange="this.form.submit()"
+                        class="w-full appearance-none rounded-lg border border-stroke bg-transparent px-4 py-2 pr-10 font-medium outline-none focus:border-primary dark:border-strokedark dark:bg-form-input dark:text-white">
+                        <option value="">Semua Series</option>
+                        @foreach($series as $s)
+                            <option value="{{ $s->id_series }}" {{ request('series') == $s->id_series ? 'selected' : '' }}>
+                                {{ $s->nama_series }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </form>
 
             <!-- Table Section with Responsive Scroll -->
@@ -126,6 +139,12 @@
                                             {{ $kat->nama_kategori }}
                                         </span>
                                     @endforeach
+                                    @if($item->series)
+                                        <span class="inline-flex items-center gap-1 rounded bg-brand-primary/10 px-2 py-0.5 text-xs font-semibold text-brand-primary">
+                                            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                                            {{ $item->series->nama_series }}{{ $item->nomor_volume ? ' Vol.'.$item->nomor_volume : '' }}
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
 
@@ -176,7 +195,9 @@
                                         tahun_terbit: '{{ $item->tahun_terbit ?? '' }}',
                                         bahasa: '{{ $item->bahasa ?? '' }}',
                                         kategori: {{ $item->kategori->pluck('id_kategori') }},
-                                        lokasi: '{{ addslashes($item->lokasi_rak) }}'
+                                        lokasi: '{{ addslashes($item->lokasi_rak) }}',
+                                        id_series: '{{ $item->id_series ?? '' }}',
+                                        nomor_volume: '{{ $item->nomor_volume ?? '' }}'
                                     })" class="hover:text-primary text-gray-500 dark:text-gray-400 border border-stroke dark:border-strokedark rounded-md p-1.5 transition-colors">
                                         <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M15.15 1.5c-.25 0-.5.1-.7.3l-1.3 1.3 2.7 2.7 1.3-1.3c.4-.4.4-1 0-1.4l-1.3-1.3c-.2-.2-.4-.3-.7-.3zm-2.7 2.7l-9.4 9.4v2.7h2.7l9.4-9.4-2.7-2.7z" fill="currentColor" />

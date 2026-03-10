@@ -1,65 +1,126 @@
 @forelse($buku as $item)
-    <a href="{{ route('anggota.buku.detail', $item->id_buku) }}"
-        class="group flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
-        title="Lihat detail: {{ $item->judul_buku }}">
+    @if($item->id_series)
+        {{-- Series Card --}}
+        <a href="{{ route('anggota.series.detail', $item->id_series) }}"
+            class="group flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
+            title="Lihat Series: {{ $item->series->nama_series }}">
 
-        {{-- Image --}}
-        <div class="relative aspect-2/3 w-full overflow-hidden bg-gray-100">
-            @if($item->sampul)
-                <img src="{{ Storage::url($item->sampul) }}" alt="{{ $item->judul_buku }}" loading="lazy"
-                    style="image-rendering: -webkit-optimize-contrast;"
-                    class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
-            @else
-                <div class="flex h-full w-full items-center justify-center bg-linear-to-br from-[#e8f4f0] to-[#c8e6d8]">
-                    <svg class="h-16 w-16 text-[#0f4c3a] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25">
-                        </path>
-                    </svg>
-                </div>
-            @endif
-
-            {{-- Status overlay --}}
-            <div class="absolute top-2 left-2">
-                @if($item->stok > 0)
-                    <span
-                        class="inline-flex items-center gap-1 rounded-full bg-green-500/90 px-2 py-0.5 text-[10px] font-bold uppercase text-white backdrop-blur-sm">
-                        <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
-                        Tersedia
-                    </span>
+            {{-- Image Series --}}
+            <div class="relative aspect-2/3 w-full overflow-hidden bg-gray-100">
+                @if($item->series->sampul_series)
+                    <img src="{{ Storage::url($item->series->sampul_series) }}" alt="{{ $item->series->nama_series }}" loading="lazy"
+                        class="h-full w-full object-contain object-center group-hover:scale-105 transition-transform duration-500">
                 @else
-                    <span
-                        class="inline-flex items-center gap-1 rounded-full bg-red-500/90 px-2 py-0.5 text-[10px] font-bold uppercase text-white backdrop-blur-sm">
-                        <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
-                        Habis
-                    </span>
+                    <div class="flex h-full w-full items-center justify-center bg-linear-to-br from-[#e8f4f0] to-[#c8e6d8]">
+                        <svg class="h-16 w-16 text-[#0f4c3a] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                        </svg>
+                    </div>
                 @endif
-            </div>
 
-            {{-- Hover overlay --}}
-            <div
-                class="absolute inset-0 bg-[#0f4c3a]/0 group-hover:bg-[#0f4c3a]/20 transition-all duration-300 flex items-center justify-center">
+                {{-- Badge Keterangan --}}
+                <div class="absolute top-2 left-2">
+                    <span class="inline-flex items-center gap-1 rounded-full bg-brand-primary px-3 py-1 text-[10px] font-bold uppercase text-white shadow-md border border-white/20">
+                        SERIES BUKU
+                    </span>
+                </div>
+
+                {{-- Volume Count --}}
+                <div class="absolute bottom-2 right-2">
+                    <span
+                        class="inline-flex items-center rounded bg-black/60 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md">
+                        {{ $item->series->buku->count() }} Vol
+                    </span>
+                </div>
+
+                {{-- Hover overlay --}}
                 <div
-                    class="opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-100 scale-90">
+                    class="absolute inset-0 bg-[#0f4c3a]/0 group-hover:bg-[#0f4c3a]/20 transition-all duration-300 flex items-center justify-center">
                     <div
-                        class="rounded-full bg-white/90 px-4 py-2 text-sm font-bold text-[#0f4c3a] shadow-lg backdrop-blur-sm">
-                        Lihat Detail →
+                        class="opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-100 scale-90">
+                        <div
+                            class="rounded-full bg-white/90 px-4 py-2 text-sm font-bold text-[#0f4c3a] shadow-lg backdrop-blur-sm">
+                            Buka Series →
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Content --}}
-        <div class="flex flex-col flex-1 p-3">
-            <p class="mb-0.5 text-xs text-[#0f4c3a] font-medium">
-                {{ $item->kategori->first()?->nama_kategori ?? 'Umum' }}
-            </p>
-            <h4 class="text-sm font-bold text-black line-clamp-2 leading-snug mb-1" title="{{ $item->judul_buku }}">
-                {{ $item->judul_buku }}
-            </h4>
-            <p class="text-xs text-gray-500 line-clamp-1">{{ $item->penulis }}</p>
-        </div>
-    </a>
+            {{-- Content --}}
+            <div class="flex flex-col flex-1 p-3">
+                <p class="mb-0.5 text-xs text-[#0f4c3a] font-medium uppercase tracking-wide">
+                    {{ $item->kategori->first()?->nama_kategori ?? 'Koleksi' }}
+                </p>
+                <h4 class="text-sm font-bold text-black line-clamp-2 leading-snug mb-1"
+                    title="{{ $item->series->nama_series }}">
+                    {{ $item->series->nama_series }}
+                </h4>
+                <p class="text-[10px] text-gray-500 line-clamp-1 italic">Kumpulan Volume</p>
+            </div>
+        </a>
+    @else
+        {{-- Regular Book Card --}}
+        <a href="{{ route('anggota.buku.detail', $item->id_buku) }}"
+            class="group flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
+            title="Lihat detail: {{ $item->judul_buku }}">
+
+            {{-- Image --}}
+            <div class="relative aspect-2/3 w-full overflow-hidden bg-gray-100">
+                @if($item->sampul)
+                    <img src="{{ Storage::url($item->sampul) }}" alt="{{ $item->judul_buku }}" loading="lazy"
+                        class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                @else
+                    <div class="flex h-full w-full items-center justify-center bg-linear-to-br from-[#e8f4f0] to-[#c8e6d8]">
+                        <svg class="h-16 w-16 text-[#0f4c3a] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                        </svg>
+                    </div>
+                @endif
+
+                {{-- Status overlay --}}
+                <div class="absolute top-2 left-2">
+                    @if($item->stok > 0)
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white shadow-sm ring-1 ring-white/20">
+                            <span class="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
+                            Tersedia
+                        </span>
+                    @else
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white shadow-sm ring-1 ring-white/20">
+                            <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+                            Habis
+                        </span>
+                    @endif
+                </div>
+
+                {{-- Hover overlay --}}
+                <div
+                    class="absolute inset-0 bg-[#0f4c3a]/0 group-hover:bg-[#0f4c3a]/20 transition-all duration-300 flex items-center justify-center">
+                    <div
+                        class="opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-100 scale-90">
+                        <div
+                            class="rounded-full bg-white/90 px-4 py-2 text-sm font-bold text-[#0f4c3a] shadow-lg backdrop-blur-sm">
+                            Lihat Detail →
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Content --}}
+            <div class="flex flex-col flex-1 p-3">
+                <p class="mb-0.5 text-xs text-[#0f4c3a] font-medium uppercase tracking-wide">
+                    {{ $item->kategori->first()?->nama_kategori ?? 'Umum' }}
+                </p>
+                <h4 class="text-sm font-bold text-black line-clamp-2 leading-snug mb-1" title="{{ $item->judul_buku }}">
+                    {{ $item->judul_buku }}
+                </h4>
+                <p class="text-[10px] text-gray-500 line-clamp-1">{{ $item->penulis }}</p>
+            </div>
+        </a>
+    @endif
 @empty
     <div class="col-span-full py-20 text-center">
         <div class="flex flex-col items-center justify-center gap-4">
@@ -74,7 +135,8 @@
                 <h3 class="text-xl font-bold text-black">Buku tidak ditemukan</h3>
                 <p class="mt-1 text-gray-500">Coba gunakan kata kunci lain atau filter kategori yang berbeda.</p>
             </div>
-            <button onclick="clearFilters()" class="mt-2 inline-flex items-center text-primary hover:underline">
+            <button onclick="window.location.href='{{ route('anggota.dashboard') }}'"
+                class="mt-2 inline-flex items-center text-primary hover:underline font-medium text-sm">
                 Bersihkan semua filter
             </button>
         </div>

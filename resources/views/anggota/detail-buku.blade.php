@@ -3,35 +3,36 @@
 @section('content')
     {{-- Breadcrumb --}}
     <nav class="mb-4 flex items-center gap-2 text-sm text-gray-500">
-        <a href="{{ route('anggota.dashboard') }}" class="hover:text-[#0f4c3a] transition-colors flex items-center gap-1">
+        <a href="{{ route('anggota.dashboard') }}"
+            class="hover:text-[#0f4c3a] transition-colors flex items-center gap-1 shrink-0">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            Katalog Buku
+            <span class="hidden sm:inline">Katalog Buku</span>
+            <span class="sm:hidden">Kembali</span>
         </a>
         <span>/</span>
-        <span class="text-gray-800 font-medium line-clamp-1">{{ $buku->judul_buku }}</span>
+        <span class="text-gray-800 font-medium line-clamp-1 min-w-0">{{ $buku->judul_buku }}</span>
     </nav>
 
-    {{-- Main Card: 2 kolom, muat di layar tanpa scroll --}}
-    <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden"
-        style="height: calc(100vh - 160px); min-height: 520px;">
-        <div class="flex h-full">
+    {{-- Main Card: Responsive layout --}}
+    <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        {{-- Mobile: stack vertical | Desktop: 2 kolom --}}
+        <div class="flex flex-col md:flex-row md:min-h-[520px] md:max-h-[calc(100vh-160px)]">
 
-            {{-- ===== KOLOM KIRI: Cover + Tombol Pinjam ===== --}}
+            {{-- ===== KOLOM KIRI ===== --}}
             <div
-                class="w-64 xl:w-72 flex-shrink-0 flex flex-col bg-gradient-to-b from-[#e8f4f0] to-[#d0ebe0] border-r border-gray-100">
+                class="w-full md:w-64 xl:w-72 md:shrink-0 flex flex-col bg-linear-to-b from-[#e8f4f0] to-[#d0ebe0] md:border-r border-b md:border-b-0 border-gray-100">
 
                 {{-- Cover --}}
-                <div class="flex-1 flex items-center justify-center p-5 overflow-hidden">
+                <div class="flex items-center justify-center p-4 md:p-5 md:flex-1 md:overflow-hidden">
                     @if($buku->sampul)
                         <img src="{{ Storage::url($buku->sampul) }}" alt="{{ $buku->judul_buku }}"
-                            class="max-h-full w-full object-contain rounded-xl shadow-lg"
-                            style="max-height: calc(100vh - 340px);">
+                            class="h-36 sm:h-44 md:h-auto md:w-full md:max-h-full rounded-xl shadow-lg object-contain">
                     @else
-                        <div class="w-full rounded-xl shadow-lg bg-white/50 flex items-center justify-center"
-                            style="aspect-ratio: 2/3; max-height: calc(100vh - 340px);">
-                            <svg class="h-20 w-20 text-[#0f4c3a] opacity-30" fill="none" stroke="currentColor"
+                        <div class="h-36 sm:h-44 md:h-auto md:w-full rounded-xl shadow-lg bg-white/50 flex items-center justify-center"
+                            style="aspect-ratio: 2/3;">
+                            <svg class="h-12 w-12 md:h-20 md:w-20 text-[#0f4c3a] opacity-30" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
                                     d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25">
@@ -41,8 +42,12 @@
                     @endif
                 </div>
 
-                {{-- Status + Tombol (bagian bawah kolom kiri, tetap) --}}
-                <div class="px-5 pb-5 space-y-3 shrink-0">
+                {{-- Status + Tombol --}}
+                @php
+                    $inWishlist = \App\Models\KoleksiPribadi::where('id_pengguna', auth()->user()->id_pengguna)->where('id_buku', $buku->id_buku)->exists();
+                @endphp
+
+                <div class="px-4 pb-4 md:px-5 md:pb-5 space-y-3 shrink-0">
                     {{-- Status Stok --}}
                     <div class="text-center">
                         @if($buku->stok > 0)
@@ -60,53 +65,39 @@
                         @endif
                     </div>
 
-                    {{-- Tombol Aksi --}}
                     {{-- Wishlist Button --}}
-                    @php
-                        $inWishlist = \App\Models\KoleksiPribadi::where('id_pengguna', auth()->user()->id_pengguna)->where('id_buku', $buku->id_buku)->exists();
-                    @endphp
                     <div x-data="{
-                                        inWishlist: {{ $inWishlist ? 'true' : 'false' }},
-                                        loading: false,
-                                        toggleWishlist() {
-                                            if (this.loading) return;
-                                            this.loading = true;
-
-                                            const isAdding = !this.inWishlist;
-                                            const url = isAdding 
-                                                ? '{{ route('anggota.koleksi.store', $buku->id_buku) }}' 
-                                                : '{{ route('anggota.koleksi.destroy', $buku->id_buku) }}';
-
-                                            const method = isAdding ? 'POST' : 'DELETE';
-
-                                            fetch(url, {
-                                                method: method,
-                                                headers: {
-                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                                    'X-Requested-With': 'XMLHttpRequest',
-                                                    'Accept': 'application/json',
-                                                    'Content-Type': 'application/json'
-                                                }
-                                            })
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                if (data.success) {
-                                                    this.inWishlist = !this.inWishlist;
-                                                    // Optional: show toast notification here
-                                                }
-                                            })
-                                            .catch(error => console.error('Error:', error))
-                                            .finally(() => {
-                                                this.loading = false;
-                                            });
-                                        }
-                                    }">
+                            inWishlist: {{ $inWishlist ? 'true' : 'false' }},
+                            loading: false,
+                            toggleWishlist() {
+                                if (this.loading) return;
+                                this.loading = true;
+                                const isAdding = !this.inWishlist;
+                                const url = isAdding
+                                    ? '{{ route('anggota.koleksi.store', $buku->id_buku) }}'
+                                    : '{{ route('anggota.koleksi.destroy', $buku->id_buku) }}';
+                                const method = isAdding ? 'POST' : 'DELETE';
+                                fetch(url, {
+                                    method: method,
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => { if (data.success) { this.inWishlist = !this.inWishlist; } })
+                                .catch(error => console.error('Error:', error))
+                                .finally(() => { this.loading = false; });
+                            }
+                        }">
                         <button @click="toggleWishlist" :disabled="loading"
                             :class="inWishlist ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-100' : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'"
-                            class="w-full flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition shadow-sm mb-3">
+                            class="w-full flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition shadow-sm">
 
                             <template x-if="loading">
-                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                         stroke-width="4"></circle>
@@ -138,10 +129,10 @@
 
                     @if(!$akunTerverifikasi)
                         {{-- Akun belum diverifikasi --}}
-                        <div class="rounded-xl border-2 border-amber-300 bg-amber-50 p-4 text-center">
+                        <div class="rounded-xl border-2 border-amber-300 bg-amber-50 p-3 text-center">
                             <div class="mb-2 flex items-center justify-center">
-                                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
-                                    <svg class="h-5 w-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100">
+                                    <svg class="h-4 w-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                                     </svg>
@@ -154,20 +145,20 @@
                                     Akun Tidak Aktif
                                 @endif
                             </p>
-                            <p class="text-[11px] text-amber-700 leading-snug mb-3">
+                            <p class="text-[11px] text-amber-700 leading-snug mb-2">
                                 @if(auth()->user()->status === 'pending')
-                                    Akun Anda sedang diproses admin. Anda hanya dapat melihat katalog.
+                                    Akun sedang diproses admin.
                                 @else
-                                    Akun Anda ditolak. Hubungi petugas untuk info lebih lanjut.
+                                    Akun ditolak. Hubungi petugas.
                                 @endif
                             </p>
                             <a href="{{ route('anggota.profile') }}"
                                 class="inline-flex items-center gap-1 rounded-lg bg-amber-600 px-3 py-1.5 text-[11px] font-bold text-white hover:bg-amber-700 transition">
-                                Lihat Status Akun →
+                                Lihat Status →
                             </a>
                         </div>
                         <button disabled
-                            class="w-full rounded-xl bg-gray-200 py-3 text-sm font-bold text-gray-400 cursor-not-allowed mt-2">
+                            class="w-full rounded-xl bg-gray-200 py-3 text-sm font-bold text-gray-400 cursor-not-allowed">
                             Peminjaman Tidak Tersedia
                         </button>
                     @elseif($sedangMeminjam)
@@ -181,7 +172,7 @@
                         </div>
                     @elseif($buku->stok > 0)
                         <div x-data="{ durasi: 7, showConfirm: false }">
-                            {{-- Slider durasi ringkas --}}
+                            {{-- Slider durasi --}}
                             <div class="mb-2">
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="text-xs text-gray-500">Durasi: <strong class="text-[#0f4c3a]"
@@ -224,11 +215,11 @@
                                 class="fixed inset-0 z-999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
                                 style="display: none;">
                                 <div @click.outside="showConfirm = false"
-                                    class="w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl">
+                                    class="w-full max-w-md rounded-2xl bg-white p-6 sm:p-8 shadow-2xl">
                                     <div class="mb-6 text-center">
                                         <div
-                                            class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#e8f4f0]">
-                                            <svg class="h-8 w-8 text-[#0f4c3a]" fill="none" stroke="currentColor"
+                                            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#e8f4f0]">
+                                            <svg class="h-7 w-7 text-[#0f4c3a]" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
@@ -300,11 +291,11 @@
                         </button>
                     @endif
                 </div>
-            </div>
+            </div>{{-- end kolom kiri --}}
 
-            {{-- ===== KOLOM KANAN: Info Buku + Sinopsis (scroll mandiri) ===== --}}
-            <div class="flex-1 overflow-y-auto">
-                <div class="p-6 xl:p-8">
+            {{-- ===== KOLOM KANAN: Info Buku + Sinopsis ===== --}}
+            <div class="flex-1 md:overflow-y-auto">
+                <div class="p-4 sm:p-6 xl:p-8">
 
                     {{-- Kategori badges --}}
                     <div class="mb-3 flex flex-wrap gap-2">
@@ -317,14 +308,27 @@
                             <span
                                 class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-600">Umum</span>
                         @endforelse
+
+                        @if($buku->series)
+                            <span
+                                class="inline-flex items-center gap-1.5 rounded-full bg-brand-primary/10 px-3 py-1 text-xs font-bold text-brand-primary">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                                {{ $buku->series->nama_series }} {{ $buku->nomor_volume ? '- Vol. ' . $buku->nomor_volume : '' }}
+                            </span>
+                        @endif
                     </div>
 
                     {{-- Judul & Penulis --}}
-                    <h1 class="mb-1 text-2xl xl:text-3xl font-bold text-black leading-tight">{{ $buku->judul_buku }}</h1>
-                    <p class="mb-5 text-base text-[#0f4c3a] font-medium">{{ $buku->penulis }}</p>
+                    <h1 class="mb-1 text-xl sm:text-2xl xl:text-3xl font-bold text-black leading-tight">
+                        {{ $buku->judul_buku }}
+                    </h1>
+                    <p class="mb-4 text-sm sm:text-base text-[#0f4c3a] font-medium">{{ $buku->penulis }}</p>
 
                     {{-- Info Grid --}}
-                    <div class="mb-5 grid grid-cols-2 xl:grid-cols-3 gap-3 rounded-xl bg-gray-50 p-4">
+                    <div class="mb-4 sm:mb-5 grid grid-cols-2 xl:grid-cols-3 gap-3 rounded-xl bg-gray-50 p-3 sm:p-4">
                         @if($buku->isbn)
                             <div>
                                 <span
@@ -373,33 +377,33 @@
 
                     {{-- AI Magic Summary --}}
                     <div class="mb-5" x-data="{ 
-                                showAi: false, 
-                                loading: false, 
-                                summary: '', 
-                                getSummary() {
-                                    if (this.summary) {
-                                        this.showAi = true;
-                                        return;
-                                    }
-                                    this.loading = true;
-                                    this.showAi = true;
-                                    fetch('{{ route('api.ai.summary') }}', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                        },
-                                        body: JSON.stringify({ id_buku: {{ $buku->id_buku }} })
-                                    })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if (data.summary) this.summary = data.summary;
-                                        else this.summary = 'Gagal mendapatkan ringkasan AI.';
-                                    })
-                                    .catch(() => this.summary = 'Terjadi kesalahan koneksi.')
-                                    .finally(() => this.loading = false);
-                                }
-                            }">
+                                        showAi: false, 
+                                        loading: false, 
+                                        summary: '', 
+                                        getSummary() {
+                                            if (this.summary) {
+                                                this.showAi = true;
+                                                return;
+                                            }
+                                            this.loading = true;
+                                            this.showAi = true;
+                                            fetch('{{ route('api.ai.summary') }}', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                },
+                                                body: JSON.stringify({ id_buku: {{ $buku->id_buku }} })
+                                            })
+                                            .then(res => res.json())
+                                            .then(data => {
+                                                if (data.summary) this.summary = data.summary;
+                                                else this.summary = 'Gagal mendapatkan ringkasan AI.';
+                                            })
+                                            .catch(() => this.summary = 'Terjadi kesalahan koneksi.')
+                                            .finally(() => this.loading = false);
+                                        }
+                                    }">
                         <button @click="getSummary"
                             class="w-full flex items-center justify-between gap-3 p-4 rounded-2xl bg-linear-to-r from-[#0f4c3a] to-[#1a6b54] text-white shadow-md hover:shadow-lg transition-all group overflow-hidden relative">
                             <div class="flex items-center gap-3 relative z-10">
@@ -473,11 +477,54 @@
                         </div>
                     </div>
 
+                    {{-- Buku Lain di Series Ini --}}
+                    @if(isset($seriesBooks) && $seriesBooks->count() > 0)
+                        <div class="mb-5">
+                            <h2 class="mb-3 text-sm font-bold text-gray-500 flex items-center gap-2 uppercase tracking-wide">
+                                <svg class="h-4 w-4 text-[#0f4c3a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                                Lanjutan Series: {{ $buku->series->nama_series }}
+                            </h2>
+                            <div class="flex flex-col gap-2">
+                                @foreach($seriesBooks as $sBook)
+                                    <a href="{{ route('anggota.buku.detail', $sBook->id_buku) }}"
+                                        class="flex items-center gap-3 p-2 rounded-xl border border-gray-100 bg-white hover:bg-[#f0f9f6] hover:border-[#c8e6d8] hover:-translate-y-0.5 shadow-xs hover:shadow-md transition-all">
+                                        <div class="h-14 w-10 shrink-0 bg-gray-100 rounded overflow-hidden">
+                                            @if($sBook->sampul)
+                                                <img src="{{ Storage::url($sBook->sampul) }}" class="h-full w-full object-cover">
+                                            @else
+                                                <div class="h-full w-full flex items-center justify-center">
+                                                    <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                            d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-sm font-bold text-gray-800 line-clamp-1 leading-snug">
+                                                {{ $sBook->judul_buku }}</h4>
+                                            <p class="text-xs text-gray-500">Volume {{ $sBook->nomor_volume ?? '-' }}</p>
+                                        </div>
+                                        <div class="shrink-0 text-[#0f4c3a] px-3">
+                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
                     {{-- Sinopsis --}}
                     @if($buku->sinopsis)
                         <div>
-                            <h2
-                                class="mb-2 text-sm font-bold text-gray-500 flex items-center gap-2 uppercase tracking-wide text-gray-500">
+                            <h2 class="mb-2 text-sm font-bold text-gray-500 flex items-center gap-2 uppercase tracking-wide">
                                 <svg class="h-4 w-4 text-[#0f4c3a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -486,32 +533,33 @@
                             </h2>
                             <div
                                 class="prose prose-sm max-w-none text-gray-600 leading-relaxed
-                                                                                                                        [&_p]:mb-3 [&_strong]:font-semibold [&_em]:italic
-                                                                                                                        [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
+                                                                                                                                        [&_p]:mb-3 [&_strong]:font-semibold [&_em]:italic
+                                                                                                                                        [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
                                 {!! $buku->sinopsis !!}
                             </div>
                         </div>
                     @endif
 
-                </div>
-            </div>
+                </div>{{-- end p-4/p-6 --}}
+            </div>{{-- end kolom kanan --}}
 
-        </div>
-    </div>
+        </div>{{-- end flex container --}}
+    </div>{{-- end main card --}}
 
     {{-- Reviews Section --}}
     <div class="mt-8 border-t border-gray-100 pt-8" id="ulasan-section">
-        <div class="flex items-center justify-between mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
             <div>
-                <h2 class="text-2xl font-bold text-black flex items-center gap-2">
-                    Ulasan & Rating
+                <h2 class="text-xl sm:text-2xl font-bold text-black flex items-center gap-2">
+                    Ulasan &amp; Rating
                 </h2>
                 <p class="text-gray-500 text-sm mt-1">Apa kata mereka tentang buku ini?</p>
             </div>
             @if($buku->ulasan->count() > 0)
-                <div class="flex items-center gap-3 bg-[#e8f4f0] p-3 rounded-2xl border border-[#c8e6d8]">
+                <div
+                    class="flex items-center gap-3 bg-[#e8f4f0] px-4 py-3 rounded-2xl border border-[#c8e6d8] self-start sm:self-auto">
                     <div class="text-center">
-                        <span class="text-3xl font-black text-[#0f4c3a]">{{ $buku->average_rating }}</span>
+                        <span class="text-2xl sm:text-3xl font-black text-[#0f4c3a]">{{ $buku->average_rating }}</span>
                         <div class="flex text-yellow-400">
                             @for($i = 1; $i <= 5; $i++)
                                 <svg class="h-3 w-3 {{ $i <= round($buku->average_rating) ? 'fill-current' : 'fill-gray-300' }}"
@@ -589,8 +637,7 @@
                         </form>
                     </div>
                 @else
-                    <div
-                        class="bg-gradient-to-br from-[#0f4c3a] to-[#0a382b] rounded-3xl p-6 text-white shadow-lg sticky top-4">
+                    <div class="bg-linear-to-br from-[#0f4c3a] to-[#0a382b] rounded-3xl p-6 text-white shadow-lg sticky top-4">
                         <div class="h-12 w-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md">
                             <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -611,7 +658,7 @@
                         <div class="flex items-start justify-between mb-4">
                             <div class="flex items-center gap-4">
                                 <div
-                                    class="h-12 w-12 flex-shrink-0 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center text-[#0f4c3a] font-black text-xl border border-gray-100 shadow-inner">
+                                    class="h-12 w-12 shrink-0 rounded-2xl bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center text-[#0f4c3a] font-black text-xl border border-gray-100 shadow-inner">
                                     {{ substr($ulasan->anggota->nama_lengkap, 0, 1) }}
                                 </div>
                                 <div>

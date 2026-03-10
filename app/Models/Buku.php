@@ -24,13 +24,20 @@ class Buku extends Model
         'tahun_terbit',
         'bahasa',
         'sampul',
-        'lokasi_rak'
+        'lokasi_rak',
+        'id_series',
+        'nomor_volume',
     ];
 
     public function kategori()
     {
         return $this->belongsToMany(Kategori::class, 'buku_kategori', 'id_buku', 'id_kategori')
             ->withPivot('dibuat_pada', 'diperbarui_pada');
+    }
+
+    public function series()
+    {
+        return $this->belongsTo(Series::class, 'id_series');
     }
 
     public function peminjaman()

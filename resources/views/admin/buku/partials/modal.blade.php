@@ -19,7 +19,8 @@
                         <div class="lg:col-span-2 space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Judul Buku <span class="text-meta-1">*</span></label>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Judul Buku <span
+                                            class="text-meta-1">*</span></label>
                                     <input type="text" name="judul_buku" x-model="form.judul" required
                                         class="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
                                 </div>
@@ -47,20 +48,25 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Stok <span class="text-meta-1">*</span></label>
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Stok <span
+                                            class="text-meta-1">*</span></label>
                                     <input type="number" name="stok" x-model="form.stok" required min="0"
                                         class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
                                 </div>
 
                                 <div>
-                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Jumlah Halaman</label>
-                                    <input type="number" name="jumlah_halaman" x-model="form.jumlah_halaman" min="1" max="10000"
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Jumlah
+                                        Halaman</label>
+                                    <input type="number" name="jumlah_halaman" x-model="form.jumlah_halaman" min="1"
+                                        max="10000"
                                         class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
                                 </div>
 
                                 <div>
-                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Tahun Terbit</label>
-                                    <input type="number" name="tahun_terbit" x-model="form.tahun_terbit" min="1900" max="{{ date('Y') }}"
+                                    <label class="mb-2.5 block font-medium text-black dark:text-white">Tahun
+                                        Terbit</label>
+                                    <input type="number" name="tahun_terbit" x-model="form.tahun_terbit" min="1900"
+                                        max="{{ date('Y') }}"
                                         class="w-full rounded border border-stroke bg-gray py-3 px-4 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
                                 </div>
                             </div>
@@ -83,9 +89,12 @@
 
                             <div>
                                 <label class="mb-2.5 block font-medium text-black dark:text-white">Sinopsis</label>
-                                <div id="editor" x-ref="quillEditor" class="bg-white dark:bg-gray-800 rounded-lg border border-stroke dark:border-strokedark" style="min-height: 200px;"></div>
+                                <div id="editor" x-ref="quillEditor"
+                                    class="bg-white dark:bg-gray-800 rounded-lg border border-stroke dark:border-strokedark"
+                                    style="min-height: 200px;"></div>
                                 <input type="hidden" name="sinopsis" x-model="form.sinopsis">
-                                <p class="text-xs text-gray-500 mt-2">Tulis sinopsis buku secara detail untuk membantu pembeli memahami konten buku.</p>
+                                <p class="text-xs text-gray-500 mt-2">Tulis sinopsis buku secara detail untuk membantu
+                                    pembeli memahami konten buku.</p>
                             </div>
 
                             <div>
@@ -99,15 +108,17 @@
                         <div class="space-y-4">
                             <div>
                                 <label class="mb-2.5 block font-medium text-black dark:text-white">Kategori</label>
-                                <div class="flex flex-wrap gap-2 rounded border border-stroke bg-gray p-3 dark:border-strokedark dark:bg-meta-4 max-h-[200px] overflow-y-auto">
+                                <div
+                                    class="flex flex-wrap gap-2 rounded border border-stroke bg-gray p-3 dark:border-strokedark dark:bg-meta-4 max-h-[200px] overflow-y-auto">
                                     @foreach($kategori as $kat)
                                         <div @click="toggleKategori({{ $kat->id_kategori }})"
                                             class="cursor-pointer select-none rounded border px-3 py-1 text-sm font-medium transition-colors"
                                             :class="form.kategori.includes({{ $kat->id_kategori }}) 
-                                                        ? 'bg-brand-primary border-brand-primary text-white' 
-                                                        : 'bg-white border-stroke text-gray-600 hover:border-brand-primary dark:bg-boxdark dark:border-strokedark dark:text-gray-300'">
+                                                            ? 'bg-brand-primary border-brand-primary text-white' 
+                                                            : 'bg-white border-stroke text-gray-600 hover:border-brand-primary dark:bg-boxdark dark:border-strokedark dark:text-gray-300'">
                                             {{ $kat->nama_kategori }}
-                                            <span x-show="form.kategori.includes({{ $kat->id_kategori }})" class="ml-1 inline-block">✓</span>
+                                            <span x-show="form.kategori.includes({{ $kat->id_kategori }})"
+                                                class="ml-1 inline-block">✓</span>
                                         </div>
                                     @endforeach
                                 </div>
@@ -125,12 +136,45 @@
                                 <p class="text-xs text-gray-500 mt-2">Format: JPG, PNG, Max: 2MB</p>
                             </div>
 
+                            <!-- Series & Volume -->
+                            <div
+                                class="rounded-xl border border-dashed border-brand-primary/40 bg-brand-primary/5 dark:bg-brand-primary/10 p-4 space-y-3">
+                                <p class="text-sm font-semibold text-brand-primary flex items-center gap-1.5">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                    </svg>
+                                    Masukkan ke Series
+                                </p>
+                                <div>
+                                    <label
+                                        class="mb-1.5 block text-sm font-medium text-black dark:text-white">Series</label>
+                                    <select name="id_series" x-model="form.id_series"
+                                        class="w-full rounded border border-stroke bg-white py-2.5 px-4 text-sm text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white">
+                                        <option value="">-- Tidak ada Series --</option>
+                                        @foreach($series as $s)
+                                            <option value="{{ $s->id_series }}">{{ $s->nama_series }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div x-show="form.id_series != ''">
+                                    <label class="mb-1.5 block text-sm font-medium text-black dark:text-white">Nomor
+                                        Volume</label>
+                                    <input type="number" name="nomor_volume" x-model="form.nomor_volume" min="1"
+                                        placeholder="Contoh: 1, 2, 3..."
+                                        class="w-full rounded border border-stroke bg-white py-2.5 px-4 text-sm text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white" />
+                                </div>
+                            </div>
+
                             <!-- Preview Cover -->
                             <div x-show="isEdit && form.coverPreview" class="mt-4">
-                                <label class="mb-2.5 block font-medium text-black dark:text-white">Cover Saat Ini</label>
+                                <label class="mb-2.5 block font-medium text-black dark:text-white">Cover Saat
+                                    Ini</label>
                                 <div class="relative">
-                                    <img :src="form.coverPreview" alt="Cover Preview" class="w-full h-48 object-cover rounded-lg border border-stroke dark:border-strokedark">
-                                    <div class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                                    <img :src="form.coverPreview" alt="Cover Preview"
+                                        class="w-full h-48 object-cover rounded-lg border border-stroke dark:border-strokedark">
+                                    <div
+                                        class="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
                                         Cover Lama
                                     </div>
                                 </div>
@@ -160,97 +204,13 @@
 <!-- Quill.js and Alpine.js Script -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
-function bookModal() {
-    return {
-        isOpen: false,
-        isEdit: false,
-        actionUrl: '{{ route("admin.buku.store") }}',
-        quill: null,
-        form: {
-            id: '',
-            judul: '',
-            isbn: '',
-            penulis: '',
-            penerbit: '',
-            stok: '',
-            sinopsis: '',
-            jumlah_halaman: '',
-            tahun_terbit: '',
-            bahasa: '',
-            kategori: [],
-            lokasi: '',
-            coverPreview: ''
-        },
-
-        init() {
-            // Initialize Quill editor
-            this.quill = new Quill(this.$refs.quillEditor, {
-                theme: 'snow',
-                placeholder: 'Tulis sinopsis buku di sini...',
-                modules: {
-                    toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        ['blockquote', 'code-block'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        [{ 'color': [] }, { 'background': [] }],
-                        ['clean']
-                    ]
-                }
-            });
-
-            // Update form.sinopsis when Quill content changes
-            this.quill.on('text-change', () => {
-                this.form.sinopsis = this.quill.root.innerHTML;
-            });
-        },
-
-        openAddModal() {
-            this.resetForm();
-            this.isEdit = false;
-            this.actionUrl = '{{ route("admin.buku.store") }}';
-            this.isOpen = true;
-            this.$nextTick(() => {
-                this.quill.setText('');
-            });
-        },
-
-        openEditModal(data) {
-            this.form = {
-                id: data.id,
-                judul: data.judul,
-                isbn: data.isbn || '',
-                penulis: data.penulis || '',
-                penerbit: data.penerbit || '',
-                stok: data.stok,
-                sinopsis: data.sinopsis || '',
-                jumlah_halaman: data.jumlah_halaman || '',
-                tahun_terbit: data.tahun_terbit || '',
-                bahasa: data.bahasa || '',
-                kategori: Array.isArray(data.kategori) ? data.kategori : [],
-                lokasi: data.lokasi || '',
-                coverPreview: data.coverPreview || ''
-            };
-            this.isEdit = true;
-            this.actionUrl = `{{ route("admin.buku.update", ":id") }}`.replace(':id', data.id);
-            this.isOpen = true;
-            
-            this.$nextTick(() => {
-                if (data.sinopsis) {
-                    this.quill.root.innerHTML = data.sinopsis;
-                } else {
-                    this.quill.setText('');
-                }
-            });
-        },
-
-        closeModal() {
-            this.isOpen = false;
-            this.resetForm();
-        },
-
-        resetForm() {
-            this.form = {
+    function bookModal() {
+        return {
+            isOpen: false,
+            isEdit: false,
+            actionUrl: '{{ route("admin.buku.store") }}',
+            quill: null,
+            form: {
                 id: '',
                 judul: '',
                 isbn: '',
@@ -263,18 +223,108 @@ function bookModal() {
                 bahasa: '',
                 kategori: [],
                 lokasi: '',
-                coverPreview: ''
-            };
-        },
+                coverPreview: '',
+                id_series: '',
+                nomor_volume: ''
+            },
 
-        toggleKategori(id) {
-            const index = this.form.kategori.indexOf(id);
-            if (index > -1) {
-                this.form.kategori.splice(index, 1);
-            } else {
-                this.form.kategori.push(id);
+            init() {
+                // Initialize Quill editor
+                this.quill = new Quill(this.$refs.quillEditor, {
+                    theme: 'snow',
+                    placeholder: 'Tulis sinopsis buku di sini...',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['blockquote', 'code-block'],
+                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            ['clean']
+                        ]
+                    }
+                });
+
+                // Update form.sinopsis when Quill content changes
+                this.quill.on('text-change', () => {
+                    this.form.sinopsis = this.quill.root.innerHTML;
+                });
+            },
+
+            openAddModal() {
+                this.resetForm();
+                this.isEdit = false;
+                this.actionUrl = '{{ route("admin.buku.store") }}';
+                this.isOpen = true;
+                this.$nextTick(() => {
+                    this.quill.setText('');
+                });
+            },
+
+            openEditModal(data) {
+                this.form = {
+                    id: data.id,
+                    judul: data.judul,
+                    isbn: data.isbn || '',
+                    penulis: data.penulis || '',
+                    penerbit: data.penerbit || '',
+                    stok: data.stok,
+                    sinopsis: data.sinopsis || '',
+                    jumlah_halaman: data.jumlah_halaman || '',
+                    tahun_terbit: data.tahun_terbit || '',
+                    bahasa: data.bahasa || '',
+                    kategori: Array.isArray(data.kategori) ? data.kategori : [],
+                    lokasi: data.lokasi || '',
+                    coverPreview: data.coverPreview || '',
+                    id_series: data.id_series || '',
+                    nomor_volume: data.nomor_volume || ''
+                };
+                this.isEdit = true;
+                this.actionUrl = `{{ route("admin.buku.update", ":id") }}`.replace(':id', data.id);
+                this.isOpen = true;
+
+                this.$nextTick(() => {
+                    if (data.sinopsis) {
+                        this.quill.root.innerHTML = data.sinopsis;
+                    } else {
+                        this.quill.setText('');
+                    }
+                });
+            },
+
+            closeModal() {
+                this.isOpen = false;
+                this.resetForm();
+            },
+
+            resetForm() {
+                this.form = {
+                    id: '',
+                    judul: '',
+                    isbn: '',
+                    penulis: '',
+                    penerbit: '',
+                    stok: '',
+                    sinopsis: '',
+                    jumlah_halaman: '',
+                    tahun_terbit: '',
+                    bahasa: '',
+                    kategori: [],
+                    lokasi: '',
+                    coverPreview: '',
+                    id_series: '',
+                    nomor_volume: ''
+                };
+            },
+
+            toggleKategori(id) {
+                const index = this.form.kategori.indexOf(id);
+                if (index > -1) {
+                    this.form.kategori.splice(index, 1);
+                } else {
+                    this.form.kategori.push(id);
+                }
             }
         }
     }
-}
 </script>
