@@ -9,7 +9,7 @@
             <div class="relative aspect-2/3 w-full overflow-hidden bg-gray-100">
                 @if($item->series->sampul_series)
                     <img src="{{ Storage::url($item->series->sampul_series) }}" alt="{{ $item->series->nama_series }}" loading="lazy"
-                        class="h-full w-full object-contain object-center group-hover:scale-105 transition-transform duration-500">
+                        class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
                 @else
                     <div class="flex h-full w-full items-center justify-center bg-linear-to-br from-[#e8f4f0] to-[#c8e6d8]">
                         <svg class="h-16 w-16 text-[#0f4c3a] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
