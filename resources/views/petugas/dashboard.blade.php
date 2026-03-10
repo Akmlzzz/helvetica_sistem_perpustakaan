@@ -7,8 +7,8 @@
         @if(session('success'))
             <div class="mb-5 flex items-start gap-3 rounded-xl border border-green-200 bg-green-50 px-5 py-4 shadow-sm">
                 <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500">
-                    <svg class="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                 </div>
                 <p class="text-sm font-medium text-green-800">{!! session('success') !!}</p>
@@ -17,8 +17,8 @@
         @if(session('error'))
             <div class="mb-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-5 py-4 shadow-sm">
                 <div class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-500">
-                    <svg class="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                    <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18 18 6M6 6l12 12" />
                     </svg>
                 </div>
                 <p class="text-sm font-medium text-red-800">{!! session('error') !!}</p>
@@ -57,8 +57,8 @@
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500 shadow-sm shadow-blue-200">
                                     <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 6h.008v.008H6V6Z" />
                                     </svg>
                                 </div>
                                 <svg class="h-4 w-4 text-blue-300 transition-transform group-hover:translate-x-1" fill="none"
@@ -82,8 +82,7 @@
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-green-500 shadow-sm shadow-green-200">
                                     <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                                     </svg>
                                 </div>
                                 <svg class="h-4 w-4 text-green-300 transition-transform group-hover:translate-x-1" fill="none"
@@ -107,8 +106,7 @@
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500 shadow-sm shadow-purple-200">
                                     <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                                     </svg>
                                 </div>
                                 <svg class="h-4 w-4 text-purple-300 transition-transform group-hover:translate-x-1" fill="none"
@@ -133,8 +131,7 @@
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-500 shadow-sm shadow-red-200">
                                     <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75m0 5.25v.75m0 5.25v.75m15-12v.75m0 5.25v.75m0 5.25v.75m-15-10.5h15c.621 0 1.125.504 1.125 1.125v10.5c0 .621-.504 1.125-1.125 1.125h-15a1.125 1.125 0 0 1-1.125-1.125v-10.5c0-.621.504-1.125 1.125-1.125Zm1.5 0v10.5m12-10.5v10.5m-10.5-8.25h3m-3 2.25h3m-3 2.25h3m3.75-6.75h3m-3 2.25h3m-3 2.25h3" />
                                     </svg>
                                 </div>
                                 <svg class="h-4 w-4 text-red-300 transition-transform group-hover:translate-x-1" fill="none"
@@ -158,8 +155,7 @@
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 shadow-sm shadow-orange-200">
                                     <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                     </svg>
                                 </div>
                                 <svg class="h-4 w-4 text-orange-300 transition-transform group-hover:translate-x-1" fill="none"
@@ -196,8 +192,7 @@
                         : 'text-gray-500 hover:text-gray-700'"
                     class="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm transition-all duration-200">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .407.16.785.42 1.066.249.27.4.63.4 1.024 0 .828-.672 1.5-1.5 1.5s-1.5-.672-1.5-1.5c0-.393.151-.754.4-1.024.26-.281.42-.659.42-1.066 0-.231-.035-.454-.1-.664m-5.8 0A2.251 2.251 0 0 1 5.625 3h12.75c1.057 0 1.912.727 2.125 1.706M3 7.5a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 .75.75v12a.75.75 0 0 1-.75.75H3.75a.75.75 0 0 1-.75-.75v-12Zm9 4.5H9v3.75h3V12Zm6 0h-3v3.75h3V12Zm-6 6H9v3.75h3V18Zm6 0h-3v3.75h3V18Z" />
                     </svg>
                     Proses Booking
                     @if($bookingAktif->count() > 0)
@@ -213,8 +208,7 @@
                         : 'text-gray-500 hover:text-gray-700'"
                     class="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm transition-all duration-200">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                     </svg>
                     Pengembalian
                 </button>
