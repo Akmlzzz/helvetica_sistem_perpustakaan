@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\HeroBanner;
 use App\Models\Kategori;
+use App\Models\Series;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,7 +16,7 @@ class HeroBannerController extends Controller
      */
     public function index()
     {
-        $banners = HeroBanner::orderBy('order_priority', 'asc')->get();
+        $banners = HeroBanner::with('series')->orderBy('order_priority', 'asc')->get();
         return view('admin.hero-banners.index', compact('banners'));
     }
 
@@ -25,7 +26,8 @@ class HeroBannerController extends Controller
     public function create()
     {
         $kategori = Kategori::orderBy('nama_kategori')->get();
-        return view('admin.hero-banners.create', compact('kategori'));
+        $series = Series::orderBy('nama_series')->get();
+        return view('admin.hero-banners.create', compact('kategori', 'series'));
     }
 
     /**
@@ -41,11 +43,12 @@ class HeroBannerController extends Controller
             'synopsis_color' => 'nullable|string',
             'tags' => 'nullable|string',
             'target_link' => 'nullable|string',
+            'id_series' => 'nullable|exists:series,id_series',
             'order_priority' => 'integer',
             'is_active' => 'boolean',
         ]);
 
-        $data = $request->only(['synopsis', 'synopsis_color', 'target_link', 'order_priority', 'is_active']);
+        $data = $request->only(['synopsis', 'synopsis_color', 'target_link', 'id_series', 'order_priority', 'is_active']);
 
         // Decode tags JSON string sent from Alpine.js
         $tagsInput = $request->input('tags');
@@ -83,7 +86,8 @@ class HeroBannerController extends Controller
     {
         $banner = HeroBanner::findOrFail($id);
         $kategori = Kategori::orderBy('nama_kategori')->get();
-        return view('admin.hero-banners.edit', compact('banner', 'kategori'));
+        $series = Series::orderBy('nama_series')->get();
+        return view('admin.hero-banners.edit', compact('banner', 'kategori', 'series'));
     }
 
     /**
@@ -101,10 +105,11 @@ class HeroBannerController extends Controller
             'synopsis_color' => 'nullable|string',
             'tags' => 'nullable|string',
             'target_link' => 'nullable|string',
+            'id_series' => 'nullable|exists:series,id_series',
             'order_priority' => 'integer',
         ]);
 
-        $data = $request->only(['synopsis', 'synopsis_color', 'target_link', 'order_priority']);
+        $data = $request->only(['synopsis', 'synopsis_color', 'target_link', 'id_series', 'order_priority']);
         $data['is_active'] = $request->has('is_active');
 
         // Decode tags JSON string sent from Alpine.js

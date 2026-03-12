@@ -19,9 +19,15 @@ class HeroBanner extends Model
         'synopsis_color',
         'tags',
         'target_link',
+        'id_series',
         'order_priority',
         'is_active',
     ];
+
+    public function series()
+    {
+        return $this->belongsTo(\App\Models\Series::class, 'id_series', 'id_series');
+    }
 
     protected $casts = [
         'is_active' => 'boolean',

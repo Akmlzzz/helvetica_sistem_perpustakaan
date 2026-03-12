@@ -9,11 +9,55 @@
                         Profil Saya
                     </h3>
                 </div>
-                <form action="{{ route('anggota.profile.update') }}" method="POST" x-data="{ showModal: false }"
+                <form action="{{ route('anggota.profile.update') }}" method="POST" x-data="{ showModal: false }" enctype="multipart/form-data"
                     @submit.prevent="showModal = true">
                     @csrf
                     @method('PUT')
                     <div class="p-6.5">
+                        
+                        <!-- Profile Image Section -->
+                        <div class="mb-4.5" x-data="profileCropper()">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+                                <div class="h-24 w-24 rounded-full overflow-hidden border border-stroke bg-gray-100 shrink-0 relative">
+                                    <img x-show="previewUrl" :src="previewUrl" class="h-full w-full object-cover relative z-10" style="display: none;">
+                                    @if($user->foto_profil)
+                                        <img x-show="!previewUrl" src="{{ Storage::url($user->foto_profil) }}" alt="Profile" class="h-full w-full object-cover">
+                                    @else
+                                        <svg x-show="!previewUrl" class="h-full w-full text-gray-400 p-4" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                                        </svg>
+                                    @endif
+                                </div>
+                                <div class="flex-1">
+                                    <label class="mb-2.5 block text-black dark:text-white font-medium">Foto Profil</label>
+                                    <input type="file" x-ref="fileInput" @change="fileChosen" name="foto_profil" accept="image/*" class="w-full rounded border-[1.5px] border-stroke bg-transparent py-2.5 px-4 font-medium outline-none transition file:mr-4 file:rounded file:border-0 file:bg-[#004236] file:py-2 file:px-4 file:text-sm file:font-semibold file:text-white hover:file:bg-[#00362b] focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                                    <input type="hidden" name="cropped_foto" x-model="croppedData">
+                                    @error('foto_profil')
+                                        <p class="text-danger text-sm mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Crop Modal -->
+                            <div x-show="showCropper" class="fixed inset-0 z-999999 flex items-center justify-center bg-black/80 backdrop-blur-sm px-4 py-5" style="display: none;">
+                                <div @click.outside="cancelCrop" class="w-full max-w-150 rounded-lg bg-white p-6 dark:bg-boxdark shadow-2xl">
+                                    <div class="mb-4 flex justify-between items-center">
+                                        <h3 class="text-xl font-bold text-black dark:text-white">Sesuaikan Foto</h3>
+                                        <button @click="cancelCrop" type="button" class="text-gray-500 hover:text-black dark:hover:text-white">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        </button>
+                                    </div>
+                                    <div class="w-full h-[50vh] sm:h-96 md:h-115 bg-gray-100 flex items-center justify-center overflow-hidden rounded">
+                                        <img x-ref="imageToCrop" :src="imageUrl" class="max-h-full max-w-full block">
+                                    </div>
+                                    <div class="mt-6 flex justify-end gap-3">
+                                        <button @click="cancelCrop" type="button" class="rounded px-6 py-2 border border-stroke text-black transition hover:bg-gray-100 dark:border-strokedark dark:text-white dark:hover:bg-meta-4">Batal</button>
+                                        <button @click="saveCrop" type="button" class="rounded bg-[#004236] px-6 py-2 text-white transition hover:bg-opacity-90">Terapkan</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
                             <div class="w-full xl:w-1/2">
                                 <label class="mb-2.5 block text-black dark:text-white">
@@ -150,7 +194,93 @@
                     class="w-full rounded bg-success p-3 font-medium text-white transition hover:bg-opacity-90 sm:w-auto px-10">
                     Tutup
                 </button>
-            </div>
         </div>
     @endif
 @endsection
+
+@push('scripts')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+<style>
+    .cropper-view-box,
+    .cropper-face {
+        border-radius: 50%;
+    }
+    .cropper-view-box {
+        outline: 0;
+        box-shadow: 0 0 0 1px #39f;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+<script>
+    function profileCropper() {
+        return {
+            showCropper: false,
+            imageUrl: '',
+            previewUrl: '',
+            croppedData: '',
+            cropper: null,
+            fileChosen(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                if (!file.type.match('image.*')) {
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imageUrl = e.target.result;
+                    this.showCropper = true;
+                    
+                    this.$nextTick(() => {
+                        if (this.cropper) {
+                            this.cropper.destroy();
+                        }
+                        this.cropper = new Cropper(this.$refs.imageToCrop, {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                            dragMode: 'move',
+                            guides: false,
+                            center: true,
+                            highlight: false,
+                            background: true,
+                            autoCropArea: 0.9,
+                            cropBoxMovable: true,
+                            cropBoxResizable: true,
+                        });
+                    });
+                };
+                reader.readAsDataURL(file);
+            },
+            cancelCrop() {
+                this.showCropper = false;
+                if (this.cropper) {
+                    this.cropper.destroy();
+                    this.cropper = null;
+                }
+                this.$refs.fileInput.value = '';
+                this.previewUrl = '';
+                this.croppedData = '';
+            },
+            saveCrop() {
+                if (!this.cropper) return;
+                const canvas = this.cropper.getCroppedCanvas({
+                    width: 400,
+                    height: 400,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                });
+                
+                this.previewUrl = canvas.toDataURL('image/png');
+                this.croppedData = this.previewUrl;
+                
+                this.showCropper = false;
+                if (this.cropper) {
+                    this.cropper.destroy();
+                    this.cropper = null;
+                }
+            }
+        };
+    }
+</script>
+@endpush

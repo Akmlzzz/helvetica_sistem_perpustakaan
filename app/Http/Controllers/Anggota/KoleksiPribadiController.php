@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KoleksiPribadi;
 use App\Models\Buku;
+use App\Models\Series;
 use Illuminate\Support\Facades\Auth;
 
 class KoleksiPribadiController extends Controller
@@ -47,6 +48,33 @@ class KoleksiPribadiController extends Controller
         }
 
         return redirect()->back()->with('success', 'Buku berhasil ditambahkan ke koleksi/wishlist.');
+    }
+
+    public function storeFromSeries(Request $request, $id_series)
+    {
+        $series = Series::with('buku')->findOrFail($id_series);
+        $id_pengguna = Auth::user()->id_pengguna;
+        $added = 0;
+
+        foreach ($series->buku as $buku) {
+            $exists = KoleksiPribadi::where('id_pengguna', $id_pengguna)
+                ->where('id_buku', $buku->id_buku)
+                ->exists();
+
+            if (!$exists) {
+                KoleksiPribadi::create([
+                    'id_pengguna' => $id_pengguna,
+                    'id_buku' => $buku->id_buku,
+                ]);
+                $added++;
+            }
+        }
+
+        if ($added === 0) {
+            return redirect()->back()->with('error', 'Semua buku dalam seri ini sudah ada di koleksi Anda.');
+        }
+
+        return redirect()->back()->with('success', "{$added} buku dari seri '{$series->nama_series}' berhasil ditambahkan ke koleksi.");
     }
 
     public function destroy(Request $request, $id_buku)

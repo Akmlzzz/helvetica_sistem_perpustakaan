@@ -324,7 +324,30 @@ class AnggotaController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'alamat' => 'required|string',
             'password' => 'nullable|min:6',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'cropped_foto' => 'nullable|string',
         ]);
+
+        if ($request->filled('cropped_foto')) {
+            $image_parts = explode(";base64,", $request->cropped_foto);
+            if (count($image_parts) == 2) {
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileName = 'profile_pictures/' . uniqid() . '.png';
+                
+                if ($user->foto_profil && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->foto_profil)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($user->foto_profil);
+                }
+                
+                \Illuminate\Support\Facades\Storage::disk('public')->put($fileName, $image_base64);
+                $user->foto_profil = $fileName;
+            }
+        } elseif ($request->hasFile('foto_profil')) {
+            if ($user->foto_profil && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->foto_profil)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->foto_profil);
+            }
+            $path = $request->file('foto_profil')->store('profile_pictures', 'public');
+            $user->foto_profil = $path;
+        }
 
         $user->email = $request->email;
         $user->nama_pengguna = $request->nama_pengguna;

@@ -157,6 +157,7 @@ Route::middleware('auth')->group(function () {
         // Koleksi Pribadi (Wishlist)
         Route::get('/anggota/koleksi', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'index'])->name('anggota.koleksi.index');
         Route::post('/anggota/koleksi/{id_buku}', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'store'])->name('anggota.koleksi.store');
+        Route::post('/anggota/koleksi/series/{id_series}', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'storeFromSeries'])->name('anggota.koleksi.store-series');
         Route::delete('/anggota/koleksi/{id_buku}', [\App\Http\Controllers\Anggota\KoleksiPribadiController::class, 'destroy'])->name('anggota.koleksi.destroy');
 
         // Ulasan Buku

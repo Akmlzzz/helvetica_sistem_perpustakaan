@@ -1,123 +1,180 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+    <div class="mx-auto">
+        {{-- Header --}}
         <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 class="text-title-md2 font-bold text-black dark:text-white">
-                Tambah Banner Hero
-            </h2>
+            <div>
+                <a href="{{ route('admin.hero-banners.index') }}" class="mb-1 inline-flex items-center gap-1 text-sm text-gray-400 hover:text-[#004236] transition">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Kembali ke daftar
+                </a>
+                <h2 class="text-2xl font-bold text-gray-800">Tambah Banner Hero</h2>
+            </div>
         </div>
 
-        <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-            <form action="{{ route('admin.hero-banners.store') }}" method="POST" enctype="multipart/form-data"
-                class="p-6.5">
-                @csrf
+        <form action="{{ route('admin.hero-banners.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
 
-                <!-- Images Section -->
-                <div class="mb-6 border-b border-stroke pb-6 dark:border-strokedark">
-                    <h3 class="mb-4 font-medium text-black dark:text-white">Gambar (Layers)</h3>
+            <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                        <!-- Background -->
-                        <div>
-                            <label class="mb-2.5 block text-black dark:text-white">Background Image <span
-                                    class="text-meta-1">*</span></label>
-                            <input type="file" name="bg_img" accept="image/*" required
-                                class="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-                            <span class="text-xs text-gray-500">Layer paling belakang (Full width)</span>
+                {{-- ===== LEFT COLUMN: Images ===== --}}
+                <div class="xl:col-span-1 space-y-5">
+                    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                        <div class="border-b border-gray-100 bg-gradient-to-r from-[#004236]/5 to-transparent px-5 py-4">
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                <svg class="h-5 w-5 text-[#004236]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                Gambar Layers
+                            </h3>
+                            <p class="text-xs text-gray-500 mt-0.5">Upload gambar untuk setiap layer carousel</p>
                         </div>
-
-                        <!-- Character -->
-                        <div>
-                            <label class="mb-2.5 block text-black dark:text-white">Character Image</label>
-                            <input type="file" name="char_img" accept="image/*"
-                                class="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-                            <span class="text-xs text-gray-500">Layer tengah (Posisi Kanan)</span>
-                        </div>
-
-                        <!-- Title/Logo -->
-                        <div>
-                            <label class="mb-2.5 block text-black dark:text-white">Title/Logo Image</label>
-                            <input type="file" name="title_img" accept="image/*"
-                                class="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-                            <span class="text-xs text-gray-500">Layer depan (Judul Buku/Teks)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Content Section -->
-                <div class="mb-4.5 grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="md:col-span-3">
-                        <label class="mb-2.5 block text-black dark:text-white">Sinopsis</label>
-                        <textarea rows="3" name="synopsis" placeholder="Deskripsi singkat menarik..."
-                            class="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"></textarea>
-                    </div>
-                    <div>
-                        <label class="mb-2.5 block text-black dark:text-white">Warna Teks Sinopsis</label>
-                        <select name="synopsis_color"
-                            class="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
-                            <option value="#084734">Warna Tema (Hijau Gelap)</option>
-                            <option value="#FFFFFF">Putih Terang</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mb-4.5 grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <!-- Tags: Clickable kategori selector -->
-                    <div x-data="{ selectedTags: [], toggleTag(tag) { const i = this.selectedTags.indexOf(tag); i > -1 ? this.selectedTags.splice(i, 1) : this.selectedTags.push(tag); } }"
-                        class="mb-4.5">
-                        <label class="mb-2.5 block text-black dark:text-white">Tags / Kategori</label>
-                        <div
-                            class="flex flex-wrap gap-2 rounded border border-stroke bg-transparent p-3 dark:border-form-strokedark dark:bg-form-input min-h-[56px]">
-                            @foreach($kategori as $kat)
-                                <div @click="toggleTag('{{ $kat->nama_kategori }}')"
-                                    class="cursor-pointer select-none rounded border px-3 py-1 text-sm font-medium transition-colors"
-                                    :class="selectedTags.includes('{{ $kat->nama_kategori }}')
-                                                                    ? 'bg-primary border-primary text-white'
-                                                                    : 'bg-white border-stroke text-gray-600 hover:border-primary dark:bg-form-input dark:border-form-strokedark dark:text-gray-300'">
-                                    {{ $kat->nama_kategori }}
-                                    <span x-show="selectedTags.includes('{{ $kat->nama_kategori }}')"
-                                        class="ml-1 inline-block">✓</span>
-                                </div>
-                            @endforeach
-                        </div>
-                        <!-- Hidden input yang menyimpan nilai tags sebagai string JSON -->
-                        <input type="hidden" name="tags" :value="JSON.stringify(selectedTags)">
-                        <p class="text-xs text-gray-500 mt-2">Klik untuk memilih tag/kategori. Bisa pilih lebih dari satu.
-                        </p>
-                    </div>
-
-                    <div>
-                        <label class="mb-2.5 block text-black dark:text-white">Target Link (URL Buku)</label>
-                        <input type="text" name="target_link" placeholder="/anggota/buku/1"
-                            class="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-                    </div>
-                </div>
-
-                <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div>
-                        <label class="mb-2.5 block text-black dark:text-white">Order Priority</label>
-                        <input type="number" name="order_priority" value="0"
-                            class="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-                    </div>
-                    <div class="flex items-center pt-8">
-                        <label for="is_active" class="flex cursor-pointer select-none items-center">
-                            <div class="relative">
-                                <input type="checkbox" id="is_active" name="is_active" class="sr-only" checked />
-                                <div class="block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]"></div>
-                                <div class="dot absolute left-1 top-1 h-6 w-6 rounded-full bg-white transition"></div>
+                        <div class="space-y-5 p-5">
+                            {{-- Background --}}
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-gray-700">Background Image <span class="text-red-500">*</span></label>
+                                <input type="file" name="bg_img" accept="image/*" required
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-[#004236] file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-white hover:file:bg-[#003028] transition focus:border-[#004236] focus:outline-none">
+                                <p class="mt-1 text-xs text-gray-400">Layer paling belakang (full width)</p>
                             </div>
-                            <span class="ml-3 text-black dark:text-white">Aktifkan Banner?</span>
-                        </label>
+                            {{-- Character --}}
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-gray-700">Character Image</label>
+                                <input type="file" name="char_img" accept="image/*"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-gray-600 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-white hover:file:bg-gray-700 transition focus:border-[#004236] focus:outline-none">
+                                <p class="mt-1 text-xs text-gray-400">Layer tengah — posisi kanan</p>
+                            </div>
+                            {{-- Title --}}
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-gray-700">Title / Logo Image</label>
+                                <input type="file" name="title_img" accept="image/*"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-gray-600 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-white hover:file:bg-gray-700 transition focus:border-[#004236] focus:outline-none">
+                                <p class="mt-1 text-xs text-gray-400">Layer depan — judul / logo buku</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Settings --}}
+                    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                        <div class="border-b border-gray-100 bg-gradient-to-r from-[#004236]/5 to-transparent px-5 py-4">
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                <svg class="h-5 w-5 text-[#004236]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                Pengaturan
+                            </h3>
+                        </div>
+                        <div class="space-y-4 p-5">
+                            {{-- Order --}}
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-gray-700">Urutan Tampil</label>
+                                <input type="number" name="order_priority" value="0"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10">
+                                <p class="mt-1 text-xs text-gray-400">Angka lebih kecil tampil lebih awal</p>
+                            </div>
+                            {{-- Warna --}}
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-gray-700">Warna Teks Sinopsis</label>
+                                <select name="synopsis_color"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10">
+                                    <option value="#084734">Hijau Gelap (Tema)</option>
+                                    <option value="#FFFFFF">Putih Terang</option>
+                                </select>
+                            </div>
+                            {{-- Active Toggle --}}
+                            <div class="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-700">Aktifkan Banner</p>
+                                    <p class="text-xs text-gray-400">Banner akan muncul di halaman anggota</p>
+                                </div>
+                                <label class="relative inline-flex cursor-pointer items-center">
+                                    <input type="checkbox" name="is_active" class="peer sr-only" checked>
+                                    <div class="peer h-6 w-11 rounded-full bg-gray-300 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all peer-checked:bg-[#004236] peer-checked:after:translate-x-full"></div>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <button type="submit"
-                    class="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                    Simpan Banner
-                </button>
-            </form>
-        </div>
-    </div>
+                {{-- ===== RIGHT COLUMN: Content ===== --}}
+                <div class="xl:col-span-2 space-y-5">
 
+                    {{-- Synopsis & Series --}}
+                    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                        <div class="border-b border-gray-100 bg-gradient-to-r from-[#004236]/5 to-transparent px-5 py-4">
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                <svg class="h-5 w-5 text-[#004236]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                Konten Banner
+                            </h3>
+                        </div>
+                        <div class="space-y-4 p-5">
+                            {{-- Sinopsis --}}
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-gray-700">Sinopsis</label>
+                                <textarea rows="3" name="synopsis" placeholder="Deskripsi singkat dan menarik..."
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10">{{ old('synopsis') }}</textarea>
+                            </div>
+
+                            {{-- Series Pilihan --}}
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-gray-700">
+                                    Series Terkait
+                                    <span class="ml-1 text-xs font-normal text-gray-400">(Tombol "Lihat Buku" & "Koleksi Saya" akan mengarah ke sini)</span>
+                                </label>
+                                <select name="id_series"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10">
+                                    <option value="">-- Tidak ada series --</option>
+                                    @foreach($series as $ser)
+                                        <option value="{{ $ser->id_series }}" {{ old('id_series') == $ser->id_series ? 'selected' : '' }}>
+                                            {{ $ser->nama_series }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <p class="mt-1 text-xs text-gray-400">Jika dipilih, tombol "Lihat Buku" akan mengarah ke halaman series ini. Jika kosong, gunakan Target Link di bawah.</p>
+                            </div>
+
+                            {{-- Target Link --}}
+                            <div>
+                                <label class="mb-1.5 block text-sm font-semibold text-gray-700">Target Link (Opsional)</label>
+                                <input type="text" name="target_link" placeholder="/anggota/buku/1" value="{{ old('target_link') }}"
+                                    class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10">
+                                <p class="mt-1 text-xs text-gray-400">Hanya dipakai jika "Series Terkait" tidak dipilih di atas.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Tags --}}
+                    <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                        <div class="border-b border-gray-100 bg-gradient-to-r from-[#004236]/5 to-transparent px-5 py-4">
+                            <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                <svg class="h-5 w-5 text-[#004236]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                                Tags / Kategori
+                            </h3>
+                        </div>
+                        <div class="p-5"
+                            x-data="{ selectedTags: [], toggleTag(tag) { const i = this.selectedTags.indexOf(tag); i > -1 ? this.selectedTags.splice(i, 1) : this.selectedTags.push(tag); } }">
+                            <p class="mb-3 text-xs text-gray-500">Klik kategori untuk memilih. Bisa pilih lebih dari satu.</p>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($kategori as $kat)
+                                    <div @click="toggleTag('{{ $kat->nama_kategori }}')"
+                                        class="cursor-pointer select-none rounded-full border px-4 py-1.5 text-sm font-medium transition-all"
+                                        :class="selectedTags.includes('{{ $kat->nama_kategori }}')
+                                            ? 'bg-[#004236] border-[#004236] text-white shadow-sm'
+                                            : 'bg-white border-gray-200 text-gray-600 hover:border-[#004236] hover:text-[#004236]'">
+                                        {{ $kat->nama_kategori }}
+                                        <span x-show="selectedTags.includes('{{ $kat->nama_kategori }}')" class="ml-1">✓</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <input type="hidden" name="tags" :value="JSON.stringify(selectedTags)">
+                        </div>
+                    </div>
+
+                    {{-- Submit --}}
+                    <button type="submit"
+                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#004236] py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#003028] hover:shadow-md">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        Simpan Banner
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 @endsection

@@ -92,7 +92,7 @@
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
         x-transition:leave-end="opacity-0 translate-y-10 scale-90"
-        class="absolute bottom-20 right-0 w-72 overflow-hidden rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl ring-1 ring-black/5 flex flex-col border border-white/20"
+        class="fixed sm:absolute bottom-24 sm:bottom-20 right-4 sm:right-0 w-[calc(100vw-2rem)] sm:w-72 max-h-[70vh] sm:max-h-none overflow-y-auto sm:overflow-hidden rounded-2xl bg-white/90 backdrop-blur-xl shadow-2xl ring-1 ring-black/5 flex flex-col border border-white/20 z-50"
         style="display: none;">
 
         <!-- Header / Track Info -->

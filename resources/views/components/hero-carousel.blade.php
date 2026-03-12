@@ -39,6 +39,11 @@
         <!-- Slides -->
         <div class="relative w-full h-full">
             @foreach($banners as $index => $banner)
+                @php
+                    $seriesLink = $banner->id_series
+                        ? route('anggota.series.detail', $banner->id_series)
+                        : ($banner->target_link ?: null);
+                @endphp
                 <div x-show="activeSlide === {{ $index }}"
                     x-transition:enter="transition-opacity ease-out duration-300 absolute inset-0"
                     x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -49,9 +54,6 @@
                     <!-- Layer 1: Background -->
                     <img src="{{ Storage::url($banner->bg_img) }}" alt="Background"
                         class="absolute inset-0 w-full h-full object-cover z-0" />
-
-                    <!-- Overlay Gradient for Readability -->
-                    <!-- <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent z-10"></div> -->
 
                     <!-- Bottom Fade -->
                     <div
@@ -102,16 +104,24 @@
 
                         <!-- CTA Buttons -->
                         <div class="flex flex-wrap gap-2 sm:gap-4">
-                            @if($banner->target_link)
-                                <a href="{{ $banner->target_link }}"
+                            @if($seriesLink)
+                                <a href="{{ $seriesLink }}"
                                     class="px-4 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-base bg-brand-primary text-white font-bold rounded-lg shadow-lg hover:bg-opacity-90 transition">
                                     Lihat Buku
                                 </a>
                             @endif
-                            <button
-                                class="px-4 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-base bg-white/10 backdrop-blur-md border border-[#084734] text-[#084734] font-semibold rounded-lg hover:bg-white/20 transition">
-                                + Koleksi Saya
-                            </button>
+
+                            @auth
+                                @if($banner->id_series)
+                                    <form action="{{ route('anggota.koleksi.store-series', $banner->id_series) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit"
+                                            class="px-4 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-base bg-white/10 backdrop-blur-md border border-[#084734] text-[#084734] font-semibold rounded-lg hover:bg-white/20 transition">
+                                            + Koleksi Saya
+                                        </button>
+                                    </form>
+                                @endif
+                            @endauth
                         </div>
                     </div>
 
