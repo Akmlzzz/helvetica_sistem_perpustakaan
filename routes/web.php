@@ -28,17 +28,60 @@ Route::middleware('auth')->group(function () {
     // =========================================================
     Route::middleware('admin')->group(function () {
         Route::get('/dashboard', function () {
-            $totalBuku = \App\Models\Buku::count();
-            $totalAnggota = \App\Models\Pengguna::where('level_akses', 'anggota')->count();
-            $totalPeminjaman = \App\Models\Peminjaman::where('status_transaksi', 'dipinjam')->count();
+            $now = \Carbon\Carbon::now();
+            $lastWeek = \Carbon\Carbon::now()->subWeek();
 
-            $latestPeminjaman = \App\Models\Peminjaman::with(['pengguna', 'buku', 'detail.buku'])
+            // === STAT CARDS ===
+            $totalBuku = \App\Models\Buku::count();
+            $totalBukuLastWeek = \App\Models\Buku::where('dibuat_pada', '<', $lastWeek)->count();
+            $bukuTrend = $totalBukuLastWeek > 0 ? round((($totalBuku - $totalBukuLastWeek) / $totalBukuLastWeek) * 100) : 0;
+
+            $totalAnggota = \App\Models\Pengguna::where('level_akses', 'anggota')->count();
+            $anggotaLastWeek = \App\Models\Pengguna::where('level_akses', 'anggota')->where('dibuat_pada', '<', $lastWeek)->count();
+            $anggotaTrend = $anggotaLastWeek > 0 ? round((($totalAnggota - $anggotaLastWeek) / $anggotaLastWeek) * 100) : 0;
+
+            $totalPeminjaman = \App\Models\Peminjaman::whereIn('status_transaksi', ['dipinjam', 'booking'])->count();
+            $peminjamanLastWeek = \App\Models\Peminjaman::whereIn('status_transaksi', ['dipinjam', 'booking'])->where('dibuat_pada', '<', $lastWeek)->count();
+            $peminjamanTrend = $peminjamanLastWeek > 0 ? round((($totalPeminjaman - $peminjamanLastWeek) / $peminjamanLastWeek) * 100) : 0;
+
+            $totalTerlambat = \App\Models\Peminjaman::whereIn('status_transaksi', ['dipinjam', 'terlambat'])
+                ->where(function($q) use ($now) {
+                    $q->whereNotNull('tgl_jatuh_tempo')->where('tgl_jatuh_tempo', '<', $now->toDateString());
+                })->count();
+            $terlambatLastWeek = \App\Models\Peminjaman::whereIn('status_transaksi', ['dipinjam', 'terlambat'])
+                ->where(function($q) use ($lastWeek) {
+                    $q->whereNotNull('tgl_jatuh_tempo')->where('tgl_jatuh_tempo', '<', $lastWeek->toDateString());
+                })->count();
+            $terlambatTrend = $terlambatLastWeek > 0 ? round((($totalTerlambat - $terlambatLastWeek) / $terlambatLastWeek) * 100) : 0;
+
+            // === DONUT CHART: Top 6 Kategori ===
+            $kategoriData = \App\Models\Kategori::withCount('buku')->orderByDesc('buku_count')->take(6)->get();
+
+            // === BAR CHART: Peminjaman 7 hari terakhir ===
+            $weeklyData = collect();
+            for ($i = 6; $i >= 0; $i--) {
+                $day = \Carbon\Carbon::now()->subDays($i);
+                $count = \App\Models\Peminjaman::whereDate('tgl_pinjam', $day->toDateString())->count();
+                $weeklyData->push(['label' => $day->translatedFormat('D'), 'count' => $count, 'date' => $day->format('d/m')]);
+            }
+
+            // === RECENT PEMINJAMAN ===
+            $latestPeminjaman = \App\Models\Peminjaman::with(['pengguna.anggota', 'buku'])
+                ->whereNotNull('tgl_pinjam')
                 ->latest('tgl_pinjam')
-                ->take(5)
+                ->take(6)
                 ->get();
 
-            return view('dashboard', compact('totalBuku', 'totalAnggota', 'totalPeminjaman', 'latestPeminjaman'));
+            return view('dashboard', compact(
+                'totalBuku', 'bukuTrend',
+                'totalAnggota', 'anggotaTrend',
+                'totalPeminjaman', 'peminjamanTrend',
+                'totalTerlambat', 'terlambatTrend',
+                'kategoriData', 'weeklyData',
+                'latestPeminjaman'
+            ));
         })->name('dashboard');
+
 
         // Pengguna Management (admin only)
         Route::get('/pengguna', [\App\Http\Controllers\Admin\PenggunaController::class, 'index'])->name('admin.pengguna.index');
