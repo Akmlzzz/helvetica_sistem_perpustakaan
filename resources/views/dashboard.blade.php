@@ -23,10 +23,8 @@
     <div class="grid grid-cols-2 gap-4 xl:grid-cols-4">
 
         {{-- Card: Total Buku --}}
-        <div class="group relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:ring-gray-700">
-            <div class="absolute right-0 top-0 h-20 w-20 translate-x-4 -translate-y-4 rounded-full bg-emerald-50 transition-transform group-hover:scale-125 dark:bg-emerald-900/20"></div>
-            <div class="relative">
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/40">
+        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:ring-gray-700">
+            <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/40">
                     <svg class="h-5 w-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
                 </div>
                 <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Buku</p>
@@ -40,15 +38,12 @@
                         <span class="text-xs font-bold text-red-400">{{ $bukuTrend }}%</span>
                     @endif
                     <span class="text-xs text-gray-400">vs minggu lalu</span>
-                </div>
             </div>
         </div>
 
         {{-- Card: Total Anggota --}}
-        <div class="group relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:ring-gray-700">
-            <div class="absolute right-0 top-0 h-20 w-20 translate-x-4 -translate-y-4 rounded-full bg-blue-50 transition-transform group-hover:scale-125 dark:bg-blue-900/20"></div>
-            <div class="relative">
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/40">
+        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:ring-gray-700">
+            <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/40">
                     <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </div>
                 <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Anggota</p>
@@ -62,15 +57,12 @@
                         <span class="text-xs font-bold text-red-400">{{ $anggotaTrend }}%</span>
                     @endif
                     <span class="text-xs text-gray-400">vs minggu lalu</span>
-                </div>
             </div>
         </div>
 
         {{-- Card: Peminjaman Aktif --}}
-        <div class="group relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:ring-gray-700">
-            <div class="absolute right-0 top-0 h-20 w-20 translate-x-4 -translate-y-4 rounded-full bg-violet-50 transition-transform group-hover:scale-125 dark:bg-violet-900/20"></div>
-            <div class="relative">
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-900/40">
+        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:ring-gray-700">
+            <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-900/40">
                     <svg class="h-5 w-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
                 </div>
                 <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Peminjaman Aktif</p>
@@ -84,15 +76,12 @@
                         <span class="text-xs font-bold text-red-400">{{ $peminjamanTrend }}%</span>
                     @endif
                     <span class="text-xs text-gray-400">vs minggu lalu</span>
-                </div>
             </div>
         </div>
 
         {{-- Card: Buku Terlambat --}}
-        <div class="group relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:ring-gray-700">
-            <div class="absolute right-0 top-0 h-20 w-20 translate-x-4 -translate-y-4 rounded-full bg-rose-50 transition-transform group-hover:scale-125 dark:bg-rose-900/20"></div>
-            <div class="relative">
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-rose-100 dark:bg-rose-900/40">
+        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:ring-gray-700">
+            <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-rose-100 dark:bg-rose-900/40">
                     <svg class="h-5 w-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                 </div>
                 <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Buku Terlambat</p>
@@ -107,7 +96,6 @@
                     @endif
                     <span class="text-xs text-gray-400">vs minggu lalu</span>
                 </div>
-            </div>
         </div>
 
     </div>
@@ -125,48 +113,9 @@
                     <p class="text-xs text-gray-400">Distribusi koleksi perpustakaan</p>
                 </div>
             </div>
-
-            @php
-                $totalKategoriBuku = $kategoriData->sum('buku_count');
-                $donutColors = ['#004236','#00644f','#34d399','#6366f1','#f59e0b','#f43f5e'];
-                $lightColors = ['bg-emerald-700','bg-emerald-600','bg-emerald-400','bg-indigo-500','bg-amber-500','bg-rose-500'];
-                $cumulativePct = 0;
-                $gradientParts = [];
-                foreach($kategoriData as $i => $kat) {
-                    $pct = $totalKategoriBuku > 0 ? ($kat->buku_count / $totalKategoriBuku) * 100 : 0;
-                    $gradientParts[] = $donutColors[$i % count($donutColors)] . ' ' . $cumulativePct . '% ' . ($cumulativePct + $pct) . '%';
-                    $cumulativePct += $pct;
-                }
-                $conicGradient = 'conic-gradient(' . implode(', ', $gradientParts) . ')';
-            @endphp
-
-            {{-- Donut --}}
-            <div class="flex flex-col items-center">
-                <div class="relative my-4 flex h-44 w-44 items-center justify-center">
-                    <div class="absolute inset-0 rounded-full" style="background: {{ $conicGradient }}; border-radius:50%;"></div>
-                    <div class="absolute inset-[28px] rounded-full bg-white dark:bg-gray-800"></div>
-                    <div class="relative z-10 text-center">
-                        <p class="text-2xl font-black text-gray-800 dark:text-white">{{ $totalKategoriBuku }}</p>
-                        <p class="text-xs text-gray-400">Total Buku</p>
-                    </div>
-                </div>
-
-                {{-- Legend --}}
-                <div class="mt-2 w-full space-y-2">
-                    @foreach($kategoriData as $i => $kat)
-                        @php $pct = $totalKategoriBuku > 0 ? round(($kat->buku_count / $totalKategoriBuku) * 100) : 0; @endphp
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="h-2.5 w-2.5 rounded-full" style="background-color: {{ $donutColors[$i % count($donutColors)] }}"></span>
-                                <span class="text-xs text-gray-600 dark:text-gray-300 truncate max-w-[120px]">{{ $kat->nama_kategori }}</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-bold text-gray-700 dark:text-white">{{ $kat->buku_count }}</span>
-                                <span class="w-8 text-right text-xs text-gray-400">{{ $pct }}%</span>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+            
+            <div class="relative flex items-center justify-center" style="height: 240px;">
+                <canvas id="kategoriChart"></canvas>
             </div>
         </div>
 
@@ -183,48 +132,113 @@
                 </div>
             </div>
 
-            @php
-                $maxCount = $weeklyData->max('count') ?: 1;
-            @endphp
-
-            <div class="flex h-48 items-end gap-2">
-                @foreach($weeklyData as $i => $day)
-                    @php
-                        $heightPct = $maxCount > 0 ? max(4, ($day['count'] / $maxCount) * 100) : 4;
-                        $isToday = ($i === count($weeklyData) - 1);
-                    @endphp
-                    <div class="group flex flex-1 flex-col items-center gap-1"
-                        x-data="{ open: false }" @mouseenter="open=true" @mouseleave="open=false">
-                        {{-- Tooltip --}}
-                        <div x-show="open"
-                            x-transition:enter="transition ease-out duration-150"
-                            x-transition:enter-start="opacity-0 -translate-y-1"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            class="mb-1 whitespace-nowrap rounded-lg bg-gray-800 px-2 py-1 text-xs font-bold text-white dark:bg-gray-600"
-                            style="display:none;">
-                            {{ $day['count'] }} pinjam
-                        </div>
-                        {{-- Bar --}}
-                        <div class="w-full rounded-t-xl transition-all duration-500 ease-out"
-                            style="height: {{ $heightPct }}%; background-color: {{ $isToday ? '#004236' : '#a7f3d0' }};">
-                        </div>
-                        {{-- Label --}}
-                        <span class="text-[10px] font-semibold {{ $isToday ? 'text-[#004236]' : 'text-gray-400' }} dark:text-gray-400">
-                            {{ $day['label'] }}
-                        </span>
-                    </div>
-                @endforeach
-            </div>
-
-            {{-- Y-axis hints --}}
-            <div class="mt-2 flex items-center justify-between border-t border-gray-100 pt-2 dark:border-gray-700">
-                <span class="text-xs text-gray-400">{{ now()->subDays(6)->format('d M') }}</span>
-                <span class="text-xs font-medium text-[#004236]">Maks: {{ $maxCount }}</span>
-                <span class="text-xs text-gray-400">{{ now()->format('d M') }}</span>
+            <div class="relative w-full" style="height: 240px;">
+                <canvas id="peminjamanChart"></canvas>
             </div>
         </div>
 
     </div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- DONUT CHART (Kategori) ---
+        const ctxKategori = document.getElementById('kategoriChart').getContext('2d');
+        const kategoriLabels = {!! json_encode($kategoriData->pluck('nama_kategori')) !!};
+        const kategoriData = {!! json_encode($kategoriData->pluck('buku_count')) !!};
+        const donutColors = ['#004236','#00644f','#34d399','#6366f1','#f59e0b','#f43f5e'];
+
+        new Chart(ctxKategori, {
+            type: 'doughnut',
+            data: {
+                labels: kategoriLabels,
+                datasets: [{
+                    data: kategoriData,
+                    backgroundColor: donutColors,
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 8,
+                            padding: 15,
+                            font: { size: 11, family: "'Inter', sans-serif" }
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- BAR CHART (Peminjaman Mingguan) ---
+        const ctxPeminjaman = document.getElementById('peminjamanChart').getContext('2d');
+        const weeklyLabels = {!! json_encode($weeklyData->pluck('label')) !!};
+        const weeklyCounts = {!! json_encode($weeklyData->pluck('count')) !!};
+
+        new Chart(ctxPeminjaman, {
+            type: 'bar',
+            data: {
+                labels: weeklyLabels,
+                datasets: [{
+                    label: 'Peminjaman',
+                    data: weeklyCounts,
+                    backgroundColor: function(context) {
+                        const index = context.dataIndex;
+                        return index === weeklyCounts.length - 1 ? '#004236' : '#a7f3d0';
+                    },
+                    borderRadius: 6,
+                    borderSkipped: false,
+                    barThickness: 24
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1f2937',
+                        padding: 10,
+                        titleFont: { size: 12 },
+                        bodyFont: { size: 13, weight: 'bold' },
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw + ' pinjam';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f3f4f6', drawBorder: false },
+                        border: { display: false },
+                        ticks: { stepSize: 1, font: { size: 11 } }
+                    },
+                    x: {
+                        grid: { display: false, drawBorder: false },
+                        border: { display: false },
+                        ticks: { font: { size: 11, weight: '500' } }
+                    }
+                },
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    });
+</script>
+@endpush
 
     {{-- ================================================== --}}
     {{-- ROW 3: RECENT PEMINJAMAN --}}
