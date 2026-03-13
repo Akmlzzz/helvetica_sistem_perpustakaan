@@ -25,7 +25,7 @@
                     <div class="relative h-40 w-full shrink-0 overflow-hidden md:h-auto md:w-64">
                         <img src="{{ Storage::url($banner->bg_img) }}" alt="Background"
                             class="h-full w-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
+                        <div class="absolute inset-0 bg-linear-to-r from-black/40 to-transparent"></div>
                         {{-- Order Badge --}}
                         <div class="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-sm font-bold text-gray-800 shadow">
                             {{ $banner->order_priority }}

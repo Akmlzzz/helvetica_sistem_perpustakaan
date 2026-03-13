@@ -176,7 +176,7 @@
                                             <div id="progress-bar-{{ $p->id_pengguna }}"
                                                 class="h-full rounded-full transition-all duration-500
                                                         {{ $persen == 100 ? 'bg-green-500' : ($persen > 0 ? 'bg-brand-primary' : 'bg-gray-300') }}"
-                                                style="width: {{ $persen }}%"></div>
+                                                @style(["width: {$persen}%"])></div>
                                         </div>
                                         <span id="progress-text-{{ $p->id_pengguna }}"
                                             class="text-xs font-semibold text-gray-500">{{ $totalDimiliki }}/{{ $totalFitur }}

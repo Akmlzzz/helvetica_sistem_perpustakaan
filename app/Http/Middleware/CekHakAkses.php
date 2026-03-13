@@ -20,7 +20,8 @@ class CekHakAkses
 {
     public function handle(Request $request, Closure $next, string $fitur): Response
     {
-        $user = auth()->user();
+        /** @var \App\Models\Pengguna|null $user */
+        $user = \Illuminate\Support\Facades\Auth::user();
 
         // Belum login
         if (!$user) {

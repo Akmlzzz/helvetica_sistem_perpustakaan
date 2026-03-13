@@ -61,7 +61,7 @@ class Peminjaman extends Model
         $jatuhTempo = $this->tgl_jatuh_tempo ?? $this->tgl_kembali;
         if (!$jatuhTempo)
             return false;
-        return Carbon::now()->startOfDay()->gt(Carbon::instance($jatuhTempo)->startOfDay());
+        return Carbon::now()->startOfDay()->gt(Carbon::parse((string) $jatuhTempo)->startOfDay());
     }
 
     /**
@@ -72,7 +72,7 @@ class Peminjaman extends Model
         $jatuhTempo = $this->tgl_jatuh_tempo ?? $this->tgl_kembali;
         if (!$jatuhTempo)
             return 0;
-        return (int) Carbon::now()->startOfDay()->diffInDays(Carbon::instance($jatuhTempo)->startOfDay(), false);
+        return (int) Carbon::now()->startOfDay()->diffInDays(Carbon::parse((string) $jatuhTempo)->startOfDay(), false);
     }
 
     /**

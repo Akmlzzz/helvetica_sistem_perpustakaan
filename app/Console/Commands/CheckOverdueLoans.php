@@ -43,6 +43,7 @@ class CheckOverdueLoans extends Command
         $officers = $petugas->merge($admin);
 
         foreach ($overdueLoans as $loan) {
+            /** @var \App\Models\Peminjaman $loan */
             // Update status to 'terlambat' if it's still 'dipinjam'
             if ($loan->status_transaksi === 'dipinjam') {
                 $loan->update(['status_transaksi' => 'terlambat']);

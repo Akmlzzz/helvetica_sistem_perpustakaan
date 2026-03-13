@@ -17,11 +17,13 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->redirectUsersTo(function () {
-            if (auth()->user()->isAdmin())
+            /** @var \App\Models\Pengguna $user */
+            $user = \Illuminate\Support\Facades\Auth::user();
+            if ($user->isAdmin())
                 return route('dashboard');
-            if (auth()->user()->isPetugas())
+            if ($user->isPetugas())
                 return route('petugas.dashboard');
-            if (auth()->user()->isAnggota())
+            if ($user->isAnggota())
                 return route('anggota.dashboard');
             return url('/');
         });

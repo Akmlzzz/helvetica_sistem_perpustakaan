@@ -46,11 +46,14 @@ class AuthController extends Controller
         if (Auth::attempt($authCredentials)) {
             $request->session()->regenerate();
 
-            if (Auth::user()->isAdmin()) {
+            /** @var \App\Models\Pengguna $user */
+            $user = Auth::user();
+
+            if ($user->isAdmin()) {
                 return redirect()->intended(route('dashboard'));
-            } elseif (Auth::user()->isPetugas()) {
+            } elseif ($user->isPetugas()) {
                 return redirect()->intended(route('petugas.dashboard'));
-            } elseif (Auth::user()->isAnggota()) {
+            } elseif ($user->isAnggota()) {
                 return redirect()->intended(route('anggota.dashboard'));
             } else {
                 return redirect()->intended('/');

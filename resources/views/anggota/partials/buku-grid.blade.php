@@ -135,10 +135,10 @@
                 <h3 class="text-xl font-bold text-black">Buku tidak ditemukan</h3>
                 <p class="mt-1 text-gray-500">Coba gunakan kata kunci lain atau filter kategori yang berbeda.</p>
             </div>
-            <button onclick="window.location.href='{{ route('anggota.dashboard') }}'"
+            <a href="{{ route('anggota.dashboard') }}"
                 class="mt-2 inline-flex items-center text-primary hover:underline font-medium text-sm">
                 Bersihkan semua filter
-            </button>
+            </a>
         </div>
     </div>
 @endforelse
