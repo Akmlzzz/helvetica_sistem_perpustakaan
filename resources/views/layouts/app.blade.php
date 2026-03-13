@@ -93,6 +93,8 @@
 
     </div>
 
+
+
     <!-- Global Success Notification Modal -->
     @if(session('success') && !Str::contains(strtolower(session('success')), ['hapus', 'delete']))
         <div x-data="{ show: true }" x-show="show" style="display: none;"
@@ -162,7 +164,30 @@
                 </svg>
             </button>
         </div>
+    @elseif(session('error'))
+        <!-- Global Error Notification Modal -->
+        <div x-data="{ show: true }" x-show="show" style="display: none;"
+            class="fixed inset-0 z-999999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-5 overflow-y-auto">
+            <div @click.outside="show = false"
+                class="w-full max-w-sm rounded-lg bg-white px-8 py-10 dark:bg-boxdark text-center shadow-2xl transform transition-all animate-fade-in-up">
+                <div
+                    class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                    <svg class="h-10 w-10 text-[#EF4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-black dark:text-white">Gagal!</h3>
+                <p class="mb-8 text-gray-500 dark:text-gray-400">{{ session('error') }}</p>
+
+                <button @click="show = false"
+                    class="w-full rounded-lg bg-[#EF4444] py-3 px-6 font-medium text-white hover:bg-[#DC2626] shadow-md transition-colors border-none cursor-pointer">
+                    Tutup
+                </button>
+            </div>
+        </div>
     @endif
+
+
 
     <x-chatbot-widget />
     <x-music-player />

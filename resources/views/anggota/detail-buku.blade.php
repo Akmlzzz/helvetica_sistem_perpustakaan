@@ -171,7 +171,7 @@
                             </p>
                         </div>
                     @elseif($buku->stok > 0)
-                        <div x-data="{ durasi: 7, showConfirm: false }">
+                        <div x-data="{ durasi: 7, showConfirm: false, isSubmitting: false }">
                             {{-- Slider durasi --}}
                             <div class="mb-2">
                                 <div class="flex items-center justify-between mb-1">
@@ -248,15 +248,25 @@
                                     <form action="{{ route('anggota.booking.store') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="id_buku" value="{{ $buku->id_buku }}">
-                                        <input type="hidden" name="durasi_pinjam" :value="durasi">
+                                        <input type="hidden" name="durasi_pinjam" x-model="durasi">
                                         <div class="flex gap-3">
                                             <button type="button" @click="showConfirm = false"
-                                                class="flex-1 rounded-xl border border-gray-300 py-3 font-medium text-gray-700 hover:bg-gray-50 transition">
+                                                class="flex-1 rounded-xl border border-gray-300 py-3 font-medium text-gray-700 hover:bg-gray-50 transition drop-shadow-sm">
                                                 Batal
                                             </button>
                                             <button type="submit"
-                                                class="flex-1 rounded-xl bg-[#0f4c3a] py-3 font-bold text-white hover:bg-[#0a382b] transition shadow-md">
-                                                Ya, Pinjam!
+                                                class="flex-1 rounded-xl bg-[#0f4c3a] py-3 font-bold text-white hover:bg-[#0a382b] transition drop-shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                                x-bind:disabled="isSubmitting">
+                                                
+                                                <span x-show="!isSubmitting">Ya, Pinjam!</span>
+                                                <span x-show="isSubmitting" class="flex flex-row items-center justify-center gap-2" x-cloak>
+                                                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                    Memproses...
+                                                </span>
+
                                             </button>
                                         </div>
                                     </form>

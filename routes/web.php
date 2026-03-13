@@ -210,6 +210,7 @@ Route::middleware('auth')->group(function () {
 
 // API Routes for AJAX calls
 Route::get('/api/buku/search', [\App\Http\Controllers\Api\BukuApiController::class, 'search'])->name('api.buku.search');
+Route::post('/api/booking', [\App\Http\Controllers\Api\BookingApiController::class, 'storeBooking'])->name('api.booking.store')->middleware(['auth', \App\Http\Middleware\AnggotaMiddleware::class]);
 
 // Pengajuan Buku - Form Publik (bisa diakses anggota yang sudah login)
 Route::middleware('auth')->group(function () {

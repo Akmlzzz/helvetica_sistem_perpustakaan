@@ -18,12 +18,10 @@ class Peminjaman extends Model
         'id_pengguna',
         'id_buku',
         'kode_booking',
-        'tgl_booking',
         'durasi_pinjam',
+        'tgl_booking',
         'tgl_pinjam',
-        'tgl_kembali',
-        'tgl_jatuh_tempo',
-        'status_transaksi'
+        // 'tgl_kembali', 'tgl_jatuh_tempo', 'status_transaksi' tidak dimass-assign secara sembarangan
     ];
 
     protected $casts = [
@@ -96,5 +94,32 @@ class Peminjaman extends Model
         } while (self::where('kode_booking', $kode)->exists());
 
         return $kode;
+    }
+
+    /**
+     * Hitung Denda dengan Ceiling (Maksimal Denda = Harga Buku)
+     * Aturan baru: Jika telat > 7 hari, denda = harga buku sepenuhnya.
+     */
+    public function hitungDenda()
+    {
+        $tarifPerHari = 2000;
+        $hariTerlambat = $this->hari_terlambat; 
+        
+        if ($hariTerlambat <= 0) return 0;
+
+        $batasMaksimal = isset($this->buku) ? $this->buku->harga_buku ?? 0 : 0;
+        
+        // Aturan Khusus: Telat lebih dari 7 hari otomatis kena harga buku penuh
+        if ($hariTerlambat > 7 && $batasMaksimal > 0) {
+            return $batasMaksimal;
+        }
+
+        $totalHitungan = $hariTerlambat * $tarifPerHari;
+        
+        if ($batasMaksimal > 0 && $totalHitungan > $batasMaksimal) {
+            return $batasMaksimal;
+        }
+
+        return $totalHitungan;
     }
 }

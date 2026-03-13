@@ -201,7 +201,7 @@ class AnggotaController extends Controller
     /**
      * Store Booking (Pinjam Buku)
      */
-    public function storeBooking(Request $request)
+    public function storeBooking(\App\Http\Requests\StoreBookingRequest $request)
     {
         // Cek status verifikasi akun anggota
         $user = Auth::user();
@@ -214,50 +214,80 @@ class AnggotaController extends Controller
             return redirect()->back()->with('error', $pesan);
         }
 
-        $request->validate([
-            'id_buku' => 'required|exists:buku,id_buku',
-            'durasi_pinjam' => 'required|integer|min:1|max:14',
-        ]);
+        // Cek apakah anggota memiliki denda yang belum dibayar
+        $adaDendaBelumLunas = \App\Models\Denda::whereHas('peminjaman', function ($query) use ($user) {
+            $query->where('id_pengguna', $user->id_pengguna);
+        })->where('status_pembayaran', 'belum_lunas')->exists();
 
-        $buku = Buku::findOrFail($request->id_buku);
-
-        if ($buku->stok <= 0) {
-            return redirect()->back()->with('error', 'Stok buku tidak tersedia.');
+        if ($adaDendaBelumLunas) {
+            return redirect()->back()->with('error', 'Peminjaman ditolak! Anda memiliki tagihan denda yang belum dilunasi. Harap lunasi denda Anda terlebih dahulu untuk bisa meminjam atau membooking buku.');
         }
 
-        // Cek apakah sudah pinjam buku ini
-        $sudahPinjam = Peminjaman::where('id_pengguna', Auth::id())
-            ->where('id_buku', $request->id_buku)
-            ->whereIn('status_transaksi', ['booking', 'dipinjam'])
-            ->exists();
+        // Cek apakah ada buku yang sedang dipinjam tapi sudah lewat jatuh tempo (terlambat)
+        $adaPeminjamanTerlambat = \App\Models\Peminjaman::where('id_pengguna', $user->id_pengguna)
+            ->where(function($q) {
+                $q->where('status_transaksi', 'terlambat')
+                  ->orWhere(function($sq) {
+                      $sq->where('status_transaksi', 'dipinjam')
+                         ->whereDate('tgl_jatuh_tempo', '<', \Carbon\Carbon::today());
+                  });
+            })->exists();
 
-        if ($sudahPinjam) {
-            return redirect()->back()->with('error', 'Anda sudah meminjam buku ini.');
+        if ($adaPeminjamanTerlambat) {
+            return redirect()->back()->with('error', 'Peminjaman ditolak! Anda memiliki buku yang terlambat dikembalikan. Harap kembalikan buku tersebut terlebih dahulu.');
         }
 
-        $kodeBooking = Peminjaman::generateKodeBooking();
-        $durasi = (int) $request->durasi_pinjam;
-        $tglPinjam = Carbon::today();
-        $tglJatuhTempo = $tglPinjam->copy()->addDays($durasi);
+        $validated = $request->validated();
 
-        DB::transaction(function () use ($request, $kodeBooking, $durasi, $tglPinjam, $tglJatuhTempo) {
-            Peminjaman::create([
-                'id_pengguna' => Auth::id(),
-                'id_buku' => $request->id_buku,
-                'kode_booking' => $kodeBooking,
-                'tgl_booking' => $tglPinjam,
-                'tgl_pinjam' => $tglPinjam,
-                'durasi_pinjam' => $durasi,
-                'tgl_jatuh_tempo' => $tglJatuhTempo,
-                'status_transaksi' => 'booking',
-            ]);
+        try {
+            DB::transaction(function () use ($validated) {
+                // 1. Kunci baris buku eksklusif dengan lockForUpdate untuk mencegah race condition
+                $buku = Buku::where('id_buku', $validated['id_buku'])
+                            ->lockForUpdate()
+                            ->firstOrFail();
 
-            // Stok dikurangi saat booking, bukan saat diambil (reservasi)
-            Buku::where('id_buku', $request->id_buku)->decrement('stok');
-        });
+                if ($buku->stok <= 0) {
+                    throw new \Exception('Maaf, buku ini baru saja dipinjam orang lain (Stok Habis).');
+                }
 
-        return redirect()->route('anggota.pinjaman')
-            ->with('success', "Booking berhasil! Kode Booking Anda: <strong>{$kodeBooking}</strong>. Tunjukkan kode ini ke petugas untuk mengambil buku. Jatuh tempo: {$tglJatuhTempo->format('d M Y')}");
+                // Cek apakah sudah pinjam buku ini
+                $sudahPinjam = Peminjaman::where('id_pengguna', Auth::id())
+                    ->where('id_buku', $validated['id_buku'])
+                    ->whereIn('status_transaksi', ['booking', 'dipinjam'])
+                    ->exists();
+
+                if ($sudahPinjam) {
+                    throw new \Exception('Anda sudah meminjam buku ini.');
+                }
+
+                // 2. Kurangi stok secara aman
+                $buku->decrement('stok');
+
+                $kodeBooking = Peminjaman::generateKodeBooking();
+                $durasi = (int) $validated['durasi_pinjam'];
+                $tglPinjam = Carbon::today();
+                $tglJatuhTempo = $tglPinjam->copy()->addDays($durasi);
+
+                // 3. Masukkan ke database
+                Peminjaman::create([
+                    'id_pengguna' => Auth::id(),
+                    'id_buku' => $buku->id_buku,
+                    'kode_booking' => $kodeBooking,
+                    'tgl_booking' => $tglPinjam,
+                    'tgl_pinjam' => $tglPinjam,
+                    'durasi_pinjam' => $durasi,
+                    'tgl_jatuh_tempo' => $tglJatuhTempo,
+                    'status_transaksi' => 'booking',
+                ]);
+
+                // Simpan pesan sukses sementara di request via flash data (karena tidak mengembalikan response dalam closure)
+                session()->flash('success_booking', "Booking berhasil! Kode Booking Anda: <strong>{$kodeBooking}</strong>. Tunjukkan kode ini ke petugas untuk mengambil buku. Jatuh tempo: {$tglJatuhTempo->format('d M Y')}");
+            });
+
+            return redirect()->route('anggota.pinjaman')->with('success', session('success_booking'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -316,6 +346,10 @@ class AnggotaController extends Controller
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
+        
+        // Memastikan update hanya milik sendiri atau oleh admin
+        \Illuminate\Support\Facades\Gate::authorize('update', $user);
+
         $anggota = $user->anggota;
 
         $request->validate([
