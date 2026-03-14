@@ -30,7 +30,7 @@ class PetugasController extends Controller
         // Fitur yang boleh diakses petugas ini
         $fiturAkses = $user->daftarFiturAkses();
 
-        // Statistik
+        // Statistik (fitur akses card lama)
         $stats = [];
         if ($fiturAkses->contains('buku')) {
             $stats['buku'] = Buku::count();
@@ -50,6 +50,49 @@ class PetugasController extends Controller
                 ->whereYear('tgl_pinjam', now()->year)
                 ->count();
         }
+
+        // ==============================
+        // STAT CARDS baru (mirip admin)
+        // ==============================
+        $totalBuku       = Buku::count();
+        $totalAnggota    = Pengguna::whereHas('anggota')->count();
+        $totalPeminjaman = Peminjaman::whereIn('status_transaksi', ['dipinjam', 'terlambat'])->count();
+        $totalTerlambat  = Peminjaman::where('status_transaksi', 'terlambat')->count();
+        $totalBooking    = Peminjaman::where('status_transaksi', 'booking')->count();
+        $totalDenda      = Denda::where('status_pembayaran', 'belum_bayar')->count();
+
+        // Trend vs minggu lalu
+        $oneWeekAgo    = Carbon::now()->subWeek();
+        $bukuTrend     = 0;
+        $anggotaTrend  = 0;
+        $peminjamanTrend = 0;
+        $terlambatTrend  = 0;
+
+        $bukuMingguLalu = Buku::where('dibuat_pada', '<', $oneWeekAgo)->count();
+        if ($bukuMingguLalu > 0) {
+            $bukuTrend = round((($totalBuku - $bukuMingguLalu) / $bukuMingguLalu) * 100);
+        }
+        $anggotaMingguLalu = Pengguna::whereHas('anggota')->where('dibuat_pada', '<', $oneWeekAgo)->count();
+        if ($anggotaMingguLalu > 0) {
+            $anggotaTrend = round((($totalAnggota - $anggotaMingguLalu) / $anggotaMingguLalu) * 100);
+        }
+
+        // ==============================
+        // WEEKLY CHART DATA
+        // ==============================
+        $weeklyData = collect(range(6, 0))->map(function ($daysAgo) {
+            $date  = Carbon::today()->subDays($daysAgo);
+            $count = Peminjaman::whereDate('tgl_pinjam', $date)->count();
+            return ['label' => $date->translatedFormat('D'), 'count' => $count];
+        });
+
+        // ==============================
+        // RECENT PEMINJAMAN (8 terbaru)
+        // ==============================
+        $latestPeminjaman = Peminjaman::with(['pengguna.anggota', 'buku'])
+            ->orderBy('dibuat_pada', 'desc')
+            ->limit(8)
+            ->get();
 
         // ==============================
         // Data untuk tab PEMINJAMAN (kode booking)
@@ -102,7 +145,19 @@ class PetugasController extends Controller
             'stats',
             'bookingAktif',
             'peminjamanAktif',
-            'searchReturn'
+            'searchReturn',
+            'totalBuku',
+            'totalAnggota',
+            'totalPeminjaman',
+            'totalTerlambat',
+            'totalBooking',
+            'totalDenda',
+            'bukuTrend',
+            'anggotaTrend',
+            'peminjamanTrend',
+            'terlambatTrend',
+            'weeklyData',
+            'latestPeminjaman'
         ));
     }
 
