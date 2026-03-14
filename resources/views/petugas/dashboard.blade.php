@@ -52,7 +52,7 @@
 
                     @if($fiturAkses->contains('kategori'))
                         <a href="{{ route('admin.kategori.index') }}"
-                            class="group relative overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-blue-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-blue-200">
+                            class="group relative overflow-hidden rounded-2xl border border-blue-100 bg-linear-to-br from-blue-50 to-blue-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-blue-200">
                             <div class="mb-4 flex items-center justify-between">
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500 shadow-sm shadow-blue-200">
@@ -77,7 +77,7 @@
 
                     @if($fiturAkses->contains('buku'))
                         <a href="{{ route('admin.buku.index') }}"
-                            class="group relative overflow-hidden rounded-2xl border border-green-100 bg-gradient-to-br from-green-50 to-green-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-green-200">
+                            class="group relative overflow-hidden rounded-2xl border border-green-100 bg-linear-to-br from-green-50 to-green-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-green-200">
                             <div class="mb-4 flex items-center justify-between">
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-green-500 shadow-sm shadow-green-200">
@@ -101,7 +101,7 @@
 
                     @if($fiturAkses->contains('peminjaman'))
                         <a href="{{ route('admin.peminjaman.index') }}"
-                            class="group relative overflow-hidden rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50 to-purple-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-purple-200">
+                            class="group relative overflow-hidden rounded-2xl border border-purple-100 bg-linear-to-br from-purple-50 to-purple-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-purple-200">
                             <div class="mb-4 flex items-center justify-between">
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500 shadow-sm shadow-purple-200">
@@ -126,7 +126,7 @@
 
                     @if($fiturAkses->contains('denda'))
                         <a href="{{ route('admin.denda.index') }}"
-                            class="group relative overflow-hidden rounded-2xl border border-red-100 bg-gradient-to-br from-red-50 to-red-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-red-200">
+                            class="group relative overflow-hidden rounded-2xl border border-red-100 bg-linear-to-br from-red-50 to-red-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-red-200">
                             <div class="mb-4 flex items-center justify-between">
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-red-500 shadow-sm shadow-red-200">
@@ -150,7 +150,7 @@
 
                     @if($fiturAkses->contains('laporan'))
                         <a href="{{ route('admin.laporan.index') }}"
-                            class="group relative overflow-hidden rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 to-orange-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-orange-200">
+                            class="group relative overflow-hidden rounded-2xl border border-orange-100 bg-linear-to-br from-orange-50 to-orange-100/60 p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-orange-200">
                             <div class="mb-4 flex items-center justify-between">
                                 <div
                                     class="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500 shadow-sm shadow-orange-200">
@@ -226,7 +226,7 @@
                     <div class="xl:col-span-2">
                         <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                             <div
-                                class="border-b border-gray-100 bg-gradient-to-r from-[#004236]/5 to-transparent px-6 py-4">
+                                class="border-b border-gray-100 bg-linear-to-r from-[#004236]/5 to-transparent px-6 py-4">
                                 <h3 class="font-bold text-gray-800 flex items-center gap-2">
                                     <svg class="h-5 w-5 text-[#004236]" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
@@ -247,7 +247,7 @@
                                         </label>
                                         <input type="text" id="kode_booking" name="kode_booking"
                                             value="{{ old('kode_booking') }}" placeholder="Contoh: BK250224ABCD" autofocus
-                                            class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-gray-800 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal placeholder:text-gray-400 outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10 @error('kode_booking') border-red-400 bg-red-50 @enderror">
+                                            class="w-full rounded-xl border px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-gray-800 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal placeholder:text-gray-400 outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10 {{ $errors->has('kode_booking') ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-gray-50' }}">
                                         @error('kode_booking')
                                             <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
                                         @enderror
@@ -289,7 +289,7 @@
                     <div class="xl:col-span-3">
                         <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                             <div
-                                class="border-b border-gray-100 bg-gradient-to-r from-amber-50 to-transparent px-6 py-4 flex items-center justify-between">
+                                class="border-b border-gray-100 bg-linear-to-r from-amber-50 to-transparent px-6 py-4 flex items-center justify-between">
                                 <div>
                                     <h3 class="font-bold text-gray-800 flex items-center gap-2">
                                         <svg class="h-5 w-5 text-amber-500" fill="none" stroke="currentColor"
@@ -585,7 +585,7 @@
             show          = true;
         " x-show="show" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
-        class="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+        class="fixed inset-0 z-999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
         style="display:none;">
 
         <div @click.outside="show = false" x-transition:enter="transition ease-out duration-200"
@@ -593,7 +593,7 @@
             class="w-full max-w-md rounded-2xl bg-white p-0 shadow-2xl overflow-hidden">
 
             {{-- Modal Header --}}
-            <div class="relative bg-gradient-to-br from-[#004236] to-[#00644f] px-6 pt-6 pb-8">
+            <div class="relative bg-linear-to-br from-[#004236] to-[#00644f] px-6 pt-6 pb-8">
                 <button @click="show = false"
                     class="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

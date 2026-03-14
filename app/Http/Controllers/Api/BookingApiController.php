@@ -39,12 +39,12 @@ class BookingApiController extends Controller
         }
 
         // Cek apakah ada buku yang sedang dipinjam tapi sudah lewat jatuh tempo (terlambat)
-        $adaPeminjamanTerlambat = \App\Models\Peminjaman::where('id_pengguna', $user->id_pengguna)
+        $adaPeminjamanTerlambat = Peminjaman::where('id_pengguna', $user->id_pengguna)
             ->where(function($q) {
                 $q->where('status_transaksi', 'terlambat')
                   ->orWhere(function($sq) {
                       $sq->where('status_transaksi', 'dipinjam')
-                         ->whereDate('tgl_jatuh_tempo', '<', \Carbon\Carbon::today());
+                         ->whereDate('tgl_jatuh_tempo', '<', Carbon::today());
                   });
             })->exists();
 

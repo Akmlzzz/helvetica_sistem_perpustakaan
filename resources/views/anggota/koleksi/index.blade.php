@@ -16,7 +16,7 @@
 
     {{-- ===== MODAL HAPUS — dirender di sini (level atas, bukan di card) ===== --}}
     <div x-show="showDeleteModal" x-transition
-        class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+        class="fixed inset-0 z-9999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
         style="display: none;">
         <div @click.outside="showDeleteModal = false"
             class="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl">
@@ -75,7 +75,7 @@
                                 <img src="{{ Storage::url($item->buku->sampul) }}" alt="{{ $item->buku->judul_buku }}" loading="lazy"
                                     class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
                             @else
-                                <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#e8f4f0] to-[#c8e6d8]">
+                                <div class="flex h-full w-full items-center justify-center bg-linear-to-br from-[#e8f4f0] to-[#c8e6d8]">
                                     <svg class="h-12 w-12 text-[#0f4c3a] opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                             d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25">

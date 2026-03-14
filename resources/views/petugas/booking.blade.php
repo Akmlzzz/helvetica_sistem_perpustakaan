@@ -43,7 +43,7 @@
         {{-- Form Input Kode Booking --}}
         <div class="xl:col-span-2">
             <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-                <div class="border-b border-gray-100 bg-gradient-to-r from-[#004236]/5 to-transparent px-6 py-4">
+                <div class="border-b border-gray-100 bg-linear-to-r from-[#004236]/5 to-transparent px-6 py-4">
                     <h3 class="font-bold text-gray-800 flex items-center gap-2">
                         <svg class="h-5 w-5 text-[#004236]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 3.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
@@ -61,7 +61,7 @@
                             </label>
                             <input type="text" id="kode_booking" name="kode_booking"
                                 value="{{ old('kode_booking') }}" placeholder="Contoh: BK250224ABCD" autofocus
-                                class="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-gray-800 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal placeholder:text-gray-400 outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10 @error('kode_booking') border-red-400 bg-red-50 @enderror">
+                                class="w-full rounded-xl border px-4 py-3 font-mono text-sm font-semibold uppercase tracking-widest text-gray-800 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal placeholder:text-gray-400 outline-none transition focus:border-[#004236] focus:bg-white focus:ring-2 focus:ring-[#004236]/10 {{ $errors->has('kode_booking') ? 'border-red-400 bg-red-50' : 'border-gray-300 bg-gray-50' }}">
                             @error('kode_booking')
                                 <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
                             @enderror
@@ -93,7 +93,7 @@
         {{-- Daftar Booking Menunggu --}}
         <div class="xl:col-span-3">
             <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-                <div class="border-b border-gray-100 bg-gradient-to-r from-amber-50 to-transparent px-6 py-4 flex items-center justify-between">
+                <div class="border-b border-gray-100 bg-linear-to-r from-amber-50 to-transparent px-6 py-4 flex items-center justify-between">
                     <div>
                         <h3 class="font-bold text-gray-800 flex items-center gap-2">
                             <svg class="h-5 w-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

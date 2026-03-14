@@ -209,13 +209,13 @@
         {{-- ===== MODAL KONFIRMASI PENGEMBALIAN ===== --}}
         <div x-show="show" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100"
-            class="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+            class="fixed inset-0 z-999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
             style="display:none;">
             <div @click.outside="show = false" x-transition:enter="transition ease-out duration-200"
                 x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                 class="w-full max-w-md rounded-2xl bg-white p-0 shadow-2xl overflow-hidden">
 
-                <div class="relative bg-gradient-to-br from-[#004236] to-[#00644f] px-6 pt-6 pb-8">
+                <div class="relative bg-linear-to-br from-[#004236] to-[#00644f] px-6 pt-6 pb-8">
                     <button @click="show = false"
                         class="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition">
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
