@@ -7,8 +7,7 @@
 @endphp
 
 <aside id="sidebar"
-    class="fixed flex flex-col mt-0 top-0 px-5 left-0 bg-white dark:bg-[#052e25] dark:border-[#052e25] text-gray-900 h-screen transition-all duration-300 ease-in-out z-99999 border-r border-gray-200"
-    class="fixed flex flex-col mt-0 top-0 px-5 left-0 bg-white dark:bg-[#052e25] dark:border-[#052e25] text-gray-900 h-screen transition-all duration-300 ease-in-out z-99999 border-r border-gray-200"
+    class="fixed flex flex-col mt-0 top-0 px-4 left-0 bg-white dark:bg-[#052e25] dark:border-[#052e25] text-gray-900 h-screen transition-all duration-300 ease-in-out z-99999 border-r border-gray-200"
     :class="{
         'w-[270px]': $store.sidebar.isExpanded || $store.sidebar.isMobileOpen || $store.sidebar.isHovered,
         'w-[90px]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,
@@ -18,8 +17,8 @@
     @mouseleave="$store.sidebar.setHovered(false)">
 
     <!-- Logo Section -->
-    <div class="pt-8 pb-7 flex items-center gap-3"
-        :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ? 'xl:justify-center' : 'justify-start'">
+    <div class="pt-8 pb-7 pl-2 flex items-center gap-3"
+        :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ? 'xl:justify-center pl-0' : 'justify-start'">
         <a href="/" class="flex items-center gap-2">
             <!-- Full Logo (when expanded) -->
             <div x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen">
@@ -82,8 +81,8 @@
                                         <div x-data="{ expanded: false }"
                                             x-effect="expanded = isSubmenuOpen('{{ $groupIndex }}', {{ $itemIndex }})">
                                             <button @click.prevent="toggleSubmenu('{{ $groupIndex }}', {{ $itemIndex }})"
-                                                class="menu-item group w-full flex items-center justify-between px-3 py-2 font-medium transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-                                                :class="isGroupActive({{ json_encode($item['subItems']) }}) ? 'text-[#004236] font-bold dark:text-white' : 'text-gray-900 dark:text-gray-400'">
+                                                class="menu-item group w-full flex items-center justify-between py-2.5 font-medium transition-colors duration-200"
+                                                :class="isGroupActive({{ json_encode($item['subItems']) }}) ? 'text-[#004236] font-bold dark:text-white bg-[#F3F7EB] dark:bg-[#004236]/30 border-l-4 border-[#CEF17B] rounded-lg pl-3 pr-4' : 'text-gray-900 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg px-4'">
 
                                                 <div class="flex items-center gap-3">
                                                     <!-- Icon LEFT -->
@@ -120,8 +119,8 @@
                                                     @foreach ($item['subItems'] as $subItem)
                                                         <li>
                                                             <a href="{{ url($subItem['path']) }}"
-                                                                class="block px-3 py-1.5 text-sm font-medium rounded-lg transition-colors hover:text-[#004236] dark:hover:text-white"
-                                                                :class="isActive('{{ $subItem['path'] }}') ? 'text-[#004236] font-bold dark:text-white' : 'text-gray-500 dark:text-gray-400'">
+                                                                class="block py-2 pr-3 text-sm font-medium transition-colors hover:text-[#004236] dark:hover:text-white"
+                                                                :class="isActive('{{ $subItem['path'] }}') ? 'text-[#004236] font-bold dark:text-white bg-[#F3F7EB] dark:bg-[#004236]/30 border-l-[3px] border-[#CEF17B] rounded-lg pl-[13px]' : 'text-gray-500 dark:text-gray-400 pl-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800'">
                                                                 {{ $subItem['name'] }}
                                                             </a>
                                                         </li>
@@ -132,8 +131,8 @@
                                     @else
                                         <!-- Simple Menu Item -->
                                         <a href="{{ url($item['path']) }}"
-                                            class="menu-item group w-full flex items-center justify-between px-3 py-2 font-medium transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-                                            :class="isActive('{{ $item['path'] }}') ? 'text-[#004236] font-bold dark:text-white' : 'text-gray-900 dark:text-gray-400'">
+                                            class="menu-item group w-full flex items-center justify-between py-2.5 font-medium transition-colors duration-200"
+                                            :class="isActive('{{ $item['path'] }}') ? 'text-[#004236] font-bold dark:text-white bg-[#F3F7EB] dark:bg-[#004236]/30 border-l-4 border-[#CEF17B] rounded-lg pl-3 pr-4' : 'text-gray-900 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg px-4'">
 
                                             <div class="flex items-center gap-3">
                                                 <span class="relative"
