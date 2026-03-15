@@ -178,7 +178,10 @@
                 </div>
             </div>
             <div class="relative w-full" style="height: 240px;">
-                <canvas id="peminjamanChartPetugas"></canvas>
+                <canvas id="peminjamanChartPetugas"
+                    data-labels='{{ $weeklyData->pluck('label')->toJson() }}'
+                    data-counts='{{ $weeklyData->pluck('count')->toJson() }}'>
+                </canvas>
             </div>
         </div>
 
@@ -331,9 +334,10 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const ctx = document.getElementById('peminjamanChartPetugas').getContext('2d');
-        const weeklyLabels = {!! json_encode($weeklyData->pluck('label')) !!};
-        const weeklyCounts = {!! json_encode($weeklyData->pluck('count')) !!};
+        const canvasEl = document.getElementById('peminjamanChartPetugas');
+        const ctx = canvasEl.getContext('2d');
+        const weeklyLabels = JSON.parse(canvasEl.dataset.labels);
+        const weeklyCounts = JSON.parse(canvasEl.dataset.counts);
 
         new Chart(ctx, {
             type: 'bar',
@@ -361,7 +365,7 @@
                         titleFont: { size: 12 },
                         bodyFont: { size: 13, weight: 'bold' },
                         displayColors: false,
-                        callbacks: { label: ctx => ctx.raw + ' pinjam' }
+                        callbacks: { label: function(c) { return c.raw + ' pinjam'; } }
                     }
                 },
                 scales: {
