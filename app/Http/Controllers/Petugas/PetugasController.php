@@ -255,7 +255,7 @@ class PetugasController extends Controller
             ?? $peminjaman->pengguna->nama_pengguna
             ?? '-';
 
-        return redirect()->route('petugas.dashboard')
+        return redirect()->back()
             ->with('success', "Buku <strong>\"{$namaBuku}\"</strong> berhasil diserahkan ke <strong>{$namaAnggota}</strong>. Status diubah menjadi Dipinjam.");
     }
 
@@ -348,7 +348,7 @@ class PetugasController extends Controller
             }
         });
 
-        return redirect()->route('petugas.dashboard')
+        return redirect()->back()
             ->with('success', $pesanReturn);
     }
 }

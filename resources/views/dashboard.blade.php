@@ -103,7 +103,11 @@
     {{-- ================================================== --}}
     {{-- ROW 2: CHARTS --}}
     {{-- ================================================== --}}
-    <div class="grid grid-cols-1 gap-5 lg:grid-cols-5">
+    <div class="grid grid-cols-1 gap-5 lg:grid-cols-5" id="charts-container" 
+        data-kategori-labels="{{ $kategoriData->pluck('nama_kategori') }}"
+        data-kategori-counts="{{ $kategoriData->pluck('buku_count') }}"
+        data-weekly-labels="{{ $weeklyData->pluck('label') }}"
+        data-weekly-counts="{{ $weeklyData->pluck('count') }}">
 
         {{-- LEFT: Donut Chart - Kategori Buku --}}
         <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 dark:bg-gray-800 dark:ring-gray-700 lg:col-span-2">
@@ -143,99 +147,118 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // --- DONUT CHART (Kategori) ---
-        const ctxKategori = document.getElementById('kategoriChart').getContext('2d');
-        const kategoriLabels = {!! json_encode($kategoriData->pluck('nama_kategori')) !!};
-        const kategoriData = {!! json_encode($kategoriData->pluck('buku_count')) !!};
-        const donutColors = ['#004236','#00644f','#34d399','#6366f1','#f59e0b','#f43f5e'];
+        const container = document.getElementById('charts-container');
+        if (!container) return;
 
-        new Chart(ctxKategori, {
-            type: 'doughnut',
-            data: {
-                labels: kategoriLabels,
-                datasets: [{
-                    data: kategoriData,
-                    backgroundColor: donutColors,
-                    borderWidth: 0,
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '75%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            usePointStyle: true,
-                            boxWidth: 8,
-                            padding: 15,
-                            font: { size: 11, family: "'Inter', sans-serif" }
-                        }
-                    }
+        // Lazy load inisialisasi chart menggunakan Intersection Observer
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    initCharts();
+                    observer.disconnect(); // Render sekali saja saat elemen terlihat
                 }
-            }
-        });
+            });
+        }, { threshold: 0.1 });
 
-        // --- BAR CHART (Peminjaman Mingguan) ---
-        const ctxPeminjaman = document.getElementById('peminjamanChart').getContext('2d');
-        const weeklyLabels = {!! json_encode($weeklyData->pluck('label')) !!};
-        const weeklyCounts = {!! json_encode($weeklyData->pluck('count')) !!};
+        observer.observe(container);
 
-        new Chart(ctxPeminjaman, {
-            type: 'bar',
-            data: {
-                labels: weeklyLabels,
-                datasets: [{
-                    label: 'Peminjaman',
-                    data: weeklyCounts,
-                    backgroundColor: function(context) {
-                        const index = context.dataIndex;
-                        return index === weeklyCounts.length - 1 ? '#004236' : '#a7f3d0';
-                    },
-                    borderRadius: 6,
-                    borderSkipped: false,
-                    barThickness: 24
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#1f2937',
-                        padding: 10,
-                        titleFont: { size: 12 },
-                        bodyFont: { size: 13, weight: 'bold' },
-                        displayColors: false,
-                        callbacks: {
-                            label: function(context) {
-                                return context.raw + ' pinjam';
+        function initCharts() {
+            // Ambil data dengan parsing dataset (Memperbaiki IDE Type/Syntax Errors)
+            const kategoriLabels = JSON.parse(container.dataset.kategoriLabels);
+            const kategoriData = JSON.parse(container.dataset.kategoriCounts);
+            const weeklyLabels = JSON.parse(container.dataset.weeklyLabels);
+            const weeklyCounts = JSON.parse(container.dataset.weeklyCounts);
+
+            // --- DONUT CHART (Kategori) ---
+            const ctxKategori = document.getElementById('kategoriChart').getContext('2d');
+            const donutColors = ['#004236','#00644f','#34d399','#6366f1','#f59e0b','#f43f5e'];
+
+            new Chart(ctxKategori, {
+                type: 'doughnut',
+                data: {
+                    labels: kategoriLabels,
+                    datasets: [{
+                        data: kategoriData,
+                        backgroundColor: donutColors,
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                padding: 15,
+                                font: { size: 11, family: "'Inter', sans-serif" }
                             }
                         }
                     }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#f3f4f6', drawBorder: false },
-                        border: { display: false },
-                        ticks: { stepSize: 1, font: { size: 11 } }
-                    },
-                    x: {
-                        grid: { display: false, drawBorder: false },
-                        border: { display: false },
-                        ticks: { font: { size: 11, weight: '500' } }
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
                 }
-            }
-        });
+            });
+
+            // --- BAR CHART (Peminjaman Mingguan) ---
+            const ctxPeminjaman = document.getElementById('peminjamanChart').getContext('2d');
+
+            new Chart(ctxPeminjaman, {
+                type: 'bar',
+                data: {
+                    labels: weeklyLabels,
+                    datasets: [{
+                        label: 'Peminjaman',
+                        data: weeklyCounts,
+                        backgroundColor: function(context) {
+                            const index = context.dataIndex;
+                            return index === weeklyCounts.length - 1 ? '#004236' : '#a7f3d0';
+                        },
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barThickness: 24
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            padding: 10,
+                            titleFont: { size: 12 },
+                            bodyFont: { size: 13, weight: 'bold' },
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + ' pinjam';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f3f4f6', drawBorder: false },
+                            border: { display: false },
+                            ticks: { stepSize: 1, font: { size: 11 } }
+                        },
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            border: { display: false },
+                            ticks: { font: { size: 11, weight: '500' } }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        }
     });
 </script>
 @endpush
@@ -278,7 +301,7 @@
                     {{-- Avatar --}}
                     @if($p->pengguna?->foto_profil)
                         <img src="{{ Storage::url($p->pengguna->foto_profil) }}" alt="{{ $nama }}"
-                            class="h-9 w-9 shrink-0 rounded-full object-cover">
+                            class="h-9 w-9 shrink-0 rounded-full object-cover" loading="lazy">
                     @else
                         <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full {{ $avatarColor }} text-sm font-bold text-white">
                             {{ $initial }}

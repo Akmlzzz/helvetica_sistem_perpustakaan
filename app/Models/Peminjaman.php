@@ -21,7 +21,9 @@ class Peminjaman extends Model
         'durasi_pinjam',
         'tgl_booking',
         'tgl_pinjam',
-        // 'tgl_kembali', 'tgl_jatuh_tempo', 'status_transaksi' tidak dimass-assign secara sembarangan
+        'tgl_kembali',
+        'tgl_jatuh_tempo',
+        'status_transaksi',
     ];
 
     protected $casts = [
