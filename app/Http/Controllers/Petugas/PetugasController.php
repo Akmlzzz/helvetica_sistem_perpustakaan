@@ -161,10 +161,23 @@ class PetugasController extends Controller
         ));
     }
 
-    public function katalog()
+    public function katalog(Request $request)
     {
-        $buku = Buku::with('kategori')->paginate(10);
-        return view('petugas.katalog', compact('buku'));
+        $search = $request->get('search');
+
+        $query = Buku::with('kategori');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('judul_buku', 'like', "%{$search}%")
+                  ->orWhere('penulis', 'like', "%{$search}%")
+                  ->orWhere('isbn', 'like', "%{$search}%");
+            });
+        }
+
+        $buku = $query->orderBy('judul_buku')->paginate(10)->withQueryString();
+
+        return view('petugas.katalog', compact('buku', 'search'));
     }
 
     /**

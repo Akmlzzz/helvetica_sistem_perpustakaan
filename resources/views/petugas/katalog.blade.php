@@ -61,7 +61,7 @@
                                         </p>
                                     </td>
                                     <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <h5 class="font-medium text-black dark:text-white">{{ $item->judul }}</h5>
+                                        <h5 class="font-medium text-black dark:text-white">{{ $item->judul_buku }}</h5>
                                         <p class="text-sm text-gray-500">{{ $item->penulis }}</p>
                                     </td>
                                     <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -77,7 +77,7 @@
                                         <p class="text-black dark:text-white">{{ $item->stok }}</p>
                                     </td>
                                     <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p class="text-black dark:text-white">Rak A-01</p> <!-- Mock Data -->
+                                        <p class="text-black dark:text-white">{{ $item->lokasi_rak ?? '-' }}</p>
                                     </td>
                                 </tr>
                             @empty
