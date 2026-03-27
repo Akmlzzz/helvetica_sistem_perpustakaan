@@ -259,7 +259,7 @@
                 @endif
                 
                 <p class="text-xs text-gray-400 mt-4">
-                    * Harap lunasi denda di petugas perpustakaan agar akun tidak dibekukan.
+                    * Lunasi denda Anda melalui pembayaran digital untuk membuka akses peminjaman buku.
                 </p>
             </div>
 
@@ -275,18 +275,29 @@
                     @if($tagihanDenda->count() > 0)
                         <div class="space-y-4">
                             @foreach($tagihanDenda as $denda)
-                                <div class="flex items-start justify-between border-b border-gray-50 pb-4 last:border-0 last:pb-0">
-                                    <div>
-                                        <p class="font-semibold text-black text-sm line-clamp-1" title="{{ $denda->peminjaman->buku->judul_buku }}">
-                                            {{ $denda->peminjaman->buku->judul_buku }}
-                                        </p>
-                                        <p class="text-xs text-gray-400 mt-0.5">Kode: {{ $denda->peminjaman->kode_booking }}
-                                        </p>
+                                <div class="rounded-xl border border-red-100 bg-red-50/40 p-4">
+                                    <div class="flex items-start justify-between gap-3 mb-3">
+                                        <div class="min-w-0 flex-1">
+                                            <p class="font-semibold text-black text-sm line-clamp-2 leading-snug" title="{{ $denda->peminjaman->buku->judul_buku }}">
+                                                {{ $denda->peminjaman->buku->judul_buku }}
+                                            </p>
+                                            <p class="text-xs text-gray-400 mt-0.5">Kode: {{ $denda->peminjaman->kode_booking }}</p>
+                                        </div>
+                                        <div class="text-right shrink-0">
+                                            <span class="block font-black text-red-600 text-base">Rp {{ number_format($denda->jumlah_denda, 0, ',', '.') }}</span>
+                                            <span class="text-[10px] font-semibold text-red-400 uppercase tracking-wide">Belum Lunas</span>
+                                        </div>
                                     </div>
-                                    <div class="text-right">
-                                        <span class="block font-bold text-red-600 text-sm">Rp {{ number_format($denda->jumlah_denda, 0, ',', '.') }}</span>
-                                        <span class="text-[10px] text-red-400">Belum Lunas</span>
-                                    </div>
+                                    {{-- Tombol Bayar Sekarang (Midtrans) --}}
+                                    <button
+                                        onclick="bayarDenda({{ $denda->id_denda }}, '{{ $denda->peminjaman->buku->judul_buku }}')"
+                                        class="midtrans-pay-btn w-full flex items-center justify-center gap-2 rounded-xl bg-[#0f4c3a] py-2.5 text-sm font-bold text-white hover:bg-[#0a382b] active:scale-95 transition-all shadow-sm"
+                                        data-id="{{ $denda->id_denda }}">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                        </svg>
+                                        Bayar Sekarang
+                                    </button>
                                 </div>
                             @endforeach
                         </div>
@@ -305,4 +316,95 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+{{-- Midtrans Snap JS --}}
+<script src="https://app.{{ config('midtrans.is_production') ? '' : 'sandbox.' }}midtrans.com/snap/snap.js"
+    data-client-key="{{ config('midtrans.client_key') }}"></script>
+
+<script>
+    const snapTokenUrl = '{{ route('payment.snap-token') }}';
+    const csrfToken   = '{{ csrf_token() }}';
+
+    function bayarDenda(idDenda, judulBuku) {
+        const btn = document.querySelector(`[data-id="${idDenda}"]`);
+
+        // UI Loading state
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Memuat...`;
+
+        // 1. Request Snap Token dari server
+        fetch(snapTokenUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({ id_denda: idDenda }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.snap_token) {
+                alert(data.message || 'Gagal mendapatkan token pembayaran.');
+                resetBtn(btn);
+                return;
+            }
+
+            // 2. Buka popup Midtrans Snap
+            snap.pay(data.snap_token, {
+                onSuccess: function(result) {
+                    // Pembayaran berhasil → redirect ke halaman ini dengan pesan
+                    window.location.href = '{{ route('anggota.riwayat') }}?payment=success';
+                },
+                onPending: function(result) {
+                    window.location.href = '{{ route('anggota.riwayat') }}?payment=pending';
+                },
+                onError: function(result) {
+                    alert('Pembayaran gagal. Silakan coba lagi.');
+                    resetBtn(btn);
+                },
+                onClose: function() {
+                    // User menutup popup tanpa bayar
+                    resetBtn(btn);
+                }
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Terjadi kesalahan. Silakan coba lagi.');
+            resetBtn(btn);
+        });
+    }
+
+    function resetBtn(btn) {
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Bayar Sekarang`;
+    }
+
+    // Tampilkan notifikasi dari URL param (?payment=success/pending)
+    document.addEventListener('DOMContentLoaded', function() {
+        const url = new URL(window.location.href);
+        const paymentStatus = url.searchParams.get('payment');
+        if (paymentStatus === 'success') {
+            const el = document.createElement('div');
+            el.className = 'fixed top-4 right-4 z-999 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-5 py-4 shadow-lg';
+            el.innerHTML = `<svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><p class="text-sm font-bold text-green-800">Pembayaran berhasil! Denda Anda telah dilunasi.</p>`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 5000);
+            // Bersihkan URL
+            url.searchParams.delete('payment');
+            history.replaceState({}, '', url);
+        } else if (paymentStatus === 'pending') {
+            const el = document.createElement('div');
+            el.className = 'fixed top-4 right-4 z-999 flex items-center gap-3 rounded-xl border border-yellow-200 bg-yellow-50 px-5 py-4 shadow-lg';
+            el.innerHTML = `<svg class="h-5 w-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><p class="text-sm font-bold text-yellow-800">Pembayaran sedang diproses. Denda akan terupdate otomatis.</p>`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 6000);
+            url.searchParams.delete('payment');
+            history.replaceState({}, '', url);
+        }
+    });
+</script>
+@endpush
 @endsection

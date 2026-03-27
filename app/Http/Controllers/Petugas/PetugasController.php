@@ -300,7 +300,7 @@ class PetugasController extends Controller
                 $jatuhTempoCarbon = Carbon::parse($jatuhTempoStr);
 
                 if ($tglKembaliAktual->gt($jatuhTempoCarbon)) {
-                    $hariTerlambat = (int) $tglKembaliAktual->diffInDays($jatuhTempoCarbon);
+                    $hariTerlambat = (int) abs($tglKembaliAktual->diffInDays($jatuhTempoCarbon));
                     $dendaAmount = $hariTerlambat * 2000; // Rp 2.000/hari
 
                     // Cek sudah ada denda atau belum

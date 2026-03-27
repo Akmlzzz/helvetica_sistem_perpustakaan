@@ -230,6 +230,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/ai/summary', [\App\Http\Controllers\AiChatController::class, 'summary'])->name('api.ai.summary');
 });
 
+// =========================================================
+// PAYMENT — Midtrans (Pembayaran Denda)
+// =========================================================
+// Generate Snap Token (hanya anggota yang login)
+Route::middleware(['auth', \App\Http\Middleware\AnggotaMiddleware::class])
+    ->post('/payment/snap-token', [\App\Http\Controllers\Anggota\PaymentController::class, 'createSnapToken'])
+    ->name('payment.snap-token');
+
+// Notification Callback dari Midtrans (tanpa auth & tanpa CSRF)
+Route::post('/payment/midtrans/callback', [\App\Http\Controllers\Anggota\PaymentController::class, 'handleNotification'])
+    ->name('payment.midtrans.callback');
+
 // Music Player Management (Admin only)
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'index'])->name('musik.index');

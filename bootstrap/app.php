@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'akses' => \App\Http\Middleware\CekHakAkses::class,
         ]);
 
+        // Kecualikan endpoint callback Midtrans dari CSRF
+        $middleware->validateCsrfTokens(except: [
+            '/payment/midtrans/callback',
+        ]);
+
         $middleware->redirectUsersTo(function () {
             /** @var \App\Models\Pengguna $user */
             $user = \Illuminate\Support\Facades\Auth::user();

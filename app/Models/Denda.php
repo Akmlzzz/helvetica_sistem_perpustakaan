@@ -16,7 +16,8 @@ class Denda extends Model
     protected $fillable = [
         'id_peminjaman',
         'jumlah_denda',
-        'status_pembayaran'
+        'status_pembayaran',
+        'midtrans_order_id',
     ];
 
     public function peminjaman()

@@ -32,7 +32,7 @@ class BookingApiController extends Controller
         // Cek apakah anggota memiliki denda yang belum dibayar
         $adaDendaBelumLunas = \App\Models\Denda::whereHas('peminjaman', function ($query) use ($user) {
             $query->where('id_pengguna', $user->id_pengguna);
-        })->where('status_pembayaran', 'belum_lunas')->exists();
+        })->where('status_pembayaran', 'belum_bayar')->exists();
 
         if ($adaDendaBelumLunas) {
             return response()->json(['success' => false, 'message' => 'Peminjaman ditolak! Anda memiliki tagihan denda yang belum dilunasi.']);
