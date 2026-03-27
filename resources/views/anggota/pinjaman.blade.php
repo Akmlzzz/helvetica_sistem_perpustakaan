@@ -59,7 +59,7 @@
                                     <img src="{{ Storage::url($item->buku->sampul) }}" alt="{{ $item->buku->judul_buku }}"
                                         class="h-20 w-14 rounded-lg object-cover shadow-sm">
                                 @else
-                                    <div class="h-20 w-14 rounded-lg bg-gradient-to-br from-[#e8f4f0] to-[#c8e6d8] flex items-center justify-center">
+                                    <div class="h-20 w-14 rounded-lg bg-linear-to-br from-[#e8f4f0] to-[#c8e6d8] flex items-center justify-center">
                                         <svg class="h-7 w-7 text-[#0f4c3a] opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                 d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25">
@@ -183,14 +183,14 @@
                                                     <div class="mb-5">
                                                         <label class="block text-sm font-medium text-gray-700 mb-2">Tambah Durasi</label>
                                                         <div class="grid grid-cols-2 gap-3">
-                                                            <label class="flex items-center gap-2 cursor-pointer rounded-xl border-2 border-gray-200 p-3 has-[:checked]:border-[#0f4c3a] has-[:checked]:bg-[#e8f4f0] transition-all">
+                                                            <label class="flex items-center gap-2 cursor-pointer rounded-xl border-2 border-gray-200 p-3 has-checked:border-[#0f4c3a] has-checked:bg-[#e8f4f0] transition-all">
                                                                 <input type="radio" name="tambah_hari" value="2" class="text-[#0f4c3a]" required>
                                                                 <div>
                                                                     <div class="font-bold text-black">+2 Hari</div>
                                                                     <div class="text-xs text-gray-500">Perpanjang 2 hari</div>
                                                                 </div>
                                                             </label>
-                                                            <label class="flex items-center gap-2 cursor-pointer rounded-xl border-2 border-gray-200 p-3 has-[:checked]:border-[#0f4c3a] has-[:checked]:bg-[#e8f4f0] transition-all">
+                                                            <label class="flex items-center gap-2 cursor-pointer rounded-xl border-2 border-gray-200 p-3 has-checked:border-[#0f4c3a] has-checked:bg-[#e8f4f0] transition-all">
                                                                 <input type="radio" name="tambah_hari" value="3" class="text-[#0f4c3a]">
                                                                 <div>
                                                                     <div class="font-bold text-black">+3 Hari</div>

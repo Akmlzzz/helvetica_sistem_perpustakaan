@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
+use App\Models\Pengguna;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -20,38 +22,13 @@ class AiChatController extends Controller
             return response()->json(['error' => 'API Key belum dikonfigurasi.'], 500);
         }
 
-        // 1. Ambil Semua Kategori yang ada
         $semuaKategori = \App\Models\Kategori::pluck('nama_kategori')->implode(', ');
+        $daftarBuku = $this->getDaftarBuku();
+        $riwayatUser = $this->getRiwayatUser();
 
-        // 2. Ambil 50 buku terbaru (context lebih luas)
-        $daftarBuku = Buku::with('kategori')
-            ->latest('dibuat_pada')
-            ->take(50)
-            ->get()
-            ->map(function ($buku) {
-                $kategori = $buku->kategori->pluck('nama_kategori')->implode(', ');
-                $sinopsis = \Illuminate\Support\Str::limit($buku->sinopsis ?? '', 100);
-                return "- {$buku->judul_buku} oleh {$buku->penulis} [Kategori: {$kategori}]. Ringkasan: {$sinopsis}";
-            })
-            ->implode("\n");
-
-        // 3. Ambil Riwayat Peminjaman User (Jika ada)
-        $riwayatUser = "";
-        if (auth()->check()) {
-            $userLoans = auth()->user()->peminjaman()
-                ->with('buku')
-                ->latest('tgl_pinjam')
-                ->take(5)
-                ->get();
-
-            if ($userLoans->isNotEmpty()) {
-                $riwayatUser = $userLoans->map(function ($loan) {
-                    return $loan->buku ? "- " . $loan->buku->judul_buku : null;
-                })->filter()->implode(", ");
-            }
-        }
-
-        $userName = auth()->user()->nama_pengguna ?? 'Tamu';
+        /** @var Pengguna|null $user */
+        $user = Auth::user();
+        $userName = $user->nama_pengguna ?? 'Tamu';
 
         $systemInstructions = "Anda adalah 'Asisten Pustakawan AI' yang ahli dan sangat ramah.
             - Nama Pengguna: {$userName}.
@@ -76,6 +53,7 @@ class AiChatController extends Controller
         $apiKey = trim($apiKey);
 
         try {
+            /** @var \Illuminate\Http\Client\Response $response */
             $response = Http::withoutVerifying()->withHeaders([
                 'Content-Type' => 'application/json',
             ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}", [
@@ -117,6 +95,43 @@ class AiChatController extends Controller
         }
     }
 
+    private function getDaftarBuku(): string
+    {
+        return Buku::with('kategori')
+            ->latest('dibuat_pada')
+            ->take(50)
+            ->get()
+            ->map(function ($buku) {
+                $kategori = $buku->kategori->pluck('nama_kategori')->implode(', ');
+                $sinopsis = \Illuminate\Support\Str::limit($buku->sinopsis ?? '', 100);
+                return "- {$buku->judul_buku} oleh {$buku->penulis} [Kategori: {$kategori}]. Ringkasan: {$sinopsis}";
+            })
+            ->implode("\n");
+    }
+
+    private function getRiwayatUser(): string
+    {
+        if (!Auth::check()) {
+            return "";
+        }
+
+        /** @var Pengguna $user */
+        $user = Auth::user();
+        $userLoans = $user->peminjaman()
+            ->with('buku')
+            ->latest('tgl_pinjam')
+            ->take(5)
+            ->get();
+
+        if ($userLoans->isEmpty()) {
+            return "";
+        }
+
+        return $userLoans->map(function ($loan) {
+            return $loan->buku ? "- " . $loan->buku->judul_buku : null;
+        })->filter()->implode(", ");
+    }
+
     public function summary(Request $request)
     {
         $request->validate([
@@ -140,6 +155,7 @@ class AiChatController extends Controller
             . "PENTING: Jawaban harus SELESAI dan tidak terpotong di tengah kalimat. Gunakan Markdown (**tebal**) untuk poin penting.";
 
         try {
+            /** @var \Illuminate\Http\Client\Response $response */
             $response = Http::withoutVerifying()
                 ->timeout(60)
                 ->withHeaders(['Content-Type' => 'application/json'])

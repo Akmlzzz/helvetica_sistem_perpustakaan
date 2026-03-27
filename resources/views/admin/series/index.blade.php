@@ -25,7 +25,7 @@
         @if(session('success'))
             <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
                 class="mb-4 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-5 py-3 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400">
-                <svg class="h-5 w-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                         clip-rule="evenodd" />
@@ -73,7 +73,7 @@
                         <div
                             class="group relative flex flex-col rounded-2xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
                             <!-- Cover Series -->
-                            <div class="relative h-40 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+                            <div class="relative h-40 bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500">
                                 @if($s->sampul_series)
                                     <img src="{{ Storage::url($s->sampul_series) }}" alt="{{ $s->nama_series }}"
                                         class="h-full w-full object-cover">
