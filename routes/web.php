@@ -83,6 +83,11 @@ Route::middleware('auth')->group(function () {
         })->name('dashboard');
 
 
+        // Profil (Admin)
+        Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'showProfile'])->name('admin.profile');
+        Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'updateProfile'])->name('admin.profile.update');
+        Route::delete('/profile/foto', [\App\Http\Controllers\ProfileController::class, 'hapusFotoProfil'])->name('admin.profile.hapus-foto');
+
         // Pengguna Management (admin only)
         Route::get('/pengguna', [\App\Http\Controllers\Admin\PenggunaController::class, 'index'])->name('admin.pengguna.index');
         Route::post('/pengguna', [\App\Http\Controllers\Admin\PenggunaController::class, 'store'])->name('admin.pengguna.store');
@@ -172,6 +177,11 @@ Route::middleware('auth')->group(function () {
         // Halaman terpisah untuk Proses Booking & Pengembalian
         Route::get('/petugas/booking', [\App\Http\Controllers\Petugas\PetugasController::class, 'bookingPage'])->name('petugas.booking.index');
         Route::get('/petugas/pengembalian', [\App\Http\Controllers\Petugas\PetugasController::class, 'pengembalianPage'])->name('petugas.pengembalian.index');
+
+        // Profil (Petugas)
+        Route::get('/petugas/profile', [\App\Http\Controllers\ProfileController::class, 'showProfile'])->name('petugas.profile');
+        Route::put('/petugas/profile', [\App\Http\Controllers\ProfileController::class, 'updateProfile'])->name('petugas.profile.update');
+        Route::delete('/petugas/profile/foto', [\App\Http\Controllers\ProfileController::class, 'hapusFotoProfil'])->name('petugas.profile.hapus-foto');
     });
 
     // =========================================================
@@ -186,9 +196,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/anggota/pinjam', [\App\Http\Controllers\Anggota\AnggotaController::class, 'storeBooking'])->name('anggota.booking.store');
         Route::post('/anggota/pinjaman/{id}/perpanjang', [\App\Http\Controllers\Anggota\AnggotaController::class, 'perpanjang'])->name('anggota.pinjaman.perpanjang');
 
-        // Profile Routes
+        // Profile Routes (Anggota)
         Route::get('/anggota/profile', [\App\Http\Controllers\Anggota\AnggotaController::class, 'profile'])->name('anggota.profile');
         Route::put('/anggota/profile', [\App\Http\Controllers\Anggota\AnggotaController::class, 'updateProfile'])->name('anggota.profile.update');
+        Route::delete('/anggota/profile/foto', [\App\Http\Controllers\Anggota\AnggotaController::class, 'hapusFotoProfil'])->name('anggota.profile.hapus-foto');
 
         // Pengajuan Buku Saya
         Route::get('/anggota/pengajuan-saya', [\App\Http\Controllers\Anggota\AnggotaController::class, 'pengajuanBuku'])->name('anggota.pengajuan-buku.index');

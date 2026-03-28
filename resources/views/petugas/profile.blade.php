@@ -9,7 +9,7 @@
                         Profil Saya
                     </h3>
                 </div>
-                <form action="{{ route('anggota.profile.update') }}" method="POST" x-data="{ showModal: false }" enctype="multipart/form-data"
+                <form action="{{ route('petugas.profile.update') }}" method="POST" x-data="{ showModal: false }" enctype="multipart/form-data"
                     @submit.prevent="showModal = true">
                     @csrf
                     @method('PUT')
@@ -48,7 +48,7 @@
                             </div>
 
                             <!-- Form Delete Foto (hidden) -->
-                            <form id="delete-foto-form" action="{{ route('anggota.profile.hapus-foto') }}" method="POST" class="hidden">
+                            <form id="delete-foto-form" action="{{ route('petugas.profile.hapus-foto') }}" method="POST" class="hidden">
                                 @csrf
                                 @method('DELETE')
                             </form>
@@ -73,38 +73,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                            <div class="w-full xl:w-1/2">
-                                <label class="mb-2.5 block text-black dark:text-white">
-                                    ID Anggota <span class="text-meta-1">*</span>
-                                </label>
-                                <input type="text" value="{{ $anggota->id_anggota }}" disabled
-                                    class="w-full rounded border-[1.5px] border-stroke bg-gray py-3 px-5 font-medium text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
-                            </div>
 
-                            <div class="w-full xl:w-1/2">
-                                <label class="mb-2.5 block text-black dark:text-white">
-                                    Nama Lengkap
-                                </label>
-                                <input type="text" name="nama_lengkap"
-                                    value="{{ old('nama_lengkap', $anggota->nama_lengkap) }}"
-                                    class="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
-                                @error('nama_lengkap')
-                                    <span class="text-danger text-sm">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="mb-4.5">
-                            <label class="mb-2.5 block text-black dark:text-white">
-                                Alamat
-                            </label>
-                            <textarea rows="3" name="alamat"
-                                class="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">{{ old('alamat', $anggota->alamat) }}</textarea>
-                            @error('alamat')
-                                <span class="text-danger text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
 
                         <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
                             <div class="w-full xl:w-1/2">

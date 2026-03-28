@@ -399,6 +399,17 @@ class AnggotaController extends Controller
         return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
     }
 
+    public function hapusFotoProfil()
+    {
+        $user = Auth::user();
+        if ($user->foto_profil && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->foto_profil)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($user->foto_profil);
+            $user->foto_profil = null;
+            $user->save();
+        }
+        return redirect()->back()->with('success', 'Foto profil berhasil dihapus.');
+    }
+
     /**
      * Daftar pengajuan buku milik anggota yang sedang login
      */
