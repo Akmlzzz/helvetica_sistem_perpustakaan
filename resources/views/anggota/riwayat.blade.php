@@ -351,21 +351,41 @@
                 return;
             }
 
+            // Callback helper to verify status
+            const verifyPayment = (paymentType) => {
+                fetch('{{ route('payment.check-status') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ id_denda: idDenda }),
+                })
+                .then(res => res.json())
+                .then(checkData => {
+                    // Redirect regardless of status, but query param reflects payment state
+                    window.location.href = `{{ route('anggota.riwayat') }}?payment=${paymentType}`;
+                })
+                .catch(err => {
+                    console.error('Verify error:', err);
+                    window.location.href = `{{ route('anggota.riwayat') }}?payment=${paymentType}`;
+                });
+            };
+
             // 2. Buka popup Midtrans Snap
             snap.pay(data.snap_token, {
                 onSuccess: function(result) {
-                    // Pembayaran berhasil → redirect ke halaman ini dengan pesan
-                    window.location.href = '{{ route('anggota.riwayat') }}?payment=success';
+                    verifyPayment('success');
                 },
                 onPending: function(result) {
-                    window.location.href = '{{ route('anggota.riwayat') }}?payment=pending';
+                    verifyPayment('pending');
                 },
                 onError: function(result) {
                     alert('Pembayaran gagal. Silakan coba lagi.');
                     resetBtn(btn);
                 },
                 onClose: function() {
-                    // User menutup popup tanpa bayar
                     resetBtn(btn);
                 }
             });

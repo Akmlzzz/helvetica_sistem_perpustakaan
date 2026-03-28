@@ -238,6 +238,11 @@ Route::middleware(['auth', \App\Http\Middleware\AnggotaMiddleware::class])
     ->post('/payment/snap-token', [\App\Http\Controllers\Anggota\PaymentController::class, 'createSnapToken'])
     ->name('payment.snap-token');
 
+// Cek & update status pembayaran (tanpa webhook, cocok untuk lokal)
+Route::middleware(['auth', \App\Http\Middleware\AnggotaMiddleware::class])
+    ->post('/payment/check-status', [\App\Http\Controllers\Anggota\PaymentController::class, 'checkAndUpdateStatus'])
+    ->name('payment.check-status');
+
 // Notification Callback dari Midtrans (tanpa auth & tanpa CSRF)
 Route::post('/payment/midtrans/callback', [\App\Http\Controllers\Anggota\PaymentController::class, 'handleNotification'])
     ->name('payment.midtrans.callback');

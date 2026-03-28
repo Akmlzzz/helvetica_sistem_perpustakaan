@@ -103,6 +103,55 @@ class PaymentController extends Controller
     }
 
     /**
+     * Cek status transaksi langsung ke Midtrans API dan update DB jika lunas.
+     * Dipanggil dari frontend setelah Snap onSuccess / onPending.
+     * Solusi tanpa webhook/ngrok untuk development lokal.
+     */
+    public function checkAndUpdateStatus(Request $request)
+    {
+        $request->validate([
+            'id_denda' => 'required|integer|exists:denda,id_denda',
+        ]);
+
+        $denda = Denda::findOrFail($request->id_denda);
+
+        // Pastikan denda milik user yang login
+        if ($denda->peminjaman->id_pengguna !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
+        }
+
+        if (!$denda->midtrans_order_id) {
+            return response()->json(['message' => 'Order belum dibuat.'], 422);
+        }
+
+        // Sudah lunas, tidak perlu cek lagi
+        if ($denda->status_pembayaran === 'lunas') {
+            return response()->json(['status' => 'lunas', 'message' => 'Denda sudah lunas.']);
+        }
+
+        try {
+            // Query status langsung ke Midtrans API
+            $status = \Midtrans\Transaction::status($denda->midtrans_order_id);
+
+            $transactionStatus = is_array($status) ? ($status['transaction_status'] ?? '') : ($status->transaction_status ?? '');
+            $fraudStatus       = is_array($status) ? ($status['fraud_status'] ?? 'accept') : ($status->fraud_status ?? 'accept');
+
+            if (
+                $transactionStatus === 'settlement' ||
+                ($transactionStatus === 'capture' && $fraudStatus === 'accept')
+            ) {
+                $denda->update(['status_pembayaran' => 'lunas']);
+                return response()->json(['status' => 'lunas', 'message' => 'Pembayaran berhasil! Denda telah dilunasi.']);
+            }
+
+            return response()->json(['status' => $transactionStatus, 'message' => 'Pembayaran masih diproses.']);
+        } catch (\Exception $e) {
+            Log::error('Midtrans Status Check Error: ' . $e->getMessage());
+            return response()->json(['message' => 'Gagal cek status pembayaran.'], 500);
+        }
+    }
+
+    /**
      * Handle Notification / Webhook dari server Midtrans.
      * URL ini wajib dikecualikan dari CSRF (lihat VerifyCsrfToken.php).
      */
