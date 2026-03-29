@@ -2,119 +2,114 @@
 
 @section('content')
 <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-    <!-- Header Section -->
-    <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <!-- Page Header (Adopted from Music Player) -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h2 class="text-2xl md:text-3xl font-black text-black dark:text-white flex items-center gap-3">
-                <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <h2 class="text-2xl font-bold text-black tracking-tight flex items-center gap-3">
+                <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#e8f4f0] text-[#0f4c3a]">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    </svg>
                 </span>
-                Tambah Batch Buku
+                Bulk Add Books
             </h2>
-            <p class="mt-1 text-sm text-gray-500 font-medium">Input koleksi buku dalam jumlah banyak secara efisien</p>
+            <p class="text-gray-500 text-sm mt-1 font-medium">Tambah banyak jilid atau koleksi buku sekaligus secara instan.</p>
         </div>
-        <a href="{{ route('admin.buku.index') }}" class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-gray-600 shadow-sm hover:bg-gray-50 hover:text-primary transition-all">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <a href="{{ route('admin.buku.index') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-100 text-gray-500 hover:text-black font-semibold rounded-2xl text-xs transition-all uppercase tracking-widest border border-gray-200">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
             Kembali
         </a>
     </div>
 
     @if(session('error'))
-        <div class="mb-6 flex w-full animate-fade-in border-l-6 border-danger bg-danger/10 p-5 shadow-sm rounded-xl">
-            <div class="mr-5 flex h-10 w-10 items-center justify-center rounded-full bg-danger text-white shrink-0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            </div>
-            <div class="w-full">
-                <h5 class="text-danger font-bold text-sm uppercase tracking-wider">Terjadi Kesalahan</h5>
-                <p class="text-sm text-danger/80 mt-1">{{ session('error') }}</p>
-            </div>
+        <div class="mb-6 flex items-center gap-3 rounded-2xl bg-red-50 border border-red-200 px-5 py-4 text-sm font-medium text-red-700 animate-fade-in shadow-sm">
+            <svg class="h-5 w-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            {{ session('error') }}
         </div>
     @endif
 
     <form action="{{ route('admin.buku.batch.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         
-        <!-- Section 1: Shared Meta -->
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <div class="xl:col-span-1">
-                <div class="sticky top-24">
-                    <div class="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-                        <div class="mb-6 flex items-center gap-3 border-b border-gray-50 pb-4 dark:border-gray-800">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                            </div>
-                            <h3 class="font-black text-black dark:text-white uppercase tracking-tighter text-lg">Data Master</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {{-- ===== KOLOM KIRI: Master Info (Styled like Form Lagu) ===== --}}
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 sticky top-4">
+                    <div class="mb-6 border-b border-gray-50 pb-4">
+                        <h3 class="text-lg font-bold text-gray-800 tracking-tight">Main Info</h3>
+                        <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mt-1">Data yang sama untuk semua item</p>
+                    </div>
+
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Judul Utama / Seri <span class="text-red-500">*</span></label>
+                            <input type="text" name="judul_buku_common" value="{{ old('judul_buku_common') }}" required
+                                class="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm focus:border-[#0f4c3a] focus:ring-0 focus:outline-none transition font-semibold"
+                                placeholder="e.g. Oshi no Ko">
                         </div>
 
-                        <div class="space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="mb-2 block text-[10px] font-black uppercase tracking-widest text-gray-400">Judul Koleksi <span class="text-danger">*</span></label>
-                                <input type="text" name="judul_buku_common" value="{{ old('judul_buku_common') }}" placeholder="Contoh: Blue Lock" class="w-full rounded-2xl border border-gray-100 bg-gray-50/50 px-5 py-3.5 outline-none transition-all focus:border-primary focus:bg-white focus:ring-4 focus:ring-primary/5 dark:border-gray-800 dark:bg-boxdark" required />
+                                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Penulis</label>
+                                <input type="text" name="penulis_common" value="{{ old('penulis_common') }}" class="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm focus:border-[#0f4c3a] focus:ring-0 outline-none" placeholder="Aka Akasaka">
                             </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="mb-2 block text-[10px] font-black uppercase tracking-widest text-gray-400">Penulis</label>
-                                    <input type="text" name="penulis_common" value="{{ old('penulis_common') }}" class="w-full rounded-2xl border border-gray-100 bg-gray-50/50 px-5 py-3.5 outline-none transition-all focus:border-primary focus:bg-white dark:border-gray-800 dark:bg-boxdark" />
-                                </div>
-                                <div>
-                                    <label class="mb-2 block text-[10px] font-black uppercase tracking-widest text-gray-400">Penerbit</label>
-                                    <input type="text" name="penerbit_common" value="{{ old('penerbit_common') }}" class="w-full rounded-2xl border border-gray-100 bg-gray-50/50 px-5 py-3.5 outline-none transition-all focus:border-primary focus:bg-white dark:border-gray-800 dark:bg-boxdark" />
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="mb-2 block text-[10px] font-black uppercase tracking-widest text-gray-400">Tahun</label>
-                                    <input type="number" name="tahun_terbit_common" value="{{ old('tahun_terbit_common', date('Y')) }}" class="w-full rounded-2xl border border-gray-100 bg-gray-50/50 px-5 py-3.5 text-center outline-none transition-all focus:border-primary focus:bg-white dark:border-gray-800 dark:bg-boxdark" />
-                                </div>
-                                <div>
-                                    <label class="mb-2 block text-[10px] font-black uppercase tracking-widest text-gray-400">Bahasa</label>
-                                    <select name="bahasa_common" class="w-full rounded-2xl border border-gray-100 bg-gray-50/50 px-5 py-3.5 outline-none transition-all focus:border-primary focus:bg-white dark:border-gray-800 dark:bg-boxdark">
-                                        <option value="id">Indonesia</option>
-                                        <option value="en">English</option>
-                                        <option value="ja">Japanese</option>
-                                    </select>
-                                </div>
-                            </div>
-
                             <div>
-                                <label class="mb-2 block text-[10px] font-black uppercase tracking-widest text-gray-400">Lokasi Rak</label>
-                                <input type="text" name="lokasi_rak_common" value="{{ old('lokasi_rak_common', 'A-1') }}" class="w-full rounded-2xl border border-gray-100 bg-gray-50/50 px-5 py-3.5 outline-none transition-all focus:border-primary focus:bg-white dark:border-gray-800 dark:bg-boxdark" />
+                                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Penerbit</label>
+                                <input type="text" name="penerbit_common" value="{{ old('penerbit_common') }}" class="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm focus:border-[#0f4c3a] focus:ring-0 outline-none" placeholder="M&C!">
                             </div>
+                        </div>
 
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="mb-2 block text-[10px] font-black uppercase tracking-widest text-gray-400">Hubungkan ke Series</label>
-                                <select name="id_series" class="w-full rounded-2xl border border-gray-100 bg-gray-50/50 px-5 py-3.5 outline-none transition-all focus:border-primary focus:bg-white dark:border-gray-800 dark:bg-boxdark">
-                                    <option value="">-- Manual (Tanpa Series) --</option>
-                                    @foreach($series as $s)
-                                        <option value="{{ $s->id_series }}">{{ $s->nama_series }}</option>
-                                    @endforeach
+                                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Tahun</label>
+                                <input type="number" name="tahun_terbit_common" value="{{ old('tahun_terbit_common', date('Y')) }}" class="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm text-center focus:border-[#0f4c3a] focus:ring-0 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Bahasa</label>
+                                <select name="bahasa_common" class="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm focus:border-[#0f4c3a] focus:ring-0 outline-none appearance-none">
+                                    <option value="id">Indonesia</option>
+                                    <option value="en">English</option>
+                                    <option value="ja">Japanese</option>
                                 </select>
                             </div>
+                        </div>
 
-                            <div>
-                                <label class="mb-3 block text-[10px] font-black uppercase tracking-widest text-gray-400">Kategori</label>
-                                <div class="flex flex-wrap gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                                    @foreach($kategori as $kat)
-                                        <label class="inline-flex cursor-pointer select-none items-center gap-2 rounded-xl border border-gray-100 bg-gray-50/50 px-3 py-2 transition-all hover:bg-white hover:shadow-sm has-checked:border-primary has-checked:bg-primary/5 group">
-                                            <input type="checkbox" name="kategori[]" value="{{ $kat->id_kategori }}" class="peer hidden">
-                                            <div class="flex h-4 w-4 shrink-0 items-center justify-center rounded-md border border-gray-300 transition-all peer-checked:border-primary peer-checked:bg-primary">
-                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="hidden peer-checked:block"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                            </div>
-                                            <span class="text-xs font-bold text-gray-600 transition-colors group-hover:text-primary peer-checked:text-primary">{{ $kat->nama_kategori }}</span>
-                                        </label>
-                                    @endforeach
-                                </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Lokasi Rak</label>
+                            <input type="text" name="lokasi_rak_common" value="{{ old('lokasi_rak_common', 'A-1') }}" class="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm focus:border-[#0f4c3a] focus:ring-0 outline-none" placeholder="Rak Komik">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Series Koleksi</label>
+                            <select name="id_series" class="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm focus:border-[#0f4c3a] focus:ring-0 outline-none appearance-none font-semibold">
+                                <option value="">-- Tidak Ada --</option>
+                                @foreach($series as $s)
+                                    <option value="{{ $s->id_series }}">{{ $s->nama_series }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Pilih Kategori</label>
+                            <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                                @foreach($kategori as $kat)
+                                    <label class="group relative cursor-pointer select-none">
+                                        <input type="checkbox" name="kategori[]" value="{{ $kat->id_kategori }}" class="peer hidden">
+                                        <div class="px-3 py-1.5 rounded-xl border border-gray-100 bg-gray-50 text-[10px] font-bold text-gray-400 uppercase group-hover:bg-gray-100 transition-all peer-checked:bg-[#e8f4f0] peer-checked:text-[#0f4c3a] peer-checked:border-[#c8e6d8]">
+                                            {{ $kat->nama_kategori }}
+                                        </div>
+                                    </label>
+                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Section 2: Items Table -->
-            <div class="xl:col-span-2">
-                <div class="rounded-[2.5rem] border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900 overflow-hidden" x-data="{ 
+            {{-- ===== KOLOM KANAN: Items List (Styled like Playlist Musik) ===== --}}
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden" x-data="{ 
                     items: [ { volume: '1', isbn: '', stok: 1, sinopsis: '' } ],
                     addItem() { 
                         const nextVol = this.items.length + 1;
@@ -122,89 +117,85 @@
                     },
                     removeItem(index) { if(this.items.length > 1) this.items.splice(index, 1) }
                 }">
-                    <div class="flex flex-col sm:flex-row items-center justify-between border-b border-gray-50 px-8 py-6 dark:border-gray-800 bg-gray-50/30 dark:bg-white/5">
-                        <div class="mb-4 sm:mb-0">
-                            <h3 class="font-black text-black dark:text-white uppercase tracking-tighter text-xl">Daftar Item Detail</h3>
-                            <p class="text-xs text-gray-400 font-medium mt-1">Gunakan volume berurut untuk seri buku</p>
+                    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-50">
+                        <div>
+                            <h3 class="font-bold text-black text-base tracking-tight uppercase">Daftar Batch Item</h3>
+                            <p class="text-[10px] font-semibold text-gray-400 mt-0.5 tracking-widest uppercase">Detail untuk tiap volume</p>
                         </div>
-                        <button type="button" @click="addItem" class="group flex items-center gap-3 rounded-2xl bg-[#0f4c3a] px-6 py-3.5 text-sm font-black text-white shadow-xl shadow-success/20 transition-all hover:scale-105 active:scale-95">
-                            <span class="flex h-6 w-6 items-center justify-center rounded-lg bg-white/20 group-hover:bg-white/30 transition-colors">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                            </span>
+                        <button type="button" @click="addItem" class="inline-flex items-center gap-2 px-4 py-2 bg-[#e8f4f0] text-[#0f4c3a] rounded-xl text-xs font-bold shadow-sm border border-[#c8e6d8] hover:bg-[#d0ebe0] transition-all transform active:scale-95">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             TAMBAH ITEM
                         </button>
                     </div>
-                    
-                    <div class="p-8">
-                        <div class="space-y-4">
-                            <template x-for="(item, index) in items" :key="index">
-                                <div class="group relative rounded-3xl border border-gray-50 bg-gray-50/20 p-6 transition-all hover:border-primary/20 hover:bg-white hover:shadow-md dark:border-gray-800 dark:bg-white/5">
-                                    <div class="absolute -left-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-100 text-[10px] font-black text-primary shadow-sm" x-text="index + 1"></div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                                        <!-- Volume & ISBN -->
-                                        <div class="md:col-span-3 grid grid-cols-1 gap-4">
-                                            <div>
-                                                <label class="mb-1.5 block text-[9px] font-black uppercase tracking-widest text-gray-400">Volume</label>
-                                                <input type="number" :name="'items['+index+'][nomor_volume]'" x-model="item.volume" placeholder="Vol" class="w-full rounded-xl border border-gray-100 bg-white px-4 py-2.5 text-sm font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 dark:bg-boxdark dark:border-gray-700" />
-                                            </div>
-                                            <div>
-                                                <label class="mb-1.5 block text-[9px] font-black uppercase tracking-widest text-gray-400">ISBN</label>
-                                                <input type="text" :name="'items['+index+'][isbn]'" x-model="item.isbn" placeholder="ISBN..." class="w-full rounded-xl border border-gray-100 bg-white px-4 py-2.5 text-sm font-bold outline-none focus:border-primary focus:ring-4 focus:ring-primary/5 dark:bg-boxdark dark:border-gray-700" />
-                                            </div>
-                                        </div>
 
-                                        <!-- Stock & Sinopsis -->
-                                        <div class="md:col-span-6 grid grid-cols-1 gap-4">
-                                            <div class="grid grid-cols-4 gap-4">
-                                                <div class="col-span-1">
-                                                    <label class="mb-1.5 block text-[9px] font-black uppercase tracking-widest text-gray-400 text-center">Stok</label>
-                                                    <input type="number" :name="'items['+index+'][stok]'" x-model="item.stok" class="w-full rounded-xl border border-gray-100 bg-white px-2 py-2.5 text-center text-sm font-bold outline-none focus:border-primary dark:bg-boxdark dark:border-gray-700" required />
-                                                </div>
-                                                <div class="col-span-3">
-                                                    <label class="mb-1.5 block text-[9px] font-black uppercase tracking-widest text-gray-400">Sinopsis Custom (Opsional)</label>
-                                                    <textarea :name="'items['+index+'][sinopsis]'" x-model="item.sinopsis" rows="1" class="w-full rounded-xl border border-gray-100 bg-white px-4 py-2.5 text-sm outline-none focus:border-primary dark:bg-boxdark dark:border-gray-700" placeholder="Biarkan kosong untuk sinopsis utama..."></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="flex items-center gap-4 bg-white/50 dark:bg-boxdark p-3 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
-                                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-400">
-                                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                                                </div>
-                                                <div class="flex-1 min-w-0">
-                                                    <p class="text-[9px] font-black uppercase text-gray-400 leading-none mb-1.5">Sampul Volume <span x-text="item.volume"></span></p>
-                                                    <input type="file" :name="'items['+index+'][sampul]'" class="block w-full text-xs text-gray-400 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-black file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer" />
-                                                </div>
-                                            </div>
-                                        </div>
+                    <div class="divide-y divide-gray-50 p-6 space-y-4">
+                        <template x-for="(item, index) in items" :key="index">
+                            <div class="flex flex-col md:flex-row gap-4 p-5 rounded-3xl bg-gray-50/50 border border-transparent hover:border-[#c8e6d8] hover:bg-[#f9fdfc] transition-all group relative">
+                                
+                                {{-- Index Badge (Music Rank Style) --}}
+                                <div class="h-12 w-12 shrink-0 rounded-2xl bg-[#e8f4f0] flex items-center justify-center text-[#0f4c3a] font-bold text-lg shadow-sm" x-text="index + 1"></div>
 
-                                        <!-- Actions -->
-                                        <div class="md:col-span-3 flex md:flex-col items-center justify-end gap-3 self-center">
-                                            <button type="button" @click="removeItem(index)" x-show="items.length > 1" class="flex h-12 w-12 items-center justify-center rounded-2xl border border-gray-100 bg-white text-gray-300 transition-all hover:border-danger hover:bg-danger/5 hover:text-danger active:scale-95 shadow-sm">
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                            </button>
+                                <div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-5">
+                                    {{-- Vol & ISBN --}}
+                                    <div class="md:col-span-3 grid gap-3">
+                                        <div class="relative">
+                                            <span class="absolute left-4 top-[10px] text-[8px] font-semibold text-gray-300 uppercase">Vol</span>
+                                            <input type="number" :name="'items['+index+'][nomor_volume]'" x-model="item.volume" 
+                                                class="w-full rounded-2xl border border-gray-200 bg-white pl-10 pr-4 py-3 text-sm font-bold focus:border-[#0f4c3a] focus:ring-0 outline-none shadow-xs">
+                                        </div>
+                                        <div class="relative">
+                                            <span class="absolute left-4 top-[10px] text-[8px] font-semibold text-gray-300 uppercase">ISBN</span>
+                                            <input type="text" :name="'items['+index+'][isbn]'" x-model="item.isbn" placeholder="..."
+                                                class="w-full rounded-2xl border border-gray-200 bg-white pl-11 pr-4 py-3 text-sm font-bold focus:border-[#0f4c3a] focus:ring-0 outline-none shadow-xs">
                                         </div>
                                     </div>
-                                </div>
-                            </template>
-                        </div>
 
-                        <div class="mt-12 flex flex-col md:flex-row items-center justify-between gap-8 border-t border-gray-50 pt-10 dark:border-gray-800">
-                            <div class="flex items-center gap-4">
-                                <div class="flex -space-x-3">
-                                    <template x-for="n in Math.min(items.length, 5)">
-                                        <div class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-primary/10 text-[10px] font-black text-primary shadow-sm dark:border-gray-900" x-text="n"></div>
-                                    </template>
-                                    <div x-show="items.length > 5" class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-gray-100 text-[10px] font-black text-gray-500 shadow-sm dark:border-gray-900" x-text="'+' + (items.length - 5)"></div>
+                                    {{-- Stok & Sinopsis --}}
+                                    <div class="md:col-span-6 flex flex-col gap-3">
+                                        <div class="flex gap-3">
+                                            <div class="w-20 shrink-0 relative">
+                                                <span class="absolute left-1/2 -translate-x-1/2 top-[6px] text-[7px] font-semibold text-gray-300 uppercase">Stok</span>
+                                                <input type="number" :name="'items['+index+'][stok]'" x-model="item.stok" 
+                                                    class="w-full rounded-2xl border border-gray-200 bg-white px-2 pt-4 pb-2 text-center text-sm font-bold focus:border-[#0f4c3a] focus:ring-0 outline-none shadow-xs" required>
+                                            </div>
+                                            <div class="flex-1">
+                                                <textarea :name="'items['+index+'][sinopsis]'" x-model="item.sinopsis" rows="1" 
+                                                    class="w-full h-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-xs outline-none focus:border-[#0f4c3a] focus:ring-0 shadow-xs placeholder:text-gray-300" 
+                                                    placeholder="Deskripsi individual (kosongkan jika sama)..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 bg-white p-2.5 rounded-2xl border border-gray-100 shadow-xs">
+                                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#e8f4f0] text-[#0f4c3a]">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                            </div>
+                                            <input type="file" :name="'items['+index+'][sampul]'" class="block w-full text-[10px] text-gray-400 file:mr-3 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[9px] font-medium file:bg-[#e8f4f0] file:text-[#0f4c3a] cursor-pointer" />
+                                        </div>
+                                    </div>
+
+                                    {{-- Actions --}}
+                                    <div class="md:col-span-3 flex items-center justify-end">
+                                        <button type="button" @click="removeItem(index)" x-show="items.length > 1" 
+                                            class="h-10 w-10 flex items-center justify-center rounded-2xl text-gray-200 hover:text-red-500 hover:bg-red-50 transition-all transform active:scale-95 border border-gray-100 hover:border-red-200 shadow-xs">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p class="text-sm font-black text-black dark:text-white uppercase tracking-tighter">Ringkasan Batch</p>
-                                    <p class="text-[11px] text-gray-400 font-medium"><span x-text="items.length"></span> entitas buku akan dibuat sekaligus</p>
+                            </div>
+                        </template>
+
+                        <div class="pt-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div class="flex items-center gap-4">
+                                <div class="flex p-2 bg-[#e8f4f0] border border-[#c8e6d8] rounded-2xl">
+                                    <svg class="h-6 w-6 text-[#0f4c3a]" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
+                                    </svg>
+                                    <span class="ml-2 text-xs font-bold text-[#0f4c3a] self-center uppercase tracking-widest" x-text="items.length + ' Item Ready'"></span>
                                 </div>
                             </div>
                             
-                            <button type="submit" class="group w-full md:w-auto flex items-center justify-center gap-4 rounded-3xl bg-black px-12 py-5 text-base font-black text-white shadow-2xl transition-all hover:bg-primary hover:shadow-primary/40 active:scale-95">
-                                KONFIRMASI & SIMPAN BATCH
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            <button type="submit" class="w-full md:w-auto rounded-3xl bg-[#0f4c3a] py-5 px-12 text-sm font-bold text-white hover:bg-[#0a382b] shadow-2xl hover:shadow-[#0f4c3a]/30 transition-all flex items-center justify-center gap-3 active:scale-95 uppercase tracking-widest">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Simpan Koleksi Batch
                             </button>
                         </div>
                     </div>
