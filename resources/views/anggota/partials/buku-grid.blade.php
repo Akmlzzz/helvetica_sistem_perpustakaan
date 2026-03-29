@@ -1,5 +1,5 @@
 @forelse($buku as $item)
-    @if($item->id_series)
+    @if($item->id_series && (!isset($isFilteringSeries) || !$isFilteringSeries))
         {{-- Series Card --}}
         <a href="{{ route('anggota.series.detail', $item->id_series) }}"
             class="group flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
@@ -30,7 +30,7 @@
                 <div class="absolute bottom-2 right-2">
                     <span
                         class="inline-flex items-center rounded bg-black/60 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-md">
-                        {{ $item->series->buku->count() }} Vol
+                        {{ collect($item->series->buku)->count() }} Vol
                     </span>
                 </div>
 
@@ -50,7 +50,7 @@
             {{-- Content --}}
             <div class="flex flex-col flex-1 p-3">
                 <p class="mb-0.5 text-xs text-[#0f4c3a] font-medium uppercase tracking-wide">
-                    {{ $item->kategori->first()?->nama_kategori ?? 'Koleksi' }}
+                    {{ collect($item->kategori)->first()?->nama_kategori ?? 'Koleksi' }}
                 </p>
                 <h4 class="text-sm font-bold text-black line-clamp-2 leading-snug mb-1"
                     title="{{ $item->series->nama_series }}">

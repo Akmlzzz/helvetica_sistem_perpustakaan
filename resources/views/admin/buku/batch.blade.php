@@ -207,6 +207,70 @@
             </div>
         </div>
     </form>
+
+    {{-- ===== KARTU KEDUA: ASSIGN BUKU KE SERIES ===== --}}
+    <div class="mt-12">
+        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-black tracking-tight flex items-center gap-3">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#e8f4f0] text-[#0f4c3a]">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                    </span>
+                    Kelompokkan Buku ke Series
+                </h2>
+                <p class="text-gray-500 text-sm mt-1 font-medium italic">Masukkan buku-buku yang sudah ada ke dalam suatu series.</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 lg:p-8">
+            <form action="{{ route('admin.buku.batch.series') }}" method="POST">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {{-- Select Series --}}
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Pilih Series Tujuan <span class="text-red-500">*</span></label>
+                        <select name="id_series" required class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-bold focus:border-[#0f4c3a] focus:ring-0 outline-none appearance-none transition shadow-sm hover:border-[#c8e6d8]">
+                            <option value="">-- Pilih Series --</option>
+                            @foreach($series as $s)
+                                <option value="{{ $s->id_series }}">{{ $s->nama_series }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Select Buku (Checkboxes) --}}
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Pilih Buku Tanpa Series (Pilih Semua yang Diinginkan) <span class="text-red-500">*</span></label>
+                        <div class="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar p-1">
+                            @forelse($buku_tanpa_series as $bukuItem)
+                                <label class="group flex items-center gap-3 cursor-pointer select-none px-4 py-3 rounded-2xl border border-gray-100 bg-white hover:bg-[#e8f4f0] hover:border-[#c8e6d8] transition-all shadow-sm text-gray-600 hover:text-[#0f4c3a]">
+                                    <input type="checkbox" name="buku_ids[]" value="{{ $bukuItem->id_buku }}" class="w-4 h-4 rounded text-[#0f4c3a] focus:ring-[#0f4c3a] border-gray-300 cursor-pointer">
+                                    <div class="flex flex-col">
+                                        <span class="text-xs font-bold leading-tight">{{ $bukuItem->judul_buku }}</span>
+                                        @if($bukuItem->nomor_volume)
+                                            <span class="text-[10px] opacity-80 mt-0.5 font-medium">Volume {{ $bukuItem->nomor_volume }}</span>
+                                        @endif
+                                    </div>
+                                </label>
+                            @empty
+                                <div class="px-4 py-4 text-xs text-gray-400 font-medium italic text-center rounded-2xl border border-dashed border-gray-200">
+                                    Keren! Semua buku di sistem sudah saling terhubung ke series.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button type="submit" class="w-full md:w-auto rounded-3xl bg-[#0f4c3a] py-4 px-10 text-sm font-bold text-white hover:bg-[#0a382b] shadow-xl hover:shadow-[#0f4c3a]/30 transition-all flex items-center justify-center gap-3 active:scale-95 uppercase tracking-widest">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Simpan ke Series
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <style>

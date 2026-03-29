@@ -19,12 +19,21 @@ class AnggotaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Buku::with(['kategori', 'series'])
-            ->whereIn('id_buku', function ($q) {
+        $query = Buku::with(['kategori', 'series']);
+
+        $isFilteringSeries = $request->filled('series') && $request->series !== 'all';
+
+        if ($isFilteringSeries) {
+            // Jika memfilter berdasarkan series tertentu, tampilkan semua BUKU dalam series tersebut 
+            $query->where('id_series', $request->series);
+        } else {
+            // Default di halaman utama: kelompokkan buku-buku dari series yang sama menjadi 1 perwakilan
+            $query->whereIn('id_buku', function ($q) {
                 $q->selectRaw('MIN(id_buku)')
                     ->from('buku')
                     ->groupByRaw('IFNULL(id_series, id_buku)');
             });
+        }
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -47,10 +56,6 @@ class AnggotaController extends Controller
             });
         }
 
-        if ($request->filled('series') && $request->series !== 'all') {
-            $query->where('id_series', $request->series);
-        }
-
         // Sorting
         $sort = $request->get('sort', 'terbaru');
         match ($sort) {
@@ -69,7 +74,7 @@ class AnggotaController extends Controller
 
         // Jika AJAX request, kembalikan JSON partial
         if ($request->ajax() || $request->has('ajax')) {
-            $gridHtml = view('anggota.partials.buku-grid', compact('buku'))->render();
+            $gridHtml = view('anggota.partials.buku-grid', compact('buku', 'isFilteringSeries'))->render();
             $paginationHtml = $buku->links()->toHtml();
             return response()->json([
                 'html' => $gridHtml,
@@ -77,7 +82,7 @@ class AnggotaController extends Controller
             ]);
         }
 
-        return view('anggota.dashboard', compact('buku', 'kategori', 'series', 'banners'));
+        return view('anggota.dashboard', compact('buku', 'kategori', 'series', 'banners', 'isFilteringSeries'));
     }
 
 
@@ -401,6 +406,7 @@ class AnggotaController extends Controller
 
     public function hapusFotoProfil()
     {
+        /** @var \App\Models\Anggota $user */
         $user = Auth::user();
         if ($user->foto_profil && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->foto_profil)) {
             \Illuminate\Support\Facades\Storage::disk('public')->delete($user->foto_profil);

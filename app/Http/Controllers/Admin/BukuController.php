@@ -176,7 +176,26 @@ class BukuController extends Controller
     {
         $kategori = Kategori::all();
         $series = Series::orderBy('nama_series')->get();
-        return view('admin.buku.batch', compact('kategori', 'series'));
+        $buku_tanpa_series = Buku::whereNull('id_series')->orderBy('judul_buku')->get();
+        return view('admin.buku.batch', compact('kategori', 'series', 'buku_tanpa_series'));
+    }
+
+    public function assignSeriesBatch(Request $request)
+    {
+        $request->validate([
+            'id_series' => 'required|exists:series,id_series',
+            'buku_ids' => 'required|array|min:1',
+            'buku_ids.*' => 'exists:buku,id_buku'
+        ], [
+            'id_series.required' => 'Pilih series terlebih dahulu.',
+            'buku_ids.required' => 'Pilih minimal satu buku untuk dimasukkan ke series.',
+        ]);
+
+        Buku::whereIn('id_buku', $request->buku_ids)->update([
+            'id_series' => $request->id_series
+        ]);
+
+        return redirect()->route('admin.buku.index')->with('success', count($request->buku_ids) . ' buku berhasil ditambahkan ke dalam series!');
     }
 
     public function storeBatch(Request $request)
