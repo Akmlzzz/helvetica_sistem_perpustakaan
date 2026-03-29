@@ -16,38 +16,39 @@
     </nav>
 
     {{-- Main Card: Responsive layout --}}
-    <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-        {{-- Mobile: stack vertical | Desktop: 2 kolom --}}
-        <div class="flex flex-col md:flex-row md:min-h-[520px] md:max-h-[calc(100vh-160px)]">
+    <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden mb-8">
+        {{-- Mobile: vertical | Tablet & Desktop: horizontal --}}
+        <div class="flex flex-col md:flex-row relative">
 
             {{-- ===== KOLOM KIRI ===== --}}
             <div
-                class="w-full md:w-64 xl:w-72 md:shrink-0 flex flex-col bg-linear-to-b from-[#e8f4f0] to-[#d0ebe0] md:border-r border-b md:border-b-0 border-gray-100">
+                class="w-full md:w-72 xl:w-80 shrink-0 min-w-0 bg-linear-to-b from-[#e8f4f0] to-[#d0ebe0] md:border-r border-b md:border-b-0 border-gray-100">
 
-                {{-- Cover --}}
-                <div class="flex items-center justify-center p-4 md:p-5 md:flex-1 md:overflow-hidden">
-                    @if($buku->sampul)
-                        <img src="{{ Storage::url($buku->sampul) }}" alt="{{ $buku->judul_buku }}"
-                            class="h-36 sm:h-44 md:h-auto md:w-full md:max-h-full rounded-xl shadow-lg object-contain">
-                    @else
-                        <div class="h-36 sm:h-44 md:h-auto md:w-full rounded-xl shadow-lg bg-white/50 flex items-center justify-center"
-                            style="aspect-ratio: 2/3;">
-                            <svg class="h-12 w-12 md:h-20 md:w-20 text-[#0f4c3a] opacity-30" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                                    d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25">
-                                </path>
-                            </svg>
-                        </div>
-                    @endif
-                </div>
+                <div class="flex flex-col p-6 md:p-8 md:sticky md:top-24 md:max-h-[calc(100vh-6rem)] md:overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {{-- Cover --}}
+                    <div class="flex items-center justify-center mb-6">
+                        @if($buku->sampul)
+                            <img src="{{ Storage::url($buku->sampul) }}" alt="{{ $buku->judul_buku }}"
+                                class="h-48 sm:h-64 md:h-auto md:w-full rounded-xl shadow-lg object-contain transition-transform duration-300 hover:scale-105">
+                        @else
+                            <div class="h-48 sm:h-64 md:h-auto md:w-full w-32 rounded-xl shadow-lg bg-white/50 flex items-center justify-center"
+                                style="aspect-ratio: 2/3;">
+                                <svg class="h-12 w-12 md:h-20 text-[#0f4c3a] opacity-30" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                        d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25">
+                                    </path>
+                                </svg>
+                            </div>
+                        @endif
+                    </div>
 
-                {{-- Status + Tombol --}}
-                @php
-                    $inWishlist = \App\Models\KoleksiPribadi::where('id_pengguna', auth()->user()->id_pengguna)->where('id_buku', $buku->id_buku)->exists();
-                @endphp
+                    {{-- Status + Tombol --}}
+                    @php
+                        $inWishlist = \App\Models\KoleksiPribadi::where('id_pengguna', auth()->user()->id_pengguna)->where('id_buku', $buku->id_buku)->exists();
+                    @endphp
 
-                <div class="px-4 pb-4 md:px-5 md:pb-5 space-y-3 shrink-0">
+                    <div class="space-y-4">
                     {{-- Status Stok --}}
                     <div class="text-center">
                         @if($buku->stok > 0)
@@ -300,12 +301,13 @@
                             Stok Habis - Tidak Tersedia
                         </button>
                     @endif
-                </div>
+                    </div>{{-- end of status + tombol stack --}}
+                </div>{{-- end of sticky wrapper --}}
             </div>{{-- end kolom kiri --}}
 
             {{-- ===== KOLOM KANAN: Info Buku + Sinopsis ===== --}}
-            <div class="flex-1 md:overflow-y-auto">
-                <div class="p-4 sm:p-6 xl:p-8">
+            <div class="flex-1 overflow-hidden">
+                <div class="p-6 md:p-8 lg:p-10 text-gray-800">
 
                     {{-- Kategori badges --}}
                     <div class="mb-3 flex flex-wrap gap-2">
