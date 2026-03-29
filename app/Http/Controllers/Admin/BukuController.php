@@ -171,4 +171,73 @@ class BukuController extends Controller
 
         return view('admin.buku.show', compact('buku', 'relatedBooks', 'seriesVolumes'));
     }
+
+    public function createBatch()
+    {
+        $kategori = Kategori::all();
+        $series = Series::orderBy('nama_series')->get();
+        return view('admin.buku.batch', compact('kategori', 'series'));
+    }
+
+    public function storeBatch(Request $request)
+    {
+        $request->validate([
+            // Common Info
+            'judul_buku_common' => 'required|string|max:255',
+            'penulis_common' => 'nullable|string|max:100',
+            'penerbit_common' => 'nullable|string|max:255',
+            'tahun_terbit_common' => 'nullable|integer|digits:4|min:1900|max:' . date('Y'),
+            'bahasa_common' => 'nullable|string|in:id,en,ar,zh,fr,de,ja,ko',
+            'lokasi_rak_common' => 'nullable|string|max:50',
+            'id_series' => 'nullable|exists:series,id_series',
+            'kategori' => 'nullable|array',
+            'kategori.*' => 'exists:kategori,id_kategori',
+
+            // Items
+            'items' => 'required|array|min:1',
+            'items.*.nomor_volume' => 'nullable|integer|min:1',
+            'items.*.isbn' => 'nullable|string|max:20',
+            'items.*.stok' => 'required|integer|min:0',
+            'items.*.sinopsis' => 'nullable|string',
+            'items.*.sampul' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            foreach ($request->items as $index => $itemData) {
+                $data = [
+                    'judul_buku' => $request->judul_buku_common,
+                    'penulis' => $request->penulis_common,
+                    'penerbit' => $request->penerbit_common,
+                    'tahun_terbit' => $request->tahun_terbit_common,
+                    'bahasa' => $request->bahasa_common,
+                    'lokasi_rak' => $request->lokasi_rak_common,
+                    'id_series' => $request->id_series,
+                    'nomor_volume' => $itemData['nomor_volume'] ?? null,
+                    'isbn' => $itemData['isbn'] ?? null,
+                    'stok' => $itemData['stok'],
+                    'sinopsis' => $itemData['sinopsis'] ?? null,
+                    'sampul' => null,
+                ];
+
+                // Jika ada upload gambar di baris tertentu
+                if ($request->hasFile("items.$index.sampul")) {
+                    $path = $request->file("items.$index.sampul")->store('sampul', 'public');
+                    $data['sampul'] = $path;
+                }
+
+                $buku = Buku::create($data);
+
+                if ($request->has('kategori')) {
+                    $buku->kategori()->attach($request->kategori);
+                }
+            }
+
+            \Illuminate\Support\Facades\DB::commit();
+            return redirect()->route('admin.buku.index')->with('success', count($request->items) . ' buku berhasil ditambahkan sekaligus!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menambahkan batch buku: ' . $e->getMessage())->withInput();
+        }
+    }
 }

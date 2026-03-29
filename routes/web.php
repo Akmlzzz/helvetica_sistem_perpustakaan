@@ -132,6 +132,8 @@ Route::middleware('auth')->group(function () {
     // Buku — admin atau petugas yang punya izin 'buku'
     Route::middleware('akses:buku')->group(function () {
         Route::get('/buku', [\App\Http\Controllers\Admin\BukuController::class, 'index'])->name('admin.buku.index');
+        Route::get('/buku/batch', [\App\Http\Controllers\Admin\BukuController::class, 'createBatch'])->name('admin.buku.batch');
+        Route::post('/buku/batch', [\App\Http\Controllers\Admin\BukuController::class, 'storeBatch'])->name('admin.buku.batch.store');
         Route::get('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'show'])->name('admin.buku.show');
         Route::post('/buku', [\App\Http\Controllers\Admin\BukuController::class, 'store'])->name('admin.buku.store');
         Route::put('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'update'])->name('admin.buku.update');

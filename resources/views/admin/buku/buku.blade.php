@@ -7,9 +7,14 @@
             <h2 class="text-title-md2 font-bold text-black dark:text-white">
                 Kelola Data Buku
             </h2>
-            <div class="flex items-center gap-3">
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="{{ route('admin.buku.batch') }}"
+                    class="inline-flex items-center justify-center gap-2.5 rounded-xl border border-success bg-success/10 px-4 py-2 text-center font-bold text-success hover:bg-success hover:text-white transition-all lg:px-6">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    Tambah Batch
+                </a>
                 <button @click="$dispatch('open-add-book-modal')"
-                    class="inline-flex items-center justify-center gap-2.5 rounded-xl bg-brand-primary px-4 py-2 text-center font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8">
+                    class="inline-flex items-center justify-center gap-2.5 rounded-xl bg-brand-primary px-4 py-2 text-center font-bold text-white hover:bg-opacity-90 transition-all lg:px-6 xl:px-8 shadow-md hover:shadow-lg">
                     <span>
                         <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
