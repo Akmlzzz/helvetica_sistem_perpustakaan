@@ -21,8 +21,17 @@
         </a>
     </div>
 
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+            class="mb-6 flex items-center gap-3 rounded-2xl bg-emerald-50 border border-emerald-200 px-5 py-4 text-sm font-medium text-emerald-700 animate-fade-in shadow-sm">
+            <svg class="h-5 w-5 shrink-0 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            {{ session('success') }}
+        </div>
+    @endif
+
     @if(session('error'))
-        <div class="mb-6 flex items-center gap-3 rounded-2xl bg-red-50 border border-red-200 px-5 py-4 text-sm font-medium text-red-700 animate-fade-in shadow-sm">
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+            class="mb-6 flex items-center gap-3 rounded-2xl bg-red-50 border border-red-200 px-5 py-4 text-sm font-medium text-red-700 animate-fade-in shadow-sm">
             <svg class="h-5 w-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             {{ session('error') }}
         </div>
@@ -241,7 +250,7 @@
 
                     {{-- Select Buku (Checkboxes) --}}
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Pilih Buku Tanpa Series (Pilih Semua yang Diinginkan) <span class="text-red-500">*</span></label>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Pilih Buku Belum Punya Series <span class="text-red-500">*</span></label>
                         <div class="flex flex-col gap-2 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar p-1">
                             @forelse($buku_tanpa_series as $bukuItem)
                                 <label class="group flex items-center gap-3 cursor-pointer select-none px-4 py-3 rounded-2xl border border-gray-100 bg-white hover:bg-[#e8f4f0] hover:border-[#c8e6d8] transition-all shadow-sm text-gray-600 hover:text-[#0f4c3a]">
@@ -267,6 +276,118 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         Simpan ke Series
                     </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- ===== KARTU KETIGA: PINDAH BUKU ANTAR SERIES ===== --}}
+    <div class="mt-10"
+        x-data="{
+            seriesAsal: '',
+            bukuList: @js($buku_dalam_series->map(fn($b) => ['id' => $b->id_buku, 'judul' => $b->judul_buku, 'volume' => $b->nomor_volume, 'series_id' => $b->id_series, 'series_nama' => $b->series?->nama_series])->values()),
+            get filteredBuku() {
+                if (!this.seriesAsal) return [];
+                return this.bukuList.filter(b => String(b.series_id) === String(this.seriesAsal));
+            }
+        }"
+    >
+        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-black tracking-tight flex items-center gap-3">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                        </svg>
+                    </span>
+                    Pindah Buku ke Series Lain
+                </h2>
+                <p class="text-gray-500 text-sm mt-1 font-medium italic">Pindahkan buku yang sudah ada di suatu series ke series yang berbeda.</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 lg:p-8">
+            <form action="{{ route('admin.buku.batch.pindah-series') }}" method="POST">
+                @csrf
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                    {{-- 1. Pilih Series Asal --}}
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                            1. Pilih Series Asal <span class="text-red-500">*</span>
+                        </label>
+                        <select x-model="seriesAsal"
+                            class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-bold focus:border-amber-500 focus:ring-0 outline-none appearance-none transition shadow-sm hover:border-amber-300">
+                            <option value="">-- Pilih Series Asal --</option>
+                            @foreach($series as $s)
+                                <option value="{{ $s->id_series }}">{{ $s->nama_series }}</option>
+                            @endforeach
+                        </select>
+                        <p class="text-[10px] text-gray-400 mt-1.5 ml-1">Series tempat buku kini berada.</p>
+                    </div>
+
+                    {{-- 2. Pilih Buku dari Series Asal --}}
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                            2. Pilih Buku yang Dipindah <span class="text-red-500">*</span>
+                        </label>
+
+                        <div class="flex flex-col gap-2 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar p-1 rounded-2xl border border-gray-200 bg-gray-50">
+
+                            {{-- Placeholder kalau belum pilih series asal --}}
+                            <template x-if="!seriesAsal">
+                                <div class="px-4 py-6 text-xs text-gray-400 font-medium italic text-center">
+                                    Pilih series asal dulu di kolom kiri.
+                                </div>
+                            </template>
+
+                            {{-- Tidak ada buku di series ini --}}
+                            <template x-if="seriesAsal && filteredBuku.length === 0">
+                                <div class="px-4 py-6 text-xs text-gray-400 font-medium italic text-center">
+                                    Tidak ada buku di series ini.
+                                </div>
+                            </template>
+
+                            {{-- Daftar buku --}}
+                            <template x-for="buku in filteredBuku" :key="buku.id">
+                                <label class="group flex items-center gap-3 cursor-pointer select-none px-4 py-3 rounded-2xl border border-transparent bg-white hover:bg-amber-50 hover:border-amber-200 transition-all shadow-sm text-gray-600 hover:text-amber-700 mx-1 my-0.5">
+                                    <input type="checkbox" name="buku_pindah_ids[]" :value="buku.id"
+                                        class="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 border-gray-300 cursor-pointer">
+                                    <div class="flex flex-col">
+                                        <span class="text-xs font-bold leading-tight" x-text="buku.judul"></span>
+                                        <span class="text-[10px] opacity-70 mt-0.5 font-medium" x-text="buku.volume ? 'Vol. ' + buku.volume : ''"></span>
+                                    </div>
+                                </label>
+                            </template>
+                        </div>
+                    </div>
+
+                    {{-- 3. Pilih Series Tujuan --}}
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                            3. Pilih Series Tujuan <span class="text-red-500">*</span>
+                        </label>
+                        <select name="id_series_tujuan" required
+                            class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-bold focus:border-amber-500 focus:ring-0 outline-none appearance-none transition shadow-sm hover:border-amber-300">
+                            <option value="">-- Pilih Series Tujuan --</option>
+                            @foreach($series as $s)
+                                <option value="{{ $s->id_series }}">{{ $s->nama_series }}</option>
+                            @endforeach
+                        </select>
+                        <p class="text-[10px] text-gray-400 mt-1.5 ml-1">Series yang ingin dituju.</p>
+
+                        <div class="mt-8 flex justify-end">
+                            <button type="submit"
+                                class="w-full rounded-3xl bg-amber-500 py-4 px-8 text-sm font-bold text-white hover:bg-amber-600 shadow-xl hover:shadow-amber-300/40 transition-all flex items-center justify-center gap-3 active:scale-95 uppercase tracking-widest">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                                </svg>
+                                Pindahkan ke Series Tujuan
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </form>
         </div>

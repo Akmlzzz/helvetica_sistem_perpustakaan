@@ -177,7 +177,9 @@ class BukuController extends Controller
         $kategori = Kategori::all();
         $series = Series::orderBy('nama_series')->get();
         $buku_tanpa_series = Buku::whereNull('id_series')->orderBy('judul_buku')->get();
-        return view('admin.buku.batch', compact('kategori', 'series', 'buku_tanpa_series'));
+        // Buku yang sudah punya series (untuk fitur pindah series)
+        $buku_dalam_series = Buku::with('series')->whereNotNull('id_series')->orderBy('judul_buku')->get();
+        return view('admin.buku.batch', compact('kategori', 'series', 'buku_tanpa_series', 'buku_dalam_series'));
     }
 
     public function assignSeriesBatch(Request $request)
@@ -195,7 +197,28 @@ class BukuController extends Controller
             'id_series' => $request->id_series
         ]);
 
-        return redirect()->route('admin.buku.index')->with('success', count($request->buku_ids) . ' buku berhasil ditambahkan ke dalam series!');
+        return redirect()->route('admin.buku.batch')->with('success', count($request->buku_ids) . ' buku berhasil ditambahkan ke dalam series!');
+    }
+
+    public function moveToSeries(Request $request)
+    {
+        $request->validate([
+            'id_series_tujuan' => 'required|exists:series,id_series',
+            'buku_pindah_ids'  => 'required|array|min:1',
+            'buku_pindah_ids.*' => 'exists:buku,id_buku',
+        ], [
+            'id_series_tujuan.required' => 'Pilih series tujuan terlebih dahulu.',
+            'buku_pindah_ids.required'  => 'Pilih minimal satu buku untuk dipindahkan.',
+        ]);
+
+        Buku::whereIn('id_buku', $request->buku_pindah_ids)->update([
+            'id_series' => $request->id_series_tujuan
+        ]);
+
+        $seriesTujuan = Series::find($request->id_series_tujuan);
+        $count = count($request->buku_pindah_ids);
+
+        return redirect()->route('admin.buku.batch')->with('success', $count . ' buku berhasil dipindahkan ke series "' . $seriesTujuan->nama_series . '"!');
     }
 
     public function storeBatch(Request $request)

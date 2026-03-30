@@ -135,6 +135,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/buku/batch', [\App\Http\Controllers\Admin\BukuController::class, 'createBatch'])->name('admin.buku.batch');
         Route::post('/buku/batch', [\App\Http\Controllers\Admin\BukuController::class, 'storeBatch'])->name('admin.buku.batch.store');
         Route::post('/buku/batch/series', [\App\Http\Controllers\Admin\BukuController::class, 'assignSeriesBatch'])->name('admin.buku.batch.series');
+        Route::post('/buku/batch/pindah-series', [\App\Http\Controllers\Admin\BukuController::class, 'moveToSeries'])->name('admin.buku.batch.pindah-series');
         Route::get('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'show'])->name('admin.buku.show');
         Route::post('/buku', [\App\Http\Controllers\Admin\BukuController::class, 'store'])->name('admin.buku.store');
         Route::put('/buku/{id}', [\App\Http\Controllers\Admin\BukuController::class, 'update'])->name('admin.buku.update');
