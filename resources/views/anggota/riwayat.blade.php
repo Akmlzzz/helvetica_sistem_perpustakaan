@@ -245,16 +245,16 @@
                 <div class="mt-2 flex items-baseline gap-2">
                     @php
                         $totalDenda = $tagihanDenda->sum('jumlah_denda');
-                        $totalEstimasi = isset($dendaBerjalan) ? $dendaBerjalan->sum('estimasi_denda') : 0;
-                        $grandTotal = $totalDenda + $totalEstimasi;
+                        // dendaBerjalan sudah masuk ke tagihanDenda, jadi tidak perlu ditambahkan lagi
+                        $grandTotal = $totalDenda;
                     @endphp
                     <span class="text-3xl font-bold text-black">Rp {{ number_format($grandTotal, 0, ',', '.') }}</span>
                 </div>
                 
-                @if($totalEstimasi > 0)
-                <div class="mt-2 text-xs text-red-500 flex items-center gap-1">
+                @if(isset($dendaBerjalan) && $dendaBerjalan->count() > 0)
+                <div class="mt-2 text-xs text-amber-600 flex items-center gap-1">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                    Termasuk estimasi Rp {{ number_format($totalEstimasi, 0, ',', '.') }} dari keterlambatan aktif
+                    {{ $dendaBerjalan->count() }} denda dari buku yang masih dipinjam (denda terus bertambah)
                 </div>
                 @endif
                 
@@ -282,6 +282,13 @@
                                                 {{ $denda->peminjaman->buku->judul_buku }}
                                             </p>
                                             <p class="text-xs text-gray-400 mt-0.5">Kode: {{ $denda->peminjaman->kode_booking }}</p>
+                                            {{-- Badge: apakah buku masih dipinjam (belum dikembalikan) --}}
+                                            @if(in_array($denda->peminjaman->status_transaksi, ['dipinjam', 'terlambat']))
+                                                <span class="inline-flex items-center gap-1 mt-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                                                    <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                                                    Sedang Dipinjam · Denda bertambah tiap hari
+                                                </span>
+                                            @endif
                                         </div>
                                         <div class="text-right shrink-0">
                                             <span class="block font-black text-red-600 text-base">Rp {{ number_format($denda->jumlah_denda, 0, ',', '.') }}</span>

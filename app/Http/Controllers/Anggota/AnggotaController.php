@@ -309,7 +309,39 @@ class AnggotaController extends Controller
             ->orderBy('tgl_kembali', 'desc')
             ->get();
 
-        // Tagihan denda yang sudah tercatat (biasanya setelah dikembalikan)
+        // Estimasi denda berjalan (buku yang sedang dipinjam tapi sudah melewati jatuh tempo)
+        $peminjamanTerlambat = Peminjaman::with('buku')
+            ->where('id_pengguna', $userId)
+            ->whereIn('status_transaksi', ['dipinjam', 'terlambat'])
+            ->whereNotNull('tgl_jatuh_tempo')
+            ->whereDate('tgl_jatuh_tempo', '<', Carbon::today())
+            ->get();
+
+        // Auto-buat record denda untuk buku yang terlambat (jika belum ada)
+        foreach ($peminjamanTerlambat as $loan) {
+            $hariTerlambat = Carbon::today()->diffInDays(Carbon::parse($loan->tgl_jatuh_tempo));
+            $estimasiDenda = $hariTerlambat * 2000;
+
+            \App\Models\Denda::firstOrCreate(
+                ['id_peminjaman' => $loan->id_peminjaman],
+                [
+                    'jumlah_denda'      => $estimasiDenda,
+                    'status_pembayaran' => 'belum_bayar',
+                ]
+            );
+        }
+
+        // Update jumlah denda yang sudah ada (agar selalu sinkron dengan hari terlambat terkini)
+        foreach ($peminjamanTerlambat as $loan) {
+            $hariTerlambat = Carbon::today()->diffInDays(Carbon::parse($loan->tgl_jatuh_tempo));
+            $estimasiDenda = $hariTerlambat * 2000;
+
+            \App\Models\Denda::where('id_peminjaman', $loan->id_peminjaman)
+                ->where('status_pembayaran', 'belum_bayar')
+                ->update(['jumlah_denda' => $estimasiDenda]);
+        }
+
+        // Tagihan denda belum lunas (termasuk yang baru saja di-auto-create)
         $tagihanDenda = \App\Models\Denda::with(['peminjaman.buku'])
             ->whereHas('peminjaman', function ($q) use ($userId) {
                 $q->where('id_pengguna', $userId);
@@ -317,25 +349,20 @@ class AnggotaController extends Controller
             ->where('status_pembayaran', 'belum_bayar')
             ->get();
 
-        // Estimasi denda berjalan (untuk buku yang sedang dipinjam tapi terlambat)
-        $dendaBerjalan = Peminjaman::with('buku')
-            ->where('id_pengguna', $userId)
-            ->whereIn('status_transaksi', ['dipinjam', 'terlambat'])
-            ->whereDate('tgl_jatuh_tempo', '<', Carbon::today())
-            ->get()
-            ->map(function ($loan) {
-                $hariTerlambat = Carbon::today()->diffInDays($loan->tgl_jatuh_tempo);
-                $loan->estimasi_denda = $hariTerlambat * 2000; // Rp 2.000 per hari
-                $loan->hari_terlambat = $hariTerlambat;
-                return $loan;
-            });
+        // Hitung estimasi untuk tampilan keterlambatan aktif
+        $dendaBerjalan = $peminjamanTerlambat->map(function ($loan) {
+            $hariTerlambat = Carbon::today()->diffInDays(Carbon::parse($loan->tgl_jatuh_tempo));
+            $loan->estimasi_denda = $hariTerlambat * 2000;
+            $loan->hari_terlambat = $hariTerlambat;
+            return $loan;
+        });
 
         // Statistik Sederhana
         $stats = [
-            'total_buku' => $history->count(),
-            'total_denda' => $totalDendaOfficial = $tagihanDenda->sum('jumlah_denda'),
+            'total_buku'     => $history->count(),
+            'total_denda'    => $tagihanDenda->where('status_pembayaran', 'belum_bayar')->sum('jumlah_denda'),
             'buku_terlambat' => $history->filter(fn($l) => $l->denda && $l->denda->jumlah_denda > 0)->count(),
-            'member_since' => Auth::user()->dibuat_pada->locale('id')->isoFormat('MMMM YYYY'),
+            'member_since'   => Auth::user()->dibuat_pada->locale('id')->isoFormat('MMMM YYYY'),
         ];
 
         return view('anggota.riwayat', compact('history', 'tagihanDenda', 'dendaBerjalan', 'stats'));
