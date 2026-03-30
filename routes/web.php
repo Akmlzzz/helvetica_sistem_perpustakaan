@@ -115,6 +115,10 @@ Route::middleware('auth')->group(function () {
 
         // Hero Banner Management
         Route::resource('hero-banners', \App\Http\Controllers\Admin\HeroBannerController::class)->names('admin.hero-banners');
+
+        // Dokumentasi (Docs)
+        Route::get('/admin/docs', [\App\Http\Controllers\Admin\DocsController::class, 'index'])->name('admin.docs.index');
+        Route::get('/admin/docs/{slug}', [\App\Http\Controllers\Admin\DocsController::class, 'show'])->name('admin.docs.show');
     });
 
     // =========================================================

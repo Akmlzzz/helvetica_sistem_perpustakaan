@@ -180,6 +180,11 @@ class MenuHelper
                         'icon' => 'report',
                         'path' => '/laporan',
                     ],
+                    [
+                        'name' => 'Dokumentasi',
+                        'icon' => 'book',
+                        'path' => '/admin/docs',
+                    ],
                 ],
             ],
         ];
