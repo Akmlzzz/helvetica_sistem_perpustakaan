@@ -37,7 +37,7 @@
     </div>
 
     <!-- Kanan: Table of Contents -->
-    <div class="hidden xl:block w-72 shrink-0 px-8 py-10 border-l border-[#CEF17B]/20 dark:border-slate-800/50 overflow-y-auto bg-gray-50/30 dark:bg-transparent">
+    <div id="toc-container" class="hidden xl:block w-72 shrink-0 px-8 py-10 border-l border-[#CEF17B]/20 dark:border-slate-800/50 overflow-y-auto bg-gray-50/30 dark:bg-transparent">
         <h4 class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-6 flex items-center gap-2">
             <svg class="w-4 h-4 text-[#004236] dark:text-[#CEF17B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
             On This Page
@@ -78,38 +78,97 @@
         });
     });
 
-    // Active TOC highlighting based on scroll position
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Remove active classes
-                document.querySelectorAll('.toc-link').forEach(link => {
-                    link.classList.remove('text-[#004236]', 'font-bold', 'dark:text-[#CEF17B]');
-                    link.classList.add('text-gray-500', 'dark:text-gray-400');
-                    
-                    // Hide all dots
-                    const dot = link.previousElementSibling;
-                    if(dot && dot.classList.contains('toc-dot')) {
-                        dot.classList.add('hidden');
-                    }
+    let observer; // Deklarasi global
 
-                    // Activate current
-                    if(link.getAttribute('data-target') === entry.target.id) {
-                        link.classList.remove('text-gray-500', 'dark:text-gray-400');
-                        link.classList.add('text-[#004236]', 'font-bold', 'dark:text-[#CEF17B]');
+    function initTOC() {
+        if (observer) {
+            observer.disconnect();
+        }
+
+        // Active TOC highlighting based on scroll position
+        observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Remove active classes
+                    document.querySelectorAll('.toc-link').forEach(link => {
+                        link.classList.remove('text-[#004236]', 'font-bold', 'dark:text-[#CEF17B]');
+                        link.classList.add('text-gray-500', 'dark:text-gray-400');
+                        
+                        // Hide all dots
+                        const dot = link.previousElementSibling;
                         if(dot && dot.classList.contains('toc-dot')) {
-                            dot.classList.remove('hidden');
+                            dot.classList.add('hidden');
                         }
-                    }
-                });
+
+                        // Activate current
+                        if(link.getAttribute('data-target') === entry.target.id) {
+                            link.classList.remove('text-gray-500', 'dark:text-gray-400');
+                            link.classList.add('text-[#004236]', 'font-bold', 'dark:text-[#CEF17B]');
+                            if(dot && dot.classList.contains('toc-dot')) {
+                                dot.classList.remove('hidden');
+                            }
+                        }
+                    });
+                }
+            });
+        }, { rootMargin: '-20% 0px -80% 0px' });
+
+        document.querySelectorAll('#main-content h2, #main-content h3').forEach(heading => {
+            if(heading.id) {
+                observer.observe(heading);
             }
         });
-    }, { rootMargin: '-20% 0px -80% 0px' });
+    }
 
-    document.querySelectorAll('#main-content h2, #main-content h3').forEach(heading => {
-        if(heading.id) {
-            observer.observe(heading);
-        }
+    // Inisialisasi awal
+    initTOC();
+
+    // 🚀 AJAX Navigation untuk pengalaman pindah halaman tanpa reload (SPA feel)
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('#sidebar-nav a');
+        if (!link) return;
+
+        e.preventDefault();
+        const url = link.getAttribute('href');
+        
+        // Transisi animasi (fade out content)
+        const mainContent = document.getElementById('main-content');
+        mainContent.style.opacity = '0.4';
+        mainContent.style.transition = 'opacity 0.2s ease-in-out';
+
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Ganti konten
+                mainContent.innerHTML = doc.getElementById('main-content').innerHTML;
+                document.getElementById('toc-container').innerHTML = doc.getElementById('toc-container').innerHTML;
+                document.getElementById('sidebar-nav').innerHTML = doc.getElementById('sidebar-nav').innerHTML;
+
+                // Animasi masuk kembali
+                mainContent.style.opacity = '1';
+                mainContent.scrollTop = 0;
+
+                // Update URL di browser
+                history.pushState({}, '', url);
+
+                // Setup ulang observer & scroll spy
+                initTOC();
+
+                // Pastikan filter dari input text box apply ulang jika ada text
+                document.getElementById('search-docs').dispatchEvent(new Event('input'));
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                window.location.href = url; // Fallback jika fetch error
+            });
+    });
+
+    // Menangani tombol back/forward di browser
+    window.addEventListener('popstate', function() {
+        window.location.reload();
     });
 </script>
 <style>
