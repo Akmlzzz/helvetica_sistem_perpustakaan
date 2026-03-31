@@ -20,7 +20,7 @@
         document.addEventListener('alpine:init', () => {
             Alpine.store('sidebar', {
                 // Initialize based on screen size
-                isExpanded: window.innerWidth >= 1280, // true for desktop, false for mobile
+                isExpanded: false, // force false for hover-based sidebar
                 isMobileOpen: false,
                 isHovered: false,
 
@@ -58,14 +58,14 @@
 
 </head>
 
-<body x-data="{ 'loaded': true}" x-init="$store.sidebar.isExpanded = window.innerWidth >= 1280;
+<body x-data="{ 'loaded': true}" x-init="$store.sidebar.isExpanded = false;
     const checkMobile = () => {
         if (window.innerWidth < 1280) {
             $store.sidebar.setMobileOpen(false);
             $store.sidebar.isExpanded = false;
         } else {
             $store.sidebar.isMobileOpen = false;
-            $store.sidebar.isExpanded = true;
+            $store.sidebar.isExpanded = false; // hover only
         }
     };
     window.addEventListener('resize', checkMobile);" class="dark:bg-slate-950">
@@ -79,8 +79,7 @@
         @include('layouts.sidebar')
 
         <div class="flex-1 transition-all duration-300 ease-in-out" :class="{
-                'xl:ml-[270px]': $store.sidebar.isExpanded || $store.sidebar.isHovered,
-                'xl:ml-[90px]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,
+                'xl:ml-[90px]': true,
                 'ml-0': $store.sidebar.isMobileOpen
             }">
             <!-- app header start -->

@@ -7,7 +7,7 @@
 @endphp
 
 <aside id="sidebar"
-    class="fixed flex flex-col mt-0 top-0 px-4 left-0 bg-white dark:bg-[#052e25] dark:border-[#052e25] text-gray-900 h-screen transition-all duration-300 ease-in-out z-99999 border-r border-gray-200"
+    class="fixed flex flex-col top-[70px] px-4 left-0 bg-white dark:bg-[#052e25] dark:border-[#052e25] text-gray-900 h-[calc(100vh-70px)] transition-all duration-300 ease-in-out z-998 border-r border-gray-200"
     :class="{
         'w-[270px]': $store.sidebar.isExpanded || $store.sidebar.isMobileOpen || $store.sidebar.isHovered,
         'w-[90px]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,
@@ -16,21 +16,7 @@
     }" @mouseenter="if (!$store.sidebar.isExpanded) $store.sidebar.setHovered(true)"
     @mouseleave="$store.sidebar.setHovered(false)">
 
-    <!-- Logo Section -->
-    <div class="pt-8 pb-7 pl-2 flex items-center gap-3"
-        :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ? 'xl:justify-center pl-0' : 'justify-start'">
-        <a href="/" class="flex items-center gap-2">
-            <!-- Full Logo (when expanded) -->
-            <div x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen">
-                <!-- Light Theme Logo -->
-                <img src="{{ asset('img/logo.svg') }}" alt="Biblio" class="h-8 w-auto dark:hidden">
-                <!-- Dark Theme Logo -->
-                <img src="{{ asset('img/Logo - light.svg') }}" alt="Biblio" class="hidden h-8 w-auto dark:block">
-            </div>
-            <span class="text-2xl"
-                x-show="!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen">📚</span>
-        </a>
-    </div>
+
 
     <!-- Navigation Menu -->
     <div class="flex flex-col grow overflow-y-auto duration-300 ease-linear no-scrollbar mt-5" x-data="{

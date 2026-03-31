@@ -1,15 +1,10 @@
 <header
-    class="fixed top-0 z-998 flex w-full bg-white drop-shadow-1 dark:bg-slate-900 dark:drop-shadow-none min-h-[70px] transition-all duration-300"
-    :class="{
-        'xl:left-[270px] xl:w-[calc(100%-270px)]': $store.sidebar.isExpanded || $store.sidebar.isHovered,
-        'xl:left-[90px] xl:w-[calc(100%-90px)]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,
-        'left-0 w-full': !($store.sidebar.isExpanded || $store.sidebar.isHovered)
-    }">
-    <div class="flex grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
-        <div class="flex items-center gap-2 sm:gap-4 xl:hidden">
+    class="fixed top-0 left-0 z-999 flex w-full bg-white border-b border-gray-200 dark:border-slate-800 dark:bg-[#052e25] dark:drop-shadow-none min-h-[70px] transition-all duration-300">
+    <div class="flex grow items-center justify-between px-4 py-4 md:px-6 2xl:px-11">
+        <div class="flex items-center gap-2 sm:gap-4">
             <!-- Hamburger Toggle BTN -->
             <button
-                class="z-99999 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-900 xl:hidden"
+                class="z-99999 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm dark:border-[#052e25] dark:bg-[#052e25] xl:hidden"
                 @click.stop="$store.sidebar.toggleMobileOpen()">
                 <svg class="h-6 w-6 stroke-current text-brand-primary dark:text-gray-200" fill="none"
                     viewBox="0 0 24 24">
@@ -19,7 +14,7 @@
             </button>
             <!-- Hamburger Toggle BTN -->
 
-            <a class="block shrink-0 xl:hidden" href="{{ route('dashboard') }}">
+            <a class="flex shrink-0 items-center gap-2" href="{{ route('dashboard') }}">
                 <!-- Light Mode Logo -->
                 <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="h-8 w-auto dark:hidden">
                 <!-- Dark Mode Logo -->
