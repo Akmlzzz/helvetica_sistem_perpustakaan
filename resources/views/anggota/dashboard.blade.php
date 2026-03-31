@@ -153,6 +153,20 @@
                 const newUrl = window.location.pathname + (displayParams.toString() ? '?' + displayParams.toString() : '');
                 history.replaceState(null, '', newUrl);
 
+                // Tampilkan Skeleton Screen saat data sedang loading
+                grid.innerHTML = `
+                    @for($i=0; $i<8; $i++)
+                    <div class="flex flex-col rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden animate-pulse">
+                        <div class="aspect-2/3 w-full bg-gray-200"></div>
+                        <div class="flex flex-col p-3 gap-2">
+                            <div class="h-3 w-1/3 bg-gray-200 rounded"></div>
+                            <div class="h-4 w-3/4 bg-gray-200 rounded mt-1"></div>
+                            <div class="h-2 w-1/2 bg-gray-200 rounded"></div>
+                        </div>
+                    </div>
+                    @endfor
+                `;
+
                 fetch(window.location.pathname + '?' + params.toString(), {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',

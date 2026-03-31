@@ -1,9 +1,56 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- Breadcrumb --}}
-    <nav class="mb-4 flex items-center gap-2 text-sm text-gray-500">
-        <a href="{{ route('anggota.dashboard') }}"
+<div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+    {{-- Skeleton Loading UI --}}
+    <div x-show="pageLoading" x-transition.opacity.duration.300ms class="animate-pulse">
+        <div class="mb-4 flex items-center gap-2">
+            <div class="h-4 bg-gray-200 rounded w-32"></div>
+            <div class="h-4 bg-gray-200 rounded w-4"></div>
+            <div class="h-4 bg-gray-200 rounded w-48"></div>
+        </div>
+
+        <div class="rounded-2xl border border-gray-100 bg-white mb-8 overflow-hidden flex flex-col md:flex-row">
+            {{-- Skeleton Kiri --}}
+            <div class="w-full md:w-72 xl:w-80 p-6 md:p-8 bg-gray-50 shrink-0">
+                <div class="aspect-2/3 bg-gray-200 rounded-xl shadow-xs mb-6 mx-auto sm:w-48 md:w-full"></div>
+                <div class="h-8 bg-gray-200 rounded-full w-full mb-4"></div>
+                <div class="h-12 bg-gray-200 rounded-xl w-full mb-4"></div>
+                <div class="h-12 bg-gray-200 rounded-xl w-full"></div>
+            </div>
+
+            {{-- Skeleton Kanan --}}
+            <div class="flex-1 p-6 md:p-8 lg:p-10">
+                <div class="flex gap-2 mb-4">
+                    <div class="h-6 bg-gray-200 rounded-full w-20"></div>
+                    <div class="h-6 bg-gray-200 rounded-full w-24"></div>
+                </div>
+                <div class="h-8 bg-gray-200 rounded w-3/4 mb-3"></div>
+                <div class="h-5 bg-gray-200 rounded w-1/3 mb-6"></div>
+
+                <div class="grid grid-cols-2 xl:grid-cols-3 gap-3 mb-6">
+                    @for($i=0; $i<6; $i++)
+                        <div class="h-14 bg-gray-200 rounded-xl"></div>
+                    @endfor
+                </div>
+
+                <div class="h-16 bg-gray-200 rounded-2xl w-full mb-8"></div>
+
+                <div class="h-4 bg-gray-200 rounded w-32 mb-4"></div>
+                <div class="space-y-2 mb-8">
+                    <div class="h-4 bg-gray-200 rounded w-full"></div>
+                    <div class="h-4 bg-gray-200 rounded w-full"></div>
+                    <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                    <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Main Content (Hidden while loading) --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms>
+        {{-- Breadcrumb --}}
+        <nav class="mb-4 flex items-center gap-2 text-sm text-gray-500">
             class="hover:text-[#0f4c3a] transition-colors flex items-center gap-1 shrink-0">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -752,4 +799,6 @@
         </div>
     @endif
 
+    </div> {{-- End of Main Content Wrapper --}}
+</div> {{-- End of x-data --}}
 @endsection
