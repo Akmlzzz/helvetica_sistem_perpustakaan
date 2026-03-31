@@ -17,7 +17,7 @@ class AnggotaMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check() && Auth::user()->level_akses === 'anggota') {
-            if (Auth::user()->status !== 'aktif') {
+            if (Auth::user()->status !== 'active') {
                 Auth::logout();
                 return redirect('/login')->with('error', 'Akun Anda belum aktif atau sedang menunggu verifikasi dari Admin.');
             }
