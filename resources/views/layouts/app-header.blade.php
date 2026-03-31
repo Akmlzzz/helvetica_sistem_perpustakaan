@@ -1,12 +1,12 @@
 <header
-    class="fixed top-0 left-0 z-999 flex w-full bg-white border-b border-gray-200 dark:border-slate-800 dark:bg-[#052e25] dark:drop-shadow-none min-h-[70px] transition-all duration-300">
-    <div class="flex grow items-center justify-between px-4 py-4 md:px-6 2xl:px-11">
+    class="fixed top-0 left-0 z-999 flex w-full bg-white border-b border-gray-200 dark:border-slate-800 dark:bg-[#052e25] dark:drop-shadow-none h-[47px] transition-all duration-300">
+    <div class="flex grow items-center justify-between px-4 py-1 md:px-6 2xl:px-11">
         <div class="flex items-center gap-2 sm:gap-4">
             <!-- Hamburger Toggle BTN -->
             <button
-                class="z-99999 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm dark:border-[#052e25] dark:bg-[#052e25] xl:hidden"
+                class="z-99999 block rounded-sm border border-gray-200 bg-white p-1 shadow-sm dark:border-[#052e25] dark:bg-[#052e25] xl:hidden"
                 @click.stop="$store.sidebar.toggleMobileOpen()">
-                <svg class="h-6 w-6 stroke-current text-brand-primary dark:text-gray-200" fill="none"
+                <svg class="h-5 w-5 stroke-current text-brand-primary dark:text-gray-200" fill="none"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
                     </path>
@@ -16,9 +16,9 @@
 
             <a class="flex shrink-0 items-center gap-2" href="{{ route('dashboard') }}">
                 <!-- Light Mode Logo -->
-                <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="h-8 w-auto dark:hidden">
+                <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="h-6 w-auto dark:hidden">
                 <!-- Dark Mode Logo -->
-                <img src="{{ asset('img/Logo - light.svg') }}" alt="Logo" class="hidden h-8 w-auto dark:block">
+                <img src="{{ asset('img/Logo - light.svg') }}" alt="Logo" class="hidden h-6 w-auto dark:block">
             </a>
         </div>
 
@@ -32,14 +32,14 @@
             @if(Auth::user() && Auth::user()->isAnggota() && Auth::user()->isPending())
                 <div class="relative" x-data="{ pendingOpen: false }" @click.outside="pendingOpen = false">
                     <button
-                        class="relative flex items-center justify-center w-10 h-10 rounded-full bg-yellow-100 hover:bg-yellow-200 transition-colors duration-200 focus:outline-none"
+                        class="relative flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100 hover:bg-yellow-200 transition-colors duration-200 focus:outline-none"
                         @click.stop="pendingOpen = !pendingOpen" title="Status Verifikasi">
-                        <svg class="w-5 h-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-4 h-4 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <span
-                            class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-yellow-500 rounded-full animate-pulse">!</span>
+                            class="absolute -top-0.5 -right-0.5 flex items-center justify-center w-3.5 h-3.5 text-[9px] font-bold text-white bg-yellow-500 rounded-full animate-pulse">!</span>
                     </button>
 
                     <!-- Pending Notification Dropdown -->
@@ -116,15 +116,15 @@
 
             <div class="relative" x-data="{ notifOpen: false }" @click.outside="notifOpen = false">
                 <button id="notif-bell-btn"
-                    class="relative flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 focus:outline-none"
+                    class="relative flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 focus:outline-none"
                     @click.stop="notifOpen = !notifOpen" title="Notifikasi">
-                    <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
                     @if($notifCount > 0 || $pendingAnggotaCount > 0)
                         <span id="notif-badge"
-                            class="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse">
+                            class="absolute -top-0.5 -right-0.5 flex items-center justify-center w-3.5 h-3.5 text-[9px] font-bold text-white bg-red-500 rounded-full animate-pulse">
                             {{ ($notifCount + $pendingAnggotaCount) > 9 ? '9+' : ($notifCount + $pendingAnggotaCount) }}
                         </span>
                     @endif
@@ -285,16 +285,16 @@
 
             <!-- User Area -->
             <div class="relative" x-data="{ dropdownOpen: false }" @click.outside="dropdownOpen = false">
-                <a class="flex items-center gap-4" href="#" @click.prevent="dropdownOpen = ! dropdownOpen">
-                    <span class="hidden text-right lg:block">
+                <a class="flex items-center gap-3" href="#" @click.prevent="dropdownOpen = ! dropdownOpen">
+                    <span class="hidden text-right lg:flex lg:flex-col lg:justify-center">
                         <span
-                            class="block text-sm font-medium text-brand-primary dark:text-white">{{ Auth::user()->nama_pengguna ?? 'User' }}</span>
+                            class="block text-[13px] font-bold leading-none text-brand-primary dark:text-white mb-0.5">{{ Auth::user()->nama_pengguna ?? 'User' }}</span>
                         <span
-                            class="block text-xs text-gray-500 dark:text-white">{{ ucfirst(Auth::user()->level_akses ?? 'Anggota') }}</span>
+                            class="block text-[10px] leading-none text-gray-500 dark:text-white">{{ ucfirst(Auth::user()->level_akses ?? 'Anggota') }}</span>
                     </span>
 
                     <span
-                        class="h-12 w-12 rounded-full overflow-hidden bg-gray-200 border-2 border-white drop-shadow-sm flex items-center justify-center text-xl font-bold text-brand-primary">
+                        class="h-8 w-8 rounded-full overflow-hidden bg-gray-200 border border-white drop-shadow-sm flex items-center justify-center text-sm font-bold text-brand-primary">
                         {{ substr(Auth::user()->nama_pengguna ?? 'U', 0, 1) }}
                     </span>
 

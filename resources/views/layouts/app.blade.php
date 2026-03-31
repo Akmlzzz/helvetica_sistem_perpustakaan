@@ -79,13 +79,13 @@
         @include('layouts.sidebar')
 
         <div class="flex-1 transition-all duration-300 ease-in-out" :class="{
-                'xl:ml-[90px]': true,
+                'xl:ml-[48px]': true,
                 'ml-0': $store.sidebar.isMobileOpen
             }">
             <!-- app header start -->
             @include('layouts.app-header')
             <!-- app header end -->
-            <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6 mt-[70px]">
+            <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6 mt-[47px]">
                 @yield('content')
             </div>
         </div>
