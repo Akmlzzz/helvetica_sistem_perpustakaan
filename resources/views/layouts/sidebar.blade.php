@@ -7,7 +7,7 @@
 @endphp
 
 <aside id="sidebar"
-    class="fixed flex flex-col top-[70px] px-4 left-0 bg-white dark:bg-[#052e25] dark:border-[#052e25] text-gray-900 h-[calc(100vh-70px)] transition-all duration-300 ease-in-out z-998 border-r border-gray-200"
+    class="fixed flex flex-col top-[70px] px-4 left-0 bg-white dark:bg-[#052e25] dark:border-[#052e25] text-gray-900 h-[calc(100vh-70px)] transition-all duration-150 ease-in-out z-998 border-r border-gray-200 overflow-x-hidden"
     :class="{
         'w-[270px]': $store.sidebar.isExpanded || $store.sidebar.isMobileOpen || $store.sidebar.isHovered,
         'w-[90px]': !$store.sidebar.isExpanded && !$store.sidebar.isHovered,
@@ -67,7 +67,7 @@
                                         <div x-data="{ expanded: false }"
                                             x-effect="expanded = isSubmenuOpen('{{ $groupIndex }}', {{ $itemIndex }})">
                                             <button @click.prevent="toggleSubmenu('{{ $groupIndex }}', {{ $itemIndex }})"
-                                                class="menu-item group w-full flex items-center justify-between py-2.5 font-medium transition-colors duration-200"
+                                                class="menu-item group w-full flex items-center justify-between py-2.5 font-medium transition-colors duration-200 whitespace-nowrap"
                                                 :class="isGroupActive({{ json_encode($item['subItems']) }}) ? 'text-[#004236] font-bold dark:text-white bg-[#F3F7EB] dark:bg-[#004236]/30 border-l-4 border-[#CEF17B] rounded-lg pl-3 pr-4' : 'text-gray-900 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg px-4'">
 
                                                 <div class="flex items-center gap-3">
@@ -105,7 +105,7 @@
                                                     @foreach ($item['subItems'] as $subItem)
                                                         <li>
                                                             <a href="{{ url($subItem['path']) }}"
-                                                                class="block py-2 pr-3 text-sm font-medium transition-colors hover:text-[#004236] dark:hover:text-white"
+                                                                class="block py-2 pr-3 text-sm font-medium transition-colors hover:text-[#004236] dark:hover:text-white whitespace-nowrap"
                                                                 :class="isActive('{{ $subItem['path'] }}') ? 'text-[#004236] font-bold dark:text-white bg-[#F3F7EB] dark:bg-[#004236]/30 border-l-[3px] border-[#CEF17B] rounded-lg pl-[13px]' : 'text-gray-500 dark:text-gray-400 pl-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800'">
                                                                 {{ $subItem['name'] }}
                                                             </a>
@@ -117,7 +117,7 @@
                                     @else
                                         <!-- Simple Menu Item -->
                                         <a href="{{ url($item['path']) }}"
-                                            class="menu-item group w-full flex items-center justify-between py-2.5 font-medium transition-colors duration-200"
+                                            class="menu-item group w-full flex items-center justify-between py-2.5 font-medium transition-colors duration-200 whitespace-nowrap"
                                             :class="isActive('{{ $item['path'] }}') ? 'text-[#004236] font-bold dark:text-white bg-[#F3F7EB] dark:bg-[#004236]/30 border-l-4 border-[#CEF17B] rounded-lg pl-3 pr-4' : 'text-gray-900 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg px-4'">
 
                                             <div class="flex items-center gap-3">
@@ -162,7 +162,7 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit"
-                class="flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-bold text-white transition-all bg-[#004236] rounded-xl hover:bg-[#00362b] shadow-lg hover:shadow-xl">
+                class="flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-bold text-white transition-all bg-[#004236] rounded-xl hover:bg-[#00362b] shadow-lg hover:shadow-xl whitespace-nowrap">
                 Log Out
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
