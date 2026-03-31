@@ -1,7 +1,30 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-col gap-6">
+<div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+    {{-- Skeleton Screen --}}
+    <div x-show="pageLoading" class="animate-pulse flex flex-col gap-6">
+        <div>
+            <div class="h-8 bg-gray-200 rounded w-48 mb-2"></div>
+            <div class="h-4 bg-gray-200 rounded w-64"></div>
+        </div>
+        <div class="rounded-2xl border border-gray-100 bg-white p-6">
+             <div class="h-6 w-48 bg-gray-200 mb-6 rounded"></div>
+             @for($i=0; $i<3; $i++)
+             <div class="flex gap-4 mb-6">
+                 <div class="h-24 w-16 bg-gray-200 rounded-lg"></div>
+                 <div class="flex-1 space-y-2 py-1">
+                     <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                     <div class="h-3 bg-gray-200 rounded w-1/4"></div>
+                 </div>
+             </div>
+             @endfor
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms>
+        <div class="flex flex-col gap-6">
 
         {{-- ===== ALERTS ===== --}}
         @if(session('success'))
@@ -309,4 +332,5 @@
         @endif
 
     </div>
+</div>
 @endsection

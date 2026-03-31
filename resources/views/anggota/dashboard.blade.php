@@ -1,7 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+<div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+    {{-- Skeleton Dashboard --}}
+    <div x-show="pageLoading" class="animate-pulse mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+        <div class="h-40 sm:h-56 md:h-72 w-full bg-gray-200 rounded-3xl mb-8"></div>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div>
+                <div class="h-8 bg-gray-200 rounded w-48 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-64"></div>
+            </div>
+        </div>
+        <div class="rounded-[20px] border border-gray-100 bg-white px-5 pb-5 pt-6 shadow-sm mb-6">
+            <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                <div class="h-12 bg-gray-200 rounded-lg flex-1"></div>
+                <div class="h-12 bg-gray-200 rounded-lg w-full sm:w-48"></div>
+                <div class="h-12 bg-gray-200 rounded-lg w-full sm:w-48"></div>
+                <div class="h-12 bg-gray-200 rounded-lg w-full sm:w-48"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                @for($i=0; $i<8; $i++)
+                <div class="flex flex-col rounded-xl border border-gray-100 bg-gray-50 overflow-hidden">
+                    <div class="aspect-2/3 w-full bg-gray-200 mb-3"></div>
+                    <div class="p-3">
+                        <div class="h-3 bg-gray-200 rounded w-1/3 mb-2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                        <div class="h-2 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                </div>
+                @endfor
+            </div>
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms>
+        <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
 
         {{-- Hero Carousel --}}
         <x-hero-carousel :banners="$banners" />
@@ -244,4 +278,7 @@
         });
     </script>
     @endpush
+        </div>
+    </div>
+</div>
 @endsection

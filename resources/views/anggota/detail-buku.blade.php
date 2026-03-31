@@ -3,7 +3,7 @@
 @section('content')
 <div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
     {{-- Skeleton Loading UI --}}
-    <div x-show="pageLoading" x-transition.opacity.duration.300ms class="animate-pulse">
+    <div x-show="pageLoading" class="animate-pulse">
         <div class="mb-4 flex items-center gap-2">
             <div class="h-4 bg-gray-200 rounded w-32"></div>
             <div class="h-4 bg-gray-200 rounded w-4"></div>
@@ -51,7 +51,7 @@
     <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms>
         {{-- Breadcrumb --}}
         <nav class="mb-4 flex items-center gap-2 text-sm text-gray-500">
-            class="hover:text-[#0f4c3a] transition-colors flex items-center gap-1 shrink-0">
+            <a href="{{ route('anggota.dashboard') }}" class="hover:text-[#0f4c3a] transition-colors flex items-center gap-1 shrink-0">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>

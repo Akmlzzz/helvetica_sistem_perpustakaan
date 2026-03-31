@@ -1,8 +1,32 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-270">
-        <div class="grid grid-cols-1 gap-9">
+<div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+    {{-- Skeleton Profile --}}
+    <div x-show="pageLoading" class="animate-pulse mx-auto max-w-270 grid grid-cols-1 gap-9">
+        <div class="rounded-sm border border-stroke bg-white p-6.5 shadow-default">
+            <div class="flex items-center gap-6 mb-6">
+                <div class="h-24 w-24 bg-gray-200 rounded-full shrink-0"></div>
+                <div class="h-10 w-48 bg-gray-200 rounded"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                <div class="h-16 bg-gray-200 rounded"></div>
+                <div class="h-16 bg-gray-200 rounded"></div>
+            </div>
+            <div class="h-24 bg-gray-200 rounded mb-6"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                <div class="h-16 bg-gray-200 rounded"></div>
+                <div class="h-16 bg-gray-200 rounded"></div>
+            </div>
+            <div class="h-16 bg-gray-200 rounded mb-6"></div>
+            <div class="h-12 bg-gray-200 rounded-xl"></div>
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms>
+        <div class="mx-auto max-w-270">
+            <div class="grid grid-cols-1 gap-9">
             <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div class="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                     <h3 class="font-medium text-black dark:text-white">
@@ -211,6 +235,8 @@
                 </button>
         </div>
     @endif
+    </div>
+</div>
 @endsection
 
 @push('scripts')

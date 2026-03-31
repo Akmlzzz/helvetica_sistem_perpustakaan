@@ -70,9 +70,7 @@
     };
     window.addEventListener('resize', checkMobile);" class="dark:bg-slate-950">
 
-    {{-- preloader --}}
-    <x-common.preloader />
-    {{-- preloader end --}}
+    {{-- preloader dihapus agar diganti dengan skeleton screen --}}
 
     <div class="min-h-screen xl:flex">
         @include('layouts.backdrop')

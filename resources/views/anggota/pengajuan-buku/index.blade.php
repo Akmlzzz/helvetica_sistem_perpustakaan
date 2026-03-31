@@ -1,7 +1,42 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+<div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+    {{-- Skeleton Screen --}}
+    <div x-show="pageLoading" class="animate-pulse mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+        <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 bg-gray-200 rounded-xl"></div>
+                <div>
+                    <div class="h-8 bg-gray-200 rounded w-48 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-64"></div>
+                </div>
+            </div>
+            <div class="h-10 w-40 bg-gray-200 rounded-xl"></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            @for($i=0; $i<4; $i++)
+            <div class="rounded-2xl bg-gray-50 border border-gray-100 p-5 flex items-center gap-4">
+                <div class="h-12 w-12 rounded-xl bg-gray-200"></div>
+                <div>
+                    <div class="h-4 bg-gray-200 rounded w-16 mb-2"></div>
+                    <div class="h-6 bg-gray-200 rounded w-10"></div>
+                </div>
+            </div>
+            @endfor
+        </div>
+        <div class="rounded-2xl border border-gray-100 bg-white overflow-hidden">
+            <div class="h-16 border-b border-gray-100 bg-gray-50"></div>
+            <div class="p-5 space-y-4">
+                @for($i=0; $i<3; $i++)
+                <div class="h-12 bg-gray-100 rounded w-full"></div>
+                @endfor
+            </div>
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
 
         {{-- ===== PAGE HEADER ===== --}}
         <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -276,4 +311,5 @@
             @endif
         </div>
     </div>
+</div>
 @endsection

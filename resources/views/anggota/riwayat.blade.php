@@ -1,7 +1,37 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+<div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+    {{-- Skeleton Riwayat --}}
+    <div x-show="pageLoading" class="animate-pulse mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+        <div class="h-10 bg-gray-200 rounded w-64 mb-2"></div>
+        <div class="h-4 bg-gray-200 rounded w-96 mb-8"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white h-32 rounded-3xl border border-gray-100 flex flex-col justify-center p-6">
+                <div class="h-8 w-16 bg-gray-200 rounded mb-2"></div><div class="h-4 w-24 bg-gray-200 rounded"></div>
+            </div>
+            <div class="bg-white h-32 rounded-3xl border border-gray-100 flex flex-col justify-center p-6">
+                <div class="h-8 w-16 bg-gray-200 rounded mb-2"></div><div class="h-4 w-24 bg-gray-200 rounded"></div>
+            </div>
+            <div class="bg-white h-32 rounded-3xl border border-gray-100 flex flex-col justify-center p-6">
+                <div class="h-8 w-24 bg-gray-200 rounded mb-2"></div><div class="h-4 w-24 bg-gray-200 rounded"></div>
+            </div>
+            <div class="bg-gray-200 h-32 rounded-3xl p-6"></div>
+        </div>
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div class="xl:col-span-2 space-y-6">
+                <div class="h-96 w-full bg-gray-200 rounded-2xl"></div>
+            </div>
+            <div class="xl:col-span-1 space-y-6">
+                <div class="h-48 w-full bg-gray-200 rounded-2xl"></div>
+                <div class="h-64 w-full bg-gray-200 rounded-2xl"></div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms>
+        <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
 
     {{-- Page Header --}}
     <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -321,6 +351,7 @@
             </div>
 
         </div>
+    </div>
     </div>
 </div>
 

@@ -1,7 +1,40 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="mx-auto max-w-screen-xl p-4 md:p-6 2xl:p-10">
+<div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+    {{-- Skeleton Screen --}}
+    <div x-show="pageLoading" class="animate-pulse mx-auto max-w-screen-xl p-4 md:p-6 2xl:p-10">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+            <div class="flex flex-col gap-6">
+                <div class="rounded-2xl border border-gray-100 bg-white overflow-hidden">
+                    <div class="h-20 bg-gray-200"></div>
+                </div>
+                <div class="rounded-2xl border border-gray-100 bg-white overflow-hidden">
+                    <div class="h-14 border-b border-gray-100 bg-gray-50"></div>
+                    <div class="p-6 space-y-5">
+                        <div class="h-6 w-3/4 bg-gray-200 rounded"></div>
+                        <div class="h-10 w-full bg-gray-100 rounded-xl"></div>
+                        <div class="h-6 w-1/2 bg-gray-200 rounded"></div>
+                        <div class="h-10 w-full bg-gray-100 rounded-xl"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-6">
+                <div class="rounded-2xl border border-gray-100 bg-white overflow-hidden">
+                    <div class="h-14 border-b border-gray-100 bg-gray-50"></div>
+                    <div class="p-6 space-y-5">
+                        <div class="h-6 w-1/2 bg-gray-200 rounded"></div>
+                        <div class="h-10 w-full bg-gray-100 rounded-xl"></div>
+                        <div class="h-6 w-1/3 bg-gray-200 rounded"></div>
+                        <div class="h-40 w-full bg-gray-100 rounded-xl"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms class="mx-auto max-w-screen-xl p-4 md:p-6 2xl:p-10">
 
         {{-- Alert Success - full width --}}
         @if(session('success'))
@@ -235,4 +268,5 @@
 
         </form>
     </div>
+</div>
 @endsection

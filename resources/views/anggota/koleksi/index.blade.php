@@ -4,6 +4,7 @@
 {{-- Wrap semua dalam satu Alpine component agar modal bisa diakses dari mana saja --}}
 <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10"
      x-data="{
+        pageLoading: true,
         showDeleteModal: false,
         deleteJudul: '',
         deleteUrl: '',
@@ -12,7 +13,33 @@
             this.deleteUrl = '/anggota/koleksi/' + idBuku;
             this.showDeleteModal = true;
         }
-     }">
+     }"
+     x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+     
+    {{-- Skeleton Screen Koleksi --}}
+    <div x-show="pageLoading" class="animate-pulse">
+        <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <div class="h-8 bg-gray-200 rounded w-64 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-96"></div>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            @for($i=0; $i<6; $i++)
+            <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
+                <div class="aspect-2/3 w-full bg-gray-200"></div>
+                <div class="p-2.5">
+                    <div class="h-3 w-1/3 bg-gray-200 rounded mb-2"></div>
+                    <div class="h-4 w-full bg-gray-200 rounded mb-1"></div>
+                    <div class="h-3 w-1/2 bg-gray-200 rounded"></div>
+                </div>
+            </div>
+            @endfor
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms>
 
     {{-- ===== MODAL HAPUS — dirender di sini (level atas, bukan di card) ===== --}}
     <div x-show="showDeleteModal" x-transition
@@ -149,5 +176,6 @@
             </a>
         </div>
     @endif
+    </div>
 </div>
 @endsection

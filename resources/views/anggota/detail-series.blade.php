@@ -1,7 +1,50 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- Breadcrumb --}}
+<div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+    {{-- Skeleton Detail Series --}}
+    <div x-show="pageLoading" class="animate-pulse">
+        {{-- Breadcrumb skeleton --}}
+        <div class="h-4 w-48 bg-gray-200 rounded mb-4"></div>
+        
+        {{-- Main Card Skeleton --}}
+        <div class="rounded-2xl border border-gray-200 bg-white mb-8 overflow-hidden">
+            <div class="flex flex-col md:flex-row h-full">
+                <div class="w-full md:w-64 xl:w-72 bg-gray-200 h-64 md:h-96 shrink-0"></div>
+                <div class="flex-1 p-4 sm:p-6 xl:p-8">
+                    <div class="flex gap-2 mb-3">
+                        <div class="h-6 w-24 bg-gray-200 rounded-full"></div>
+                        <div class="h-6 w-32 bg-gray-200 rounded-full"></div>
+                    </div>
+                    <div class="h-8 md:h-10 w-3/4 bg-gray-200 rounded mb-6"></div>
+                    <div class="h-5 w-32 bg-gray-200 rounded mb-3"></div>
+                    <div class="space-y-2">
+                        <div class="h-4 w-full bg-gray-200 rounded"></div>
+                        <div class="h-4 w-full bg-gray-200 rounded"></div>
+                        <div class="h-4 w-5/6 bg-gray-200 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Daftar Buku Skeleton --}}
+        <div class="h-6 w-64 bg-gray-200 rounded mb-4"></div>
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            @for($i=0; $i<6; $i++)
+            <div class="rounded-xl border border-gray-200 bg-white overflow-hidden">
+                <div class="aspect-2/3 w-full bg-gray-200"></div>
+                <div class="p-3">
+                    <div class="h-4 w-full bg-gray-200 rounded mb-2"></div>
+                    <div class="h-3 w-1/2 bg-gray-200 rounded"></div>
+                </div>
+            </div>
+            @endfor
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms>
+        {{-- Breadcrumb --}}
     <nav class="mb-4 flex items-center gap-2 text-sm text-gray-500">
         <a href="{{ route('anggota.dashboard') }}"
             class="hover:text-[#0f4c3a] transition-colors flex items-center gap-1 shrink-0">
@@ -167,4 +210,6 @@
             </div>
         @endif
     </div>
+    </div>
+</div>
 @endsection

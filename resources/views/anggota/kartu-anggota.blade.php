@@ -3,7 +3,33 @@
 @section('title', 'Kartu Anggota')
 
 @section('content')
-    <div class="space-y-6">
+<div x-data="{ pageLoading: true }" x-init="window.addEventListener('load', () => setTimeout(() => pageLoading = false, 300))">
+    {{-- Skeleton Screen --}}
+    <div x-show="pageLoading" class="animate-pulse space-y-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="h-8 bg-gray-200 rounded w-48 mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-64"></div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <div class="flex justify-center">
+                <div class="h-64 w-full max-w-md bg-gray-200 rounded-2xl"></div>
+            </div>
+            <div class="bg-gray-50 rounded-xl border border-gray-100 p-6 h-full">
+                <div class="h-6 bg-gray-200 rounded w-48 mb-6"></div>
+                <div class="space-y-4">
+                    <div class="h-4 bg-gray-200 rounded w-full"></div>
+                    <div class="h-4 bg-gray-200 rounded w-full"></div>
+                    <div class="h-4 bg-gray-200 rounded w-full"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Main Content --}}
+    <div x-show="!pageLoading" style="display: none;" x-transition.opacity.duration.500ms>
+        <div class="space-y-6">
         <!-- Header -->
         <div class="flex items-center justify-between">
             <div>
@@ -77,4 +103,5 @@
 
         </div>
     </div>
+</div>
 @endsection
