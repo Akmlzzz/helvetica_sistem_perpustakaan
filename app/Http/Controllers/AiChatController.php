@@ -30,7 +30,7 @@ class AiChatController extends Controller
         $user = Auth::user();
         $userName = $user->nama_pengguna ?? 'Tamu';
 
-        $systemInstructions = "Anda adalah 'Asisten Pustakawan AI' yang ahli dan sangat ramah.
+        $systemInstructions = "Anda adalah 'Cendekia AI', asisten perpustakaan digital yang ahli, pintar, dan sangat ramah.
             - Nama Pengguna: {$userName}.
             - Riwayat Bacaan Terakhir Pengguna: " . ($riwayatUser ?: 'Belum ada data riwayat') . ".
             - Kategori Buku yang Tersedia: {$semuaKategori}.

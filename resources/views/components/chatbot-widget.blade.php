@@ -1,7 +1,7 @@
 <div x-data="{ 
     open: false, 
     messages: [
-        { role: 'ai', text: 'Halo! Saya Pustakawan AI. Ada yang bisa saya bantu hari ini?' }
+        { role: 'ai', text: 'Hai! 👋 Kenalin, aku Cendekia-mu. Mau cari referensi atau sekadar tanya-tanya santai?' }
     ],
     userInput: '',
     loading: false,
@@ -46,7 +46,6 @@
             });
         }
     }
-    }
 }" class="fixed bottom-6 right-6 z-999999 flex flex-col items-end gap-3">
 
     <!-- Text Label Above Widget -->
@@ -58,7 +57,7 @@
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-[#004236]"></span>
         </span>
-        Cendikia AI
+        Cendekia AI
     </div>
 
     <!-- Floating Bubble Button -->
@@ -98,7 +97,7 @@
                         class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#004236] bg-green-400"></span>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold">Cendikia AI</h4>
+                    <h4 class="text-sm font-bold">Cendekia AI</h4>
                     <p class="text-[10px] text-white/70">Gemini 2.5 Flash &bull;</p>
                 </div>
             </div>
