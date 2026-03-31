@@ -46,16 +46,25 @@
             });
         }
     }
-}" class="fixed bottom-6 right-6 z-999999">
+    }
+}" class="fixed bottom-6 right-6 z-999999 flex flex-col items-end gap-3">
+
+    <!-- Text Label Above Widget -->
+    <div x-show="!open" x-transition.duration.300ms
+        class="rounded-full bg-white px-4 py-2.5 text-xs font-bold text-[#004236] shadow-xl border border-gray-100 flex items-center gap-2 cursor-pointer hover:bg-gray-50 hover:-translate-y-1 transition-all"
+        style="box-shadow: 0 4px 20px -5px rgba(0, 66, 54, 0.15);"
+        @click="open = true">
+        <span class="flex h-2 w-2 relative">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-[#004236]"></span>
+        </span>
+        Cendikia AI
+    </div>
 
     <!-- Floating Bubble Button -->
     <button @click="open = !open"
         class="group flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-[#004236] to-[#00644f] text-white shadow-xl transition-all duration-300 hover:scale-110 active:scale-95">
-        <svg x-show="!open" class="h-8 w-8 transition-all group-hover:rotate-12" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-        </svg>
+        <img x-show="!open" src="{{ asset('img/logo-ai.svg') }}" alt="AI Logo" class="h-5 w-auto object-contain transition-all group-hover:scale-110" />
         <svg x-show="open" class="h-7 w-7 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24"
             style="display: none;">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -83,16 +92,13 @@
             <div class="flex items-center gap-3">
                 <div class="relative">
                     <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg>
+                        <img src="{{ asset('img/logo-ai.svg') }}" alt="AI" class="h-4 w-auto object-contain" />
                     </div>
                     <span
                         class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-[#004236] bg-green-400"></span>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold">Pustakawan AI</h4>
+                    <h4 class="text-sm font-bold">Cendikia AI</h4>
                     <p class="text-[10px] text-white/70">Gemini 2.5 Flash &bull;</p>
                 </div>
             </div>
@@ -105,10 +111,7 @@
                     <!-- AI Icon -->
                     <div x-show="msg.role === 'ai'"
                         class="mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#004236]/10 text-[#004236]">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 0a12.022 12.022 0 01-1.012 5.034" />
-                        </svg>
+                        <img src="{{ asset('img/logo-ai.svg') }}" alt="AI" class="h-3 w-auto object-contain" />
                     </div>
 
                     <!-- Bubble Text -->
