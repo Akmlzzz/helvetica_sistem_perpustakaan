@@ -259,67 +259,69 @@
                             </button>
 
                             {{-- Confirm Modal --}}
-                            <div x-show="showConfirm" x-transition
-                                class="fixed inset-0 z-999 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
-                                style="display: none;">
-                                <div @click.outside="showConfirm = false"
-                                    class="w-full max-w-md rounded-2xl bg-white p-6 sm:p-8 shadow-2xl">
-                                    <div class="mb-6 text-center">
-                                        <div
-                                            class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#e8f4f0]">
-                                            <svg class="h-7 w-7 text-[#0f4c3a]" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-                                            </svg>
+                            <template x-teleport="body">
+                                <div x-show="showConfirm" x-transition
+                                    class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+                                    style="display: none;">
+                                    <div @click.outside="showConfirm = false"
+                                        class="w-full max-w-md rounded-2xl bg-white p-6 sm:p-8 shadow-2xl">
+                                        <div class="mb-6 text-center">
+                                            <div
+                                                class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#e8f4f0]">
+                                                <svg class="h-7 w-7 text-[#0f4c3a]" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                                                </svg>
+                                            </div>
+                                            <h3 class="text-xl font-bold text-black mb-1">Konfirmasi Peminjaman</h3>
+                                            <p class="text-gray-500 text-sm">Pastikan data peminjaman sudah benar</p>
                                         </div>
-                                        <h3 class="text-xl font-bold text-black mb-1">Konfirmasi Peminjaman</h3>
-                                        <p class="text-gray-500 text-sm">Pastikan data peminjaman sudah benar</p>
+
+                                        <div class="mb-6 rounded-xl bg-gray-50 p-4 space-y-2">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <span class="text-sm text-gray-500 shrink-0">Buku:</span>
+                                                <span
+                                                    class="text-sm font-semibold text-black text-right">{{ $buku->judul_buku }}</span>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm text-gray-500">Durasi:</span>
+                                                <span class="text-sm font-semibold text-[#0f4c3a]" x-text="durasi + ' hari'"></span>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-sm text-gray-500">Jatuh Tempo:</span>
+                                                <span class="text-sm font-semibold text-[#0f4c3a]" id="confirm-jatuh-tempo">-</span>
+                                            </div>
+                                        </div>
+
+                                        <form action="{{ route('anggota.booking.store') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="id_buku" value="{{ $buku->id_buku }}">
+                                            <input type="hidden" name="durasi_pinjam" x-model="durasi">
+                                            <div class="flex gap-3">
+                                                <button type="button" @click="showConfirm = false"
+                                                    class="flex-1 rounded-xl border border-gray-300 py-3 font-medium text-gray-700 hover:bg-gray-50 transition drop-shadow-sm">
+                                                    Batal
+                                                </button>
+                                                <button type="submit"
+                                                    class="flex-1 rounded-xl bg-[#0f4c3a] py-3 font-bold text-white hover:bg-[#0a382b] transition drop-shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    x-bind:disabled="isSubmitting">
+                                                    
+                                                    <span x-show="!isSubmitting">Ya, Pinjam!</span>
+                                                    <span x-show="isSubmitting" class="flex flex-row items-center justify-center gap-2" x-cloak>
+                                                        <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                        </svg>
+                                                        Memproses...
+                                                    </span>
+
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
-
-                                    <div class="mb-6 rounded-xl bg-gray-50 p-4 space-y-2">
-                                        <div class="flex items-start justify-between gap-2">
-                                            <span class="text-sm text-gray-500 shrink-0">Buku:</span>
-                                            <span
-                                                class="text-sm font-semibold text-black text-right">{{ $buku->judul_buku }}</span>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-500">Durasi:</span>
-                                            <span class="text-sm font-semibold text-[#0f4c3a]" x-text="durasi + ' hari'"></span>
-                                        </div>
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-gray-500">Jatuh Tempo:</span>
-                                            <span class="text-sm font-semibold text-[#0f4c3a]" id="confirm-jatuh-tempo">-</span>
-                                        </div>
-                                    </div>
-
-                                    <form action="{{ route('anggota.booking.store') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="id_buku" value="{{ $buku->id_buku }}">
-                                        <input type="hidden" name="durasi_pinjam" x-model="durasi">
-                                        <div class="flex gap-3">
-                                            <button type="button" @click="showConfirm = false"
-                                                class="flex-1 rounded-xl border border-gray-300 py-3 font-medium text-gray-700 hover:bg-gray-50 transition drop-shadow-sm">
-                                                Batal
-                                            </button>
-                                            <button type="submit"
-                                                class="flex-1 rounded-xl bg-[#0f4c3a] py-3 font-bold text-white hover:bg-[#0a382b] transition drop-shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                                x-bind:disabled="isSubmitting">
-                                                
-                                                <span x-show="!isSubmitting">Ya, Pinjam!</span>
-                                                <span x-show="isSubmitting" class="flex flex-row items-center justify-center gap-2" x-cloak>
-                                                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                    </svg>
-                                                    Memproses...
-                                                </span>
-
-                                            </button>
-                                        </div>
-                                    </form>
                                 </div>
-                            </div>
+                            </template>
                         </div>
 
                         <script>
