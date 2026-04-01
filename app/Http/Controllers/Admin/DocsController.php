@@ -79,28 +79,59 @@ class DocsController extends Controller
             }
         }
         
-        $customOrder = [
-            'introduction',
-            'logika-autentikasi-akses',
-            'manajemen-pengguna',
-            'manajemen-buku',
-            'logika-peminjaman-pengembalian',
-            'logika-pembayaran-denda',
-            'logika-koleksi-ulasan',
-            'fitur-ai-chatbot'
+        $sectionMap = [
+            'Panduan Sistem' => [
+                'introduction',
+                'logika-autentikasi-akses',
+                'fitur-dashboard-profil',
+                'manajemen-pengguna',
+            ],
+            'Manajemen Koleksi' => [
+                'manajemen-buku',
+            ],
+            'Sirkulasi & Transaksi' => [
+                'logika-peminjaman-pengembalian',
+                'fitur-perpanjangan-pinjaman',
+                'logika-pembayaran-denda',
+            ],
+            'Fitur Anggota' => [
+                'logika-koleksi-ulasan',
+                'fitur-kartu-anggota-digital',
+                'fitur-pengajuan-buku',
+            ],
+            'Fitur Admin & Lanjutan' => [
+                'fitur-laporan-export',
+                'fitur-banner-music-player',
+                'fitur-ai-chatbot',
+                'fitur-autosync-google-sheets',
+            ],
         ];
 
-        usort($nav, function ($a, $b) use ($customOrder) {
-            $posA = array_search($a['slug'], $customOrder);
-            $posB = array_search($b['slug'], $customOrder);            
-            $posA = $posA === false ? 999 : $posA;
-            $posB = $posB === false ? 999 : $posB;
-            
-            return $posA <=> $posB;
-        });
+        $navBySections = [];
+        $mappedSlugs = [];
 
-        return [
-            'Panduan Utama' => $nav
-        ];
+        foreach ($sectionMap as $sectionTitle => $slugs) {
+            $sectionItems = [];
+            foreach ($slugs as $slug) {
+                foreach ($nav as $item) {
+                    if ($item['slug'] === $slug) {
+                        $sectionItems[] = $item;
+                        $mappedSlugs[] = $slug;
+                        break;
+                    }
+                }
+            }
+            if (!empty($sectionItems)) {
+                $navBySections[$sectionTitle] = $sectionItems;
+            }
+        }
+
+        // Tampung dokumen yang tidak masuk ke section manapun
+        $unmapped = array_filter($nav, fn($item) => !in_array($item['slug'], $mappedSlugs));
+        if (!empty($unmapped)) {
+            $navBySections['Lainnya'] = array_values($unmapped);
+        }
+
+        return $navBySections;
     }
 }
