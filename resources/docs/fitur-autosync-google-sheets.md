@@ -1,102 +1,78 @@
-# Auto-Sync Reporting (Integrasi Google Sheets)
+# Auto-Sync Reporting (Integrasi Google Sheets via Make.com)
 
-Fitur **Auto-Sync Reporting** adalah integrasi otomatis antara Sistem Perpustakaan Digital Biblio dengan **Google Sheets** yang memungkinkan laporan transaksi perpustakaan tersinkronisasi secara real-time atau terjadwal ke dalam spreadsheet Google milik administrator, tanpa perlu proses export manual.
+Fitur **Auto-Sync Reporting** adalah integrasi otomatis antara Sistem Perpustakaan Digital Biblio dengan **Google Sheets** menggunakan platform otomatisasi **Make.com** (dahulu Integromat). Fitur ini memungkinkan data transaksi dan koleksi tersinkronisasi secara real-time ke spreadsheet tanpa perlu export manual.
 
-## 1. Konsep & Manfaat
+## 1. Alur Kerja (Workflow Make.com)
 
-Daripada harus download Excel setiap hari untuk memantau aktivitas, Admin dapat menghubungkan sistem ke Google Sheets sehingga data selalu up-to-date secara otomatis. Spreadsheet ini kemudian bisa:
-- Dibagikan ke kepala perpustakaan via link (tanpa perlu login ke sistem).
-- Diolah lebih lanjut menggunakan formula/pivot table Google Sheets.
-- Dikoneksikan ke Google Looker Studio untuk visualisasi laporan yang lebih kaya.
+Sistem menggunakan arsitektur berbasis **Webhook** yang dikirim dari aplikasi Biblio ke skenario di Make.com. Berikut adalah representasi alur kerjanya:
 
----
-
-## 2. Cara Kerja (Arsitektur)
-
-```
-Sistem Biblio (Laravel)
-        ↓  [Triggered by Event / Scheduled Job]
-Google Sheets API (via Service Account)
-        ↓
-Spreadsheet Google milik Admin ter-update otomatis
+```mermaid
+graph LR
+    A[Sistem Biblio] -->|Kirim JSON via Webhook| B(Make.com Webhooks)
+    B --> C{Router}
+    C -->|Filter: Peminjaman| D[Add Row to Google Sheets: Sheet Peminjaman]
+    C -->|Filter: Buku| E[Add Row to Google Sheets: Sheet Koleksi]
 ```
 
-Sistem menggunakan **Google Sheets API v4** dengan autentikasi menggunakan **Service Account** (bukan OAuth user). Service Account adalah akun bot yang diberikan izin menulis ke spreadsheet tertentu tanpa harus login secara interaktif.
+### Komponen Skenario di Make.com:
+1.  **Custom Webhook**: Bertindak sebagai pintu masuk (entry point) data dari aplikasi.
+2.  **Router**: Memisahkan alur logika data berdasarkan tipe data yang dikirim (apakah itu data transaksi peminjaman atau data buku baru).
+3.  **Filters**: 
+    - `Filter Peminjaman`: Memastikan data hanya diteruskan jika berisi payload transaksi.
+    - `Filter Buku`: Memastikan data hanya diteruskan jika berisi payload informasi buku.
+4.  **Google Sheets (Add a Row)**: Modul akhir yang menulis data secara otomatis ke baris baru pada spreadsheet yang telah ditentukan.
 
 ---
 
-## 3. Setup Integrasi (Konfigurasi Satu Kali)
+## 2. Cara Kerja Integrasi
 
-### Langkah 1: Buat Service Account di Google Cloud
-1. Buka [Google Cloud Console](https://console.cloud.google.com).
-2. Buat Project baru → aktifkan **Google Sheets API**.
-3. Buat **Service Account** → download file kunci JSON (credential).
-4. Salin email service account (format: `nama@project.iam.gserviceaccount.com`).
-
-### Langkah 2: Siapkan Spreadsheet
-1. Buat Google Spreadsheet baru.
-2. **Share** spreadsheet tersebut ke email Service Account dengan izin **Editor**.
-3. Catat **Spreadsheet ID** dari URL: `https://docs.google.com/spreadsheets/d/[SPREADSHEET_ID]/edit`.
-
-### Langkah 3: Konfigurasi .env
-Masukkan konfigurasi berikut ke file `.env`:
-
-```dotenv
-GOOGLE_SERVICE_ACCOUNT_JSON=/path/ke/credentials.json
-GOOGLE_SHEETS_SPREADSHEET_ID=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms
-```
-
----
-
-## 4. Data yang Disinkronisasi
-
-Sinkronisasi menulis ke beberapa **Sheet (tab)** dalam satu Spreadsheet:
-
-| Nama Sheet | Data yang Ditulis | Frekuensi Sync |
-|---|---|---|
-| `Peminjaman` | Semua record peminjaman aktif & histori | Setiap ada transaksi baru |
-| `Denda` | Semua record denda beserta statusnya | Setiap ada perubahan status denda |
-| `Anggota` | Daftar anggota aktif | Harian (setiap tengah malam) |
-| `Ringkasan` | Statistik agregat (total buku, anggota, dll.) | Setiap jam |
-
----
-
-## 5. Mekanisme Sync: Event vs Scheduled
-
-Sistem mendukung dua metode sinkronisasi:
-
-### a. Event-based (Real-time Sync)
-Setiap kali ada transaksi penting (peminjaman baru, denda lunas, dll.), sistem menembakkan sebuah Laravel **Event** yang didengarkan oleh **Listener** yang bertugas menulis ke Google Sheets.
+### Trigger dari Laravel (Aplikasi Biblio)
+Setiap kali terjadi aksi penting (seperti peminjaman baru dikonfirmasi atau buku baru ditambahkan), aplikasi akan mengirimkan permintaan HTTP POST (Webhook) ke URL yang diberikan oleh Make.com.
 
 ```php
-// Contoh: setelah denda lunas, otomatis update Sheet
-event(new DendaLunas($denda));
-
-// Listener: App\Listeners\SyncDendaToSheets
-public function handle(DendaLunas $event)
+// Contoh Trigger Webhook di Controller
+public function syncToMake($data, $type)
 {
-    GoogleSheetsService::updateRow('Denda', $event->denda);
+    Http::post(config('services.make_webhook_url'), [
+        'type' => $type,
+        'data' => $data,
+        'timestamp' => now()->toDateTimeString()
+    ]);
 }
 ```
 
-### b. Scheduled Job (Sinkronisasi Terjadwal)
-Untuk sinkronisasi massal harian/jamuan, sistem menggunakan Laravel **Scheduler** yang berjalan via cronjob server.
+---
 
-```php
-// routes/console.php
-Schedule::command('sheets:sync-all')->daily()->at('23:59');
-Schedule::command('sheets:sync-ringkasan')->hourly();
+## 3. Konfigurasi Sistem
+
+### Langkah 1: Setup di Make.com
+1.  Buat skenario baru di [Make.com](https://www.make.com).
+2.  Tambahkan modul **Webhooks** -> **Custom Webhook**.
+3.  Salin URL Webhook yang muncul (contoh: `https://hook.us1.make.com/xxxxxx`).
+4.  Gunakan **Router** untuk membagi jalur ke dua modul **Google Sheets**.
+5.  Atur **Filter** pada masing-masing jalur (misalnya: `type Equal to 'peminjaman'`).
+
+### Langkah 2: Konfigurasi di Aplikasi (.env)
+Pastikan URL Webhook dari Make.com sudah dimasukkan ke dalam file `.env` aplikasi Biblio:
+
+```dotenv
+MAKE_WEBHOOK_URL=https://hook.us1.make.com/xxxxxx
 ```
-
-> **Perlu Konfigurasi Server:** Pastikan cronjob `* * * * * php /path/to/artisan schedule:run` sudah aktif di server hosting/VPS agar Schedule berjalan otomatis.
 
 ---
 
-## 6. Troubleshooting Umum
+## 4. Keuntungan Menggunakan Make.com
 
-| Masalah | Kemungkinan Penyebab | Solusi |
+-   **Tanpa Coding API Yang Rumit**: Tidak perlu mengelola library Google SDK yang berat di dalam server.
+-   **Visualisasi Alur**: Admin dapat melihat secara visual log data yang masuk dan di mana terjadi kegagalan (jika ada).
+-   **Fleksibilitas**: Jika ingin menambah integrasi lain (misal: kirim notifikasi Telegram saat denda lunas), cukup tambah modul baru di Make.com tanpa mengubah kode di aplikasi utama.
+
+---
+
+## 5. Troubleshooting Sync
+
+| Gejala | Penyebab Umum | Solusi |
 |---|---|---|
-| Data tidak muncul di Sheet | Service Account belum di-share ke Spreadsheet | Share ulang spreadsheet ke email SA dengan izin Editor |
-| Error "403 Forbidden" | Spreadsheet ID salah atau API belum diaktifkan | Cek `GOOGLE_SHEETS_SPREADSHEET_ID` di `.env` |
-| Sync tidak berjalan otomatis | Cronjob tidak aktif di server | Jalankan `php artisan schedule:run` manual, atau periksa konfigurasi cron |
-| Credential file tidak ditemukan | Path di `.env` salah | Pastikan path file JSON mutlak dan dapat dibaca Laravel |
+| Data tidak masuk ke Sheets | Webhook di Make.com belum status "Scheduling: ON" | Pastikan skenario sudah diaktifkan (ON) di dashboard Make.com. |
+| Data masuk ke jalur yang salah | Pengaturan filter pada Router kurang tepat | Cek field `type` yang dikirim dari aplikasi dan sesuaikan dengan filter di Router. |
+| Error 404/500 saat kirim data | URL Webhook di `.env` salah atau expired | Ganti URL Webhook di `.env` dengan URL terbaru dari Make.com. |
