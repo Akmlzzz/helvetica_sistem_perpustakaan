@@ -11,19 +11,56 @@
                 <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
         </div>
-        <div class="p-4 overflow-y-auto grow docs-nav bg-transparent" id="sidebar-nav">
+        <div class="py-3 overflow-y-auto grow docs-nav bg-transparent" id="sidebar-nav">
             @foreach($navigation as $category => $items)
-                <div class="mb-6">
-                    <h3 class="text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-3 mb-3">{{ $category }}</h3>
-                    <ul class="space-y-1">
-                        @foreach($items as $item)
-                        <li>
-                            <a href="{{ route('admin.docs.show', $item['slug']) }}" class="block px-3 py-2.5 text-sm rounded-xl transition-all duration-200 {{ $slug === $item['slug'] ? 'bg-[#004236] text-[#CEF17B] font-medium shadow-md' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800/50 hover:text-gray-900 dark:hover:text-gray-200' }}">
-                                {{ $item['title'] }}
-                            </a>
-                        </li>
-                        @endforeach
-                    </ul>
+                @php
+                    $isGroupActive = collect($items)->contains('slug', $slug);
+                @endphp
+                <div class="mb-1"
+                     x-data="{ open: {{ $isGroupActive ? 'true' : 'false' }} }">
+
+                    {{-- Group header / dropdown trigger --}}
+                    <button @click="open = !open"
+                            class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-left group transition-all duration-200
+                                   {{ $isGroupActive ? 'text-[#004236] dark:text-[#CEF17B]' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300' }}">
+                        <span class="text-[11px] font-bold uppercase tracking-widest">{{ $category }}</span>
+                        <svg class="w-3.5 h-3.5 transition-transform duration-300 shrink-0"
+                             :class="open ? 'rotate-180' : 'rotate-0'"
+                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    {{-- Sub-menu items with slide animation --}}
+                    <div x-show="open"
+                         x-transition:enter="transition-all duration-300 ease-out"
+                         x-transition:enter-start="max-h-0 opacity-0"
+                         x-transition:enter-end="max-h-96 opacity-100"
+                         x-transition:leave="transition-all duration-200 ease-in"
+                         x-transition:leave-start="max-h-96 opacity-100"
+                         x-transition:leave-end="max-h-0 opacity-0"
+                         class="overflow-hidden">
+                        <ul class="mt-1 mb-2 ml-2 space-y-0.5 border-l-2 border-gray-200 dark:border-slate-700 pl-3">
+                            @foreach($items as $item)
+                            <li>
+                                <a href="{{ route('admin.docs.show', $item['slug']) }}"
+                                   class="block px-3 py-2 text-sm rounded-lg transition-all duration-150
+                                          {{ $slug === $item['slug']
+                                              ? 'bg-[#004236] text-[#CEF17B] font-semibold shadow-sm'
+                                              : 'text-gray-600 dark:text-gray-400 hover:bg-[#004236]/10 dark:hover:bg-slate-800/60 hover:text-[#004236] dark:hover:text-[#CEF17B]' }}">
+                                    <span class="flex items-center gap-2">
+                                        @if($slug === $item['slug'])
+                                            <span class="w-1.5 h-1.5 rounded-full bg-[#CEF17B] shrink-0"></span>
+                                        @else
+                                            <span class="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-slate-600 shrink-0"></span>
+                                        @endif
+                                        {{ $item['title'] }}
+                                    </span>
+                                </a>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
             @endforeach
         </div>
