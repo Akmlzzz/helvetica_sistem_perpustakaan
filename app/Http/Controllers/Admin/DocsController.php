@@ -79,12 +79,20 @@ class DocsController extends Controller
             }
         }
         
-        $customOrder = ['introduction', 'manajemen-buku', 'logika-denda', 'manajemen-pengguna'];
-        
+        $customOrder = [
+            'introduction',
+            'logika-autentikasi-akses',
+            'manajemen-pengguna',
+            'manajemen-buku',
+            'logika-peminjaman-pengembalian',
+            'logika-pembayaran-denda',
+            'logika-koleksi-ulasan',
+            'fitur-ai-chatbot'
+        ];
+
         usort($nav, function ($a, $b) use ($customOrder) {
             $posA = array_search($a['slug'], $customOrder);
-            $posB = array_search($b['slug'], $customOrder);
-            
+            $posB = array_search($b['slug'], $customOrder);            
             $posA = $posA === false ? 999 : $posA;
             $posB = $posB === false ? 999 : $posB;
             

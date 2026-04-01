@@ -1,4 +1,4 @@
-# Logika Denda Otomatis
+# Logika Pembayaran & Denda Otomatis
 
 Dokumen ini menjelaskan secara lengkap cara sistem Biblio menghitung dan memproses denda keterlambatan pengembalian buku.
 
