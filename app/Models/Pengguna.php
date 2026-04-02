@@ -85,7 +85,23 @@ class Pengguna extends Authenticatable implements CanResetPassword
         return $this->hakAkses->pluck('fitur');
     }
 
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === 'rejected';
+    }
+
     // ----------- Relationships -----------
+
 
     public function anggota()
     {
