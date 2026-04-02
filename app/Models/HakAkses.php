@@ -61,6 +61,12 @@ class HakAkses extends Model
                 'icon' => 'tag',
                 'warna' => 'purple',
             ],
+            'musik_player' => [
+                'label' => 'Musik Player',
+                'deskripsi' => 'Mengontrol fungsionalitas pemutar musik di platform',
+                'icon' => 'tag',
+                'warna' => 'green',
+            ],
         ];
     }
 
