@@ -49,6 +49,12 @@ class HakAkses extends Model
                 'icon' => 'report',
                 'warna' => 'orange',
             ],
+            'series_buku' => [
+                'label' => 'Series Buku',
+                'deskripsi' => 'Mengelola pengelompokan buku dalam satu series',
+                'icon' => 'book',
+                'warna' => 'blue',
+            ],
         ];
     }
 
