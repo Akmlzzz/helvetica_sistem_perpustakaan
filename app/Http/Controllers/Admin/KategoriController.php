@@ -32,7 +32,7 @@ class KategoriController extends Controller
             $query->orderBy('dibuat_pada', 'desc');
         }
 
-        $kategori = $query->get();
+        $kategori = $query->paginate(10)->withQueryString();
         return view('admin.kategori.kategori', compact('kategori'));
     }
 

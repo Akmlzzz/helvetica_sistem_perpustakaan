@@ -220,6 +220,8 @@
                             </div>
                         @endforelse
                     </div>
+                <div class="mt-4 px-6.5 pb-4">
+                    {{ $kategori->links() }}
                 </div>
             </div>
         </div>
