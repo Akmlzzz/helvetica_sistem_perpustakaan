@@ -55,6 +55,12 @@ class HakAkses extends Model
                 'icon' => 'book',
                 'warna' => 'blue',
             ],
+            'hero_banner' => [
+                'label' => 'Hero Banner',
+                'deskripsi' => 'Kelola banner utama di halaman depan / landing page',
+                'icon' => 'tag',
+                'warna' => 'purple',
+            ],
         ];
     }
 
