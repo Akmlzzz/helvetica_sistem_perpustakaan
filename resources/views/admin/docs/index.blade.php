@@ -99,6 +99,16 @@
 @endsection
 
 @push('scripts')
+<!-- Mermaid.js for diagrams -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ 
+        startOnLoad: true,
+        theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+        securityLevel: 'loose',
+        flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+    });
+</script>
 <script>
     // Search functionality for docs sidebar
     document.getElementById('search-docs').addEventListener('input', function(e) {
@@ -191,8 +201,11 @@
                 // Update URL di browser
                 history.pushState({}, '', url);
 
-                // Setup ulang observer & scroll spy
+                // Setup ulang observer & scroll spy & Mermaid
                 initTOC();
+                if (typeof mermaid !== 'undefined') {
+                    mermaid.run();
+                }
 
                 // Pastikan filter dari input text box apply ulang jika ada text
                 document.getElementById('search-docs').dispatchEvent(new Event('input'));
@@ -218,11 +231,15 @@
 .prose ul { padding-left: 1.5em; list-style-type: disc; margin-top: 1em; margin-bottom: 1em; }
 .prose ol { padding-left: 1.5em; list-style-type: decimal; margin-top: 1em; margin-bottom: 1em; }
 .prose li { margin-top: 0.375em; margin-bottom: 0.375em; }
-.prose table { width: 100%; text-align: left; margin-top: 2em; margin-bottom: 2em; font-size: 0.875rem; line-height: 1.5; border-collapse: collapse; overflow-x: auto; display: block;}
-.prose thead { color: #111827; font-weight: 600; border-bottom: 2px solid #e5e7eb; background-color: #f9fafb; }
-.prose thead th { padding: 0.75rem 1rem; white-space: nowrap; }
+.prose table { width: 100%; text-align: left; margin-top: 2em; margin-bottom: 2em; font-size: 0.875rem; line-height: 1.5; border-collapse: collapse; overflow: hidden; border-radius: 0.5rem; border: 1px solid #e5e7eb; }
+.prose thead { color: #111827; font-weight: 600; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb; }
+.prose thead th { padding: 0.75rem 1rem; white-space: nowrap; border-right: 1px solid #e5e7eb; }
+.prose thead th:last-child { border-right: none; }
 .prose tbody tr { border-bottom: 1px solid #e5e7eb; }
-.prose tbody td { padding: 0.75rem 1rem; color: #4b5563; }
+.prose tbody tr:last-child { border-bottom: none; }
+.prose tbody td { padding: 0.75rem 1rem; color: #4b5563; border-right: 1px solid #e5e7eb; }
+.prose tbody td:last-child { border-right: none; }
+.prose tbody tr:nth-child(even) { background-color: #fcfcfd; }
 .prose blockquote { border-left-width: 4px; border-color: #004236; padding: 1rem 1.25rem; font-style: normal; color: #4b5563; background-color: #F3F7EB; border-radius: 0 0.5rem 0.5rem 0; margin: 1.5rem 0;}
 .prose blockquote p { margin: 0;}
 .prose blockquote strong { color: #004236; }
@@ -236,10 +253,12 @@
 .dark .prose { color: #d1d5db; }
 .dark .prose h1, .dark .prose h2, .dark .prose h3 { color: #f3f4f6; }
 .dark .prose h2 { border-color: #374151; }
-.dark .prose table { display: table; }
-.dark .prose thead { color: #e5e7eb; background-color: #1f2937; border-color: #4b5563; }
+.dark .prose table { border-color: #374151; }
+.dark .prose thead { color: #e5e7eb; background-color: #1f2937; border-color: #374151; }
+.dark .prose thead th { border-color: #374151; }
 .dark .prose tbody tr { border-color: #374151; }
-.dark .prose tbody td { color: #9ca3af; }
+.dark .prose tbody tr:nth-child(even) { background-color: rgba(255,255,255,0.02); }
+.dark .prose tbody td { color: #9ca3af; border-color: #374151; }
 .dark .prose blockquote { color: #d1d5db; border-color: #CEF17B; background-color: rgba(206, 241, 123, 0.1);}
 .dark .prose blockquote strong { color: #CEF17B; }
 .dark .prose code:not(pre code) { color: #CEF17B; background-color: rgba(206, 241, 123, 0.1); }
