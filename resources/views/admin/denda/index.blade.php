@@ -142,9 +142,9 @@
                             <!-- Pembayaran -->
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
                                 @if(strtolower($item->status_pembayaran) == 'lunas')
-                                    <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">Lunas</span>
+                                    <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">Lunas</span>
                                 @else
-                                    <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">Belum Lunas</span>
+                                    <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">Belum Lunas</span>
                                 @endif
                             </div>
 
