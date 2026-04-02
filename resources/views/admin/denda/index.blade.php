@@ -81,7 +81,7 @@
                             <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Judul Buku</h5>
                         </div>
                         <div class="p-2.5 text-center xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Tgl Pinjam</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Nominal Denda</h5>
                         </div>
                         <div class="p-2.5 text-center xl:p-5">
                             <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Deadline</h5>
@@ -121,9 +121,9 @@
                                 @endif
                             </div>
 
-                            <!-- Tgl Pinjam -->
+                            <!-- Nominal Denda -->
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
-                                <p class="text-black dark:text-white">{{ $item->peminjaman->tgl_pinjam }}</p>
+                                <p class="text-black dark:text-white font-bold text-danger">Rp {{ number_format($item->jumlah_denda, 0, ',', '.') }}</p>
                             </div>
 
                             <!-- Deadline -->
