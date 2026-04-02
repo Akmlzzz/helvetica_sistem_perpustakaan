@@ -233,11 +233,14 @@
         </div>
     </div>
 
+    <!-- App config (PHP vars exposed safely to JS via data attributes) -->
+    <div id="app-config" data-tarif-denda="{{ $tarifDenda ?? 2000 }}" class="hidden"></div>
+
     <script>
         function dendaModal() {
             return {
                 isOpen: false,
-                tarifDefault: {{ $tarifDenda ?? 2000 }},
+                tarifDefault: parseInt(document.getElementById('app-config').dataset.tarifDenda) || 2000,
                 data: {
                     id: '',
                     nama: '',

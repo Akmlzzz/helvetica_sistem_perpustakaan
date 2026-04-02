@@ -223,7 +223,7 @@
 </script>
 <style>
 /* Modern Typography styling inspired by VitePress / Tailwind Docs */
-.prose { max-w: 70ch; color: #374151; }
+.prose { max-width: 70ch; color: #374151; }
 .prose h1 { font-size: 2.25rem; letter-spacing: -0.025em; line-height: 2.5rem; margin-top: 0; margin-bottom: 1.5rem; font-weight: 800; color: #111827; }
 .prose h2 { font-size: 1.5rem; letter-spacing: -0.025em; line-height: 2rem; margin-top: 2.5rem; margin-bottom: 1rem; font-weight: 700; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.75rem; color: #1f2937; }
 .prose h3 { font-size: 1.25rem; letter-spacing: -0.025em; line-height: 1.75rem; margin-top: 2rem; margin-bottom: 0.75rem; font-weight: 600; color: #374151; }

@@ -533,7 +533,7 @@
             <!-- Track 1 -->
             <div class="flex shrink-0 animate-marquee gap-6 px-3">
                 <!-- Card 1 -->
-                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
                         "Sistem perpustakaan digital ini benar-benar mempermudah saya dalam mencari dan meminjam buku. Fitur 'Smart Fine Tracker'-nya sangat membantu saya agar tidak lupa tanggal pengembalian."
                     </p>
@@ -546,7 +546,7 @@
                 </div>
 
                 <!-- Card 2 -->
-                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
                         "Saya paling suka fitur Kartu Anggota Digital! Tidak perlu repot bawa kartu fisik lagi, tinggal tunjukkan QR Code di HP sewaktu ingin ambil buku. Benar-benar sangat memanjakan kami."
                     </p>
@@ -559,7 +559,7 @@
                 </div>
 
                 <!-- Card 3 -->
-                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
                         "Koleksi bukunya selalu ter-update dan fitur Booking Fisik Real-Time menyelamatkan saya dari kekecewaan kehabisan stok buku. Saya selalu bisa memantau ketersediaan buku."
                     </p>
@@ -572,7 +572,7 @@
                 </div>
 
                 <!-- Card 4 -->
-                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
                         "Proses registrasinya gampang dan cepat! Dashboard personalnya membuat saya bisa melihat riwayat bacaan dan menyimpan rekomendasi buku yang ingin saya baca berikutnya. The best lah!"
                     </p>
@@ -588,7 +588,7 @@
             <!-- Track 2 (Duplicate for Seamless Effect) -->
             <div class="flex shrink-0 animate-marquee gap-6 px-3" aria-hidden="true">
                 <!-- Card 1 -->
-                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
                         "Sistem perpustakaan digital ini benar-benar mempermudah saya dalam mencari dan meminjam buku. Fitur 'Smart Fine Tracker'-nya sangat membantu saya agar tidak lupa tanggal pengembalian."
                     </p>
@@ -601,7 +601,7 @@
                 </div>
 
                 <!-- Card 2 -->
-                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
                         "Saya paling suka fitur Kartu Anggota Digital! Tidak perlu repot bawa kartu fisik lagi, tinggal tunjukkan QR Code di HP sewaktu ingin ambil buku. Benar-benar sangat memanjakan kami."
                     </p>
@@ -614,7 +614,7 @@
                 </div>
 
                 <!-- Card 3 -->
-                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
                         "Koleksi bukunya selalu ter-update dan fitur Booking Fisik Real-Time menyelamatkan saya dari kekecewaan kehabisan stok buku. Saya selalu bisa memantau ketersediaan buku."
                     </p>
@@ -627,7 +627,7 @@
                 </div>
 
                 <!-- Card 4 -->
-                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
                         "Proses registrasinya gampang dan cepat! Dashboard personalnya membuat saya bisa melihat riwayat bacaan dan menyimpan rekomendasi buku yang ingin saya baca berikutnya. The best lah!"
                     </p>
