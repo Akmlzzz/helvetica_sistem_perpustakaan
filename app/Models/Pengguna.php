@@ -17,7 +17,6 @@ class Pengguna extends Authenticatable implements CanResetPassword
 
     const CREATED_AT = 'dibuat_pada';
     const UPDATED_AT = 'diperbarui_pada';
-    // public $timestamps = false; // Removed as Authenticatable typically uses timestamps
 
     protected $fillable = [
         'nama_pengguna',
@@ -45,41 +44,29 @@ class Pengguna extends Authenticatable implements CanResetPassword
         ];
     }
 
-    /**
-     * Cek dia admin apa bukan
-     */
     public function isAdmin(): bool
     {
         return $this->level_akses === 'admin';
     }
 
-    /**
-     * Cek dia petugas atau bukan
-     */
     public function isPetugas(): bool
     {
         return $this->level_akses === 'petugas';
     }
 
-    /**
-     * Cek dia anggota biasa atau bukan
-     */
     public function isAnggota(): bool
     {
         return $this->level_akses === 'anggota';
     }
 
-    /**
-     * Cek user biasa (anggota/petugas)
-     */
     public function isUser(): bool
     {
         return in_array($this->level_akses, ['anggota', 'petugas']);
     }
 
     /**
-     * Cek apakah user boleh mengakses fitur tertentu.
-     * Admin selalu boleh akses semua, petugas hanya yang diberikan izin.
+     * Admin selalu boleh akses semua fitur.
+     * Petugas hanya boleh akses fitur yang diberikan izin secara eksplisit.
      */
     public function canAccess(string $fitur): bool
     {
@@ -98,7 +85,7 @@ class Pengguna extends Authenticatable implements CanResetPassword
         return $this->hakAkses->pluck('fitur');
     }
 
-    // ----------- RELATIONSHIPS -----------
+    // ----------- Relationships -----------
 
     public function anggota()
     {
@@ -116,52 +103,20 @@ class Pengguna extends Authenticatable implements CanResetPassword
     }
 
     /**
-     * Cek apa masih nunggu verifikasi admin
-     */
-    public function isPending(): bool
-    {
-        return $this->status === 'pending';
-    }
-
-    /**
-     * Cek kalo udah aktif
-     */
-    public function isActive(): bool
-    {
-        return $this->status === 'active';
-    }
-
-    /**
-     * Cek kalo ditolak admin
-     */
-    public function isRejected(): bool
-    {
-        return $this->status === 'rejected';
-    }
-
-    /**
-     * Buat kode nomor anggota otomatis
+     * Generate nomor anggota dengan format: ID-{urutan}-PX-{tahun}
      */
     public static function generateNomorAnggota(): string
     {
         $year = date('Y');
-        $maxNumber = self::whereNotNull('nomor_anggota')
+        $maxSequence = self::whereNotNull('nomor_anggota')
             ->where('nomor_anggota', 'like', "ID-%-PX-{$year}")
-            ->get(['nomor_anggota'])
-            ->map(function ($member) {
-                $parts = explode('-', $member->nomor_anggota);
-                return isset($parts[1]) ? (int) $parts[1] : 0;
-            })
-            ->max();
+            ->pluck('nomor_anggota')
+            ->map(fn($n) => (int) explode('-', $n)[1])
+            ->max() ?? 0;
 
-        $newNumber = ($maxNumber ?? 0) + 1;
-
-        return "ID-{$newNumber}-PX-{$year}";
+        return sprintf('ID-%d-PX-%s', $maxSequence + 1, $year);
     }
 
-    /**
-     * ACC anggota baru + kasih nomor anggota
-     */
     public function approve(): void
     {
         $this->status = 'active';
@@ -169,9 +124,6 @@ class Pengguna extends Authenticatable implements CanResetPassword
         $this->save();
     }
 
-    /**
-     * Tolak anggota baru
-     */
     public function reject(): void
     {
         $this->status = 'rejected';

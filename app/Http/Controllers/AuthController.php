@@ -26,84 +26,74 @@ class AuthController extends Controller
     {
         $credentials = $request->validate([
             'nama_pengguna' => ['required', 'string'],
-            'kata_sandi' => ['required', 'string'],
+            'kata_sandi'    => ['required', 'string'],
         ]);
 
+        if (!Auth::attempt($this->resolveAuthCredentials($credentials))) {
+            return back()->withErrors([
+                'nama_pengguna' => 'Kredensial yang diberikan tidak cocok dengan catatan kami.',
+            ])->onlyInput('nama_pengguna');
+        }
 
-        $authCredentials = [
-            'nama_pengguna' => $credentials['nama_pengguna'],
-            'password' => $credentials['kata_sandi']
+        $request->session()->regenerate();
+
+        /** @var \App\Models\Pengguna $user */
+        $user = Auth::user();
+
+        return redirect()->intended(match (true) {
+            $user->isAdmin()   => route('dashboard'),
+            $user->isPetugas() => route('petugas.dashboard'),
+            $user->isAnggota() => route('anggota.dashboard'),
+            default            => '/',
+        });
+    }
+
+    private function resolveAuthCredentials(array $credentials): array
+    {
+        $isEmail = filter_var($credentials['nama_pengguna'], FILTER_VALIDATE_EMAIL);
+
+        return [
+            $isEmail ? 'email' : 'nama_pengguna' => $credentials['nama_pengguna'],
+            'password' => $credentials['kata_sandi'],
         ];
-
-
-        if (filter_var($credentials['nama_pengguna'], FILTER_VALIDATE_EMAIL)) {
-            $authCredentials = [
-                'email' => $credentials['nama_pengguna'],
-                'password' => $credentials['kata_sandi']
-            ];
-        }
-
-        if (Auth::attempt($authCredentials)) {
-            $request->session()->regenerate();
-
-            /** @var \App\Models\Pengguna $user */
-            $user = Auth::user();
-
-            if ($user->isAdmin()) {
-                return redirect()->intended(route('dashboard'));
-            } elseif ($user->isPetugas()) {
-                return redirect()->intended(route('petugas.dashboard'));
-            } elseif ($user->isAnggota()) {
-                return redirect()->intended(route('anggota.dashboard'));
-            } else {
-                return redirect()->intended('/');
-            }
-        }
-
-        return back()->withErrors([
-            'nama_pengguna' => 'Kredensial yang diberikan tidak cocok dengan catatan kami.',
-        ])->onlyInput('nama_pengguna');
     }
 
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'nama_lengkap' => ['required', 'string', 'max:255'],
-            'nama_pengguna' => ['required', 'string', 'max:100', 'unique:pengguna'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:pengguna'],
-            'kata_sandi' => ['required', 'string', 'min:8'],
-            'nomor_telepon' => ['required', 'string', 'max:15'],
-            'alamat' => ['required', 'string'],
+            'nama_lengkap'    => ['required', 'string', 'max:255'],
+            'nama_pengguna'   => ['required', 'string', 'max:100', 'unique:pengguna'],
+            'email'           => ['required', 'string', 'email', 'max:255', 'unique:pengguna'],
+            'kata_sandi'      => ['required', 'string', 'min:8'],
+            'nomor_telepon'   => ['required', 'string', 'max:15'],
+            'alamat'          => ['required', 'string'],
         ]);
 
         DB::beginTransaction();
 
         try {
-            // Simpan data ke tabel pengguna dulu
             $pengguna = Pengguna::create([
                 'nama_pengguna' => $validated['nama_pengguna'],
-                'email' => $validated['email'],
-                'kata_sandi' => Hash::make($validated['kata_sandi']),
-                'level_akses' => 'anggota', // tiap daftar baru otomatis jadi anggota
-                'status' => 'pending', // menunggu verifikasi admin
+                'email'         => $validated['email'],
+                'kata_sandi'    => Hash::make($validated['kata_sandi']),
+                'level_akses'   => 'anggota',
+                'status'        => 'pending',
             ]);
 
             Anggota::create([
-                'id_pengguna' => $pengguna->id_pengguna,
-                'nama_lengkap' => $validated['nama_lengkap'],
-                'alamat' => $validated['alamat'],
+                'id_pengguna'   => $pengguna->id_pengguna,
+                'nama_lengkap'  => $validated['nama_lengkap'],
+                'alamat'        => $validated['alamat'],
                 'nomor_telepon' => $validated['nomor_telepon'],
             ]);
 
             DB::commit();
-
             Auth::login($pengguna);
 
             return redirect()->route('anggota.dashboard');
-
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->withErrors(['error' => 'Waduh, ada masalah pas daftar: ' . $e->getMessage()]);
+            return back()->withInput()->withErrors(['error' => 'Registrasi gagal: ' . $e->getMessage()]);
         }
     }
 
