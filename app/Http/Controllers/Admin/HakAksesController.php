@@ -35,9 +35,11 @@ class HakAksesController extends Controller
             ->where('id_pengguna', $id_pengguna)
             ->firstOrFail();
 
+        $fiturValidKeys = implode(',', array_keys(HakAkses::daftarFitur()));
+
         $request->validate([
             'fitur' => 'nullable|array',
-            'fitur.*' => 'in:kategori,buku,peminjaman,denda,laporan',
+            'fitur.*' => 'in:' . $fiturValidKeys,
         ]);
 
         DB::beginTransaction();
@@ -62,7 +64,7 @@ class HakAksesController extends Controller
 
             $namaFitur = empty($fiturDipilih)
                 ? 'tidak ada fitur'
-                : implode(', ', array_map('ucfirst', $fiturDipilih));
+                : implode(', ', array_map('ucfirst', str_replace('_', ' ', $fiturDipilih)));
 
             return redirect()->route('admin.hak-akses.index')
                 ->with('success', "Hak akses {$user->nama_pengguna} berhasil diperbarui: {$namaFitur}.");
@@ -82,8 +84,10 @@ class HakAksesController extends Controller
             ->where('id_pengguna', $id_pengguna)
             ->firstOrFail();
 
+        $fiturValidKeys = implode(',', array_keys(HakAkses::daftarFitur()));
+
         $request->validate([
-            'fitur' => 'required|in:kategori,buku,peminjaman,denda,laporan',
+            'fitur' => 'required|in:' . $fiturValidKeys,
         ]);
 
         $fitur = $request->input('fitur');
