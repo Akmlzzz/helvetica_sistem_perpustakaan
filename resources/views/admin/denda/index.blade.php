@@ -165,4 +165,38 @@
             </div>
         </div>
     </div>
+    <!-- Edit Config Modal -->
+    <div x-data="{ isOpen: false }" x-show="isOpen" @open-edit-config-modal.window="isOpen = true" x-cloak
+        class="fixed inset-0 z-99999 flex items-center justify-center overflow-y-auto bg-black/50 px-4 py-6">
+        <div @click.outside="isOpen = false"
+            class="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-boxdark sm:p-8">
+            <h3 class="mb-4 text-xl font-bold text-black dark:text-white">Edit Konfigurasi Denda</h3>
+            <p class="mb-6 text-sm text-gray-500">Sesuaikan nominal denda yang akan dibebankan kepada anggota per hari keterlambatan.</p>
+            
+            <form action="{{ route('admin.denda.config.update') }}" method="POST">
+                @csrf
+                <div class="mb-5">
+                    <label class="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Nominal Denda (Per Hari)
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black dark:text-white">Rp</span>
+                        <input type="number" name="denda_per_hari" min="0" step="500" value="{{ $tarifDenda ?? 2000 }}" required
+                            class="w-full rounded border border-stroke bg-gray pl-12 pr-4 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 mt-6">
+                    <button type="button" @click="isOpen = false"
+                        class="rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="rounded bg-primary px-6 py-2 font-medium text-white hover:bg-opacity-90">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection

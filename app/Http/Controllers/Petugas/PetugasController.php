@@ -301,7 +301,8 @@ class PetugasController extends Controller
 
                 if ($tglKembaliAktual->gt($jatuhTempoCarbon)) {
                     $hariTerlambat = (int) abs($tglKembaliAktual->diffInDays($jatuhTempoCarbon));
-                    $dendaAmount = $hariTerlambat * 2000; // Rp 2.000/hari
+                    $tarifPerHari = \App\Helpers\AppSetting::get('denda_per_hari', 2000);
+                    $dendaAmount = $hariTerlambat * $tarifPerHari; // Dihitung dari konfigurasi
 
                     // Cek sudah ada denda atau belum
                     $dendaExist = Denda::where('id_peminjaman', $peminjaman->id_peminjaman)->first();

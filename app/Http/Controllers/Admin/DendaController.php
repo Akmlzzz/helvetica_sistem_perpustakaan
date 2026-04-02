@@ -60,7 +60,20 @@ class DendaController extends Controller
 
         $denda = $query->paginate(10)->withQueryString();
 
-        return view('admin.denda.index', compact('denda'));
+        $tarifDenda = \App\Helpers\AppSetting::get('denda_per_hari', 2000);
+
+        return view('admin.denda.index', compact('denda', 'tarifDenda'));
+    }
+
+    public function updateConfig(Request $request)
+    {
+        $request->validate([
+            'denda_per_hari' => 'required|numeric|min:0',
+        ]);
+
+        \App\Helpers\AppSetting::set('denda_per_hari', $request->denda_per_hari);
+
+        return redirect()->back()->with('success', 'Konfigurasi denda berhasil diperbarui.');
     }
 
     public function show($id)

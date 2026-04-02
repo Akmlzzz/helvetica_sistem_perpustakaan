@@ -164,6 +164,7 @@ Route::middleware(['auth', 'back_history'])->group(function () {
     // Denda — admin atau petugas yang punya izin 'denda'
     Route::middleware('akses:denda')->group(function () {
         Route::get('/denda', [\App\Http\Controllers\Admin\DendaController::class, 'index'])->name('admin.denda.index');
+        Route::post('/denda/config', [\App\Http\Controllers\Admin\DendaController::class, 'updateConfig'])->name('admin.denda.config.update');
         Route::get('/denda/{id}', [\App\Http\Controllers\Admin\DendaController::class, 'show'])->name('admin.denda.show');
     });
 

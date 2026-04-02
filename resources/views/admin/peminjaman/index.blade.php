@@ -237,6 +237,7 @@
         function dendaModal() {
             return {
                 isOpen: false,
+                tarifDefault: {{ $tarifDenda ?? 2000 }},
                 data: {
                     id: '',
                     nama: '',
@@ -249,8 +250,7 @@
                     this.data.nama = detail.nama;
                     this.data.tgl_kembali = detail.tgl_kembali;
 
-                    // Simple logic to calculate fine (Example: 1000 per day)
-                    // In real app, this should probably come from backend or config
+                    // Calculate fine dynamically based on setting
                     const tglKembali = new Date(detail.tgl_kembali);
                     const today = new Date();
                     const diffTime = Math.abs(today - tglKembali);
@@ -259,7 +259,7 @@
                     // If today is after due date
                     if (today > tglKembali) {
                         this.data.terlambat = diffDays;
-                        this.data.total_denda = diffDays * 1000; // Asumsi denda 1000 per hari
+                        this.data.total_denda = diffDays * this.tarifDefault;
                     } else {
                         this.data.terlambat = 0;
                         this.data.total_denda = 0;
