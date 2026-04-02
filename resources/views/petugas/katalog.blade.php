@@ -30,59 +30,66 @@
                 <div class="max-w-full overflow-x-auto">
                     <table class="w-full table-auto">
                         <thead>
-                            <tr class="bg-gray-2 text-left dark:bg-meta-4">
-                                <th class="min-w-[50px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                            <tr class="border-b-2 border-gray-100 text-left dark:border-strokedark">
+                                <th class="w-[60px] py-3 px-5 text-sm font-semibold text-gray-600 dark:text-gray-300">
                                     No
                                 </th>
-                                <th class="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                                <th class="min-w-[220px] py-3 px-5 text-sm font-semibold text-gray-600 dark:text-gray-300">
                                     Judul Buku
                                 </th>
-                                <th class="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
+                                <th class="min-w-[150px] py-3 px-5 text-sm font-semibold text-gray-600 dark:text-gray-300">
                                     ISBN
                                 </th>
-                                <th class="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
+                                <th class="min-w-[120px] py-3 px-5 text-sm font-semibold text-gray-600 dark:text-gray-300">
                                     Kategori
                                 </th>
-                                <th class="py-4 px-4 font-medium text-black dark:text-white">
+                                <th class="min-w-[80px] py-3 px-5 text-sm font-semibold text-gray-600 dark:text-gray-300 text-center">
                                     Stok
                                 </th>
-                                <!-- Assuming 'lokasi_rak' might be added later to DB, using mock for now or displaying generic location if field doesn't exist -->
-                                <th class="py-4 px-4 font-medium text-black dark:text-white">
+                                <th class="min-w-[120px] py-3 px-5 text-sm font-semibold text-gray-600 dark:text-gray-300 text-center">
                                     Lokasi Rak
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($buku as $item)
-                                <tr>
-                                    <td class="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                                        <p class="text-black dark:text-white">
-                                            {{ $loop->iteration + ($buku->currentPage() - 1) * $buku->perPage() }}
-                                        </p>
+                                <tr class="transition-colors hover:bg-gray-50 dark:hover:bg-meta-4">
+                                    <td class="border-b border-gray-100 py-4 px-5 text-sm text-gray-600 dark:border-strokedark dark:text-white">
+                                        {{ $loop->iteration + ($buku->currentPage() - 1) * $buku->perPage() }}
                                     </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <h5 class="font-medium text-black dark:text-white">{{ $item->judul_buku }}</h5>
-                                        <p class="text-sm text-gray-500">{{ $item->penulis }}</p>
+                                    <td class="border-b border-gray-100 py-4 px-5 dark:border-strokedark">
+                                        <div class="flex flex-col">
+                                            <span class="font-bold text-gray-800 dark:text-white">{{ $item->judul_buku }}</span>
+                                            <span class="text-xs text-gray-500 mt-0.5">{{ $item->penulis }}</span>
+                                        </div>
                                     </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p class="text-black dark:text-white">{{ $item->isbn }}</p>
+                                    <td class="border-b border-gray-100 py-4 px-5 text-sm text-gray-600 dark:border-strokedark dark:text-white font-mono">
+                                        {{ $item->isbn ?? '-' }}
                                     </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p
-                                            class="inline-flex rounded-full bg-primary bg-opacity-10 py-1 px-3 text-sm font-medium text-primary">
-                                            {{ $item->kategori->first()?->nama_kategori ?? '-' }}
-                                        </p>
+                                    <td class="border-b border-gray-100 py-4 px-5 dark:border-strokedark">
+                                        <span class="inline-flex items-center justify-center rounded-full bg-[#E8F3EE] px-3 py-1.5 text-xs font-bold text-[#004236] dark:bg-[#004236]/30 dark:text-emerald-300 ring-1 ring-[#004236]/10">
+                                            {{ $item->kategori->first()?->nama_kategori ?? 'Tidak Ada' }}
+                                        </span>
                                     </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p class="text-black dark:text-white">{{ $item->stok }}</p>
+                                    <td class="border-b border-gray-100 py-4 px-5 text-center dark:border-strokedark">
+                                        <span class="inline-flex items-center justify-center font-bold {{ $item->stok > 0 ? 'text-gray-800 dark:text-white' : 'text-red-500' }}">
+                                            {{ $item->stok }}
+                                        </span>
                                     </td>
-                                    <td class="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                                        <p class="text-black dark:text-white">{{ $item->lokasi_rak ?? '-' }}</p>
+                                    <td class="border-b border-gray-100 py-4 px-5 text-center text-sm font-medium text-gray-600 dark:border-strokedark dark:text-white">
+                                        {{ $item->lokasi_rak ?? '-' }}
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-5">Tidak ada data buku ditemukan.</td>
+                                    <td colspan="6" class="text-center py-8 text-gray-500">
+                                        <div class="flex flex-col items-center justify-center">
+                                            <svg class="h-10 w-10 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                                            </svg>
+                                            Tidak ada data buku ditemukan.
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
