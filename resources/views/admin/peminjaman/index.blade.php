@@ -7,17 +7,6 @@
             <h2 class="text-title-md2 font-bold text-black dark:text-white">
                 Data Peminjaman
             </h2>
-            <a href="{{ route('admin.peminjaman.create') }}"
-                class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-6 py-3 font-medium text-white hover:bg-opacity-90">
-                <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 4.16666V15.8333" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                    <path d="M4.16669 10H15.8334" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                Tambah Peminjaman
-            </a>
         </div>
 
         <!-- Search & Filter -->
