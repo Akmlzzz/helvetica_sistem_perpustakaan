@@ -73,7 +73,7 @@
             <!-- Table Section with Responsive Scroll -->
             <div class="flex flex-col overflow-x-auto">
                 <div class="min-w-[1000px]">
-                    <div class="grid grid-cols-6 rounded-sm bg-gray-50 dark:bg-gray-800 sm:grid-cols-6">
+                    <div class="grid grid-cols-7 rounded-sm bg-gray-50 dark:bg-gray-800 sm:grid-cols-7">
                         <div class="p-2.5 xl:p-5">
                             <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Nama Peminjam</h5>
                         </div>
@@ -87,7 +87,10 @@
                             <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Deadline</h5>
                         </div>
                          <div class="p-2.5 text-center xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Status</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Status Pinjam</h5>
+                        </div>
+                        <div class="p-2.5 text-center xl:p-5">
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Pembayaran</h5>
                         </div>
                         <div class="p-2.5 text-center xl:p-5">
                             <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Aksi</h5>
@@ -95,7 +98,7 @@
                     </div>
 
                     @foreach($denda as $item)
-                        <div class="grid grid-cols-6 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors sm:grid-cols-6">
+                        <div class="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors sm:grid-cols-7">
                             <!-- Nama Peminjam -->
                             <div class="flex items-center p-2.5 xl:p-5">
                                 <p class="text-black dark:text-white">
@@ -131,9 +134,18 @@
                                 <p class="text-black dark:text-white">{{ $item->peminjaman->tgl_kembali }}</p>
                             </div>
 
-                            <!-- Status -->
+                            <!-- Status Pinjam -->
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
                                 <x-status-badge :type="$item->peminjaman->status_transaksi" />
+                            </div>
+
+                            <!-- Pembayaran -->
+                            <div class="flex items-center justify-center p-2.5 xl:p-5">
+                                @if(strtolower($item->status_pembayaran) == 'lunas')
+                                    <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">Lunas</span>
+                                @else
+                                    <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">Belum Lunas</span>
+                                @endif
                             </div>
 
                             <!-- Aksi -->
