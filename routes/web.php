@@ -113,8 +113,7 @@ Route::middleware(['auth', 'back_history'])->group(function () {
         Route::get('/verifikasi-anggota/all', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'allMembers'])->name('admin.verifikasi-anggota.all');
         Route::post('/verifikasi-anggota/{id}/toggle', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'toggleStatus'])->name('admin.verifikasi-anggota.toggle');
 
-        // Hero Banner Management
-        Route::resource('hero-banners', \App\Http\Controllers\Admin\HeroBannerController::class)->names('admin.hero-banners');
+
 
         // Dokumentasi (Docs)
         Route::get('/admin/docs', [\App\Http\Controllers\Admin\DocsController::class, 'index'])->name('admin.docs.index');
@@ -173,6 +172,20 @@ Route::middleware(['auth', 'back_history'])->group(function () {
         Route::get('/laporan', [\App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan.index');
         Route::get('/laporan/pdf', [\App\Http\Controllers\Admin\LaporanController::class, 'exportPdf'])->name('admin.laporan.pdf');
         Route::get('/laporan/excel', [\App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('admin.laporan.excel');
+    });
+
+    // Hero Banner — admin atau petugas yang punya izin 'hero_banner'
+    Route::middleware('akses:hero_banner')->group(function () {
+        Route::resource('hero-banners', \App\Http\Controllers\Admin\HeroBannerController::class)->names('admin.hero-banners');
+    });
+
+    // Music Player — admin atau petugas yang punya izin 'musik_player'
+    Route::middleware('akses:musik_player')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'index'])->name('musik.index');
+        Route::post('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'store'])->name('musik.store');
+        Route::put('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'update'])->name('musik.update');
+        Route::delete('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'destroy'])->name('musik.destroy');
+        Route::patch('/musik/{musik}/toggle', [\App\Http\Controllers\Admin\MusikController::class, 'toggleAktif'])->name('musik.toggle');
     });
 
     // =========================================================
@@ -267,14 +280,7 @@ Route::middleware(['auth', 'back_history', \App\Http\Middleware\AnggotaMiddlewar
 Route::post('/payment/midtrans/callback', [\App\Http\Controllers\Anggota\PaymentController::class, 'handleNotification'])
     ->name('payment.midtrans.callback');
 
-// Music Player Management (Admin only)
-Route::middleware(['auth', 'back_history'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'index'])->name('musik.index');
-    Route::post('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'store'])->name('musik.store');
-    Route::put('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'update'])->name('musik.update');
-    Route::delete('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'destroy'])->name('musik.destroy');
-    Route::patch('/musik/{musik}/toggle', [\App\Http\Controllers\Admin\MusikController::class, 'toggleAktif'])->name('musik.toggle');
-});
+
 
 // Public API: get active tracks for music player
 Route::get('/api/musik', function () {
