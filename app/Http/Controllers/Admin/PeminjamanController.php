@@ -57,7 +57,7 @@ class PeminjamanController extends Controller
             $query->orderBy('tgl_pinjam', 'desc');
         }
 
-        $peminjaman = $query->paginate(10);
+        $peminjaman = $query->paginate(10)->withQueryString();
 
         return view('admin.peminjaman.index', compact('peminjaman'));
     }

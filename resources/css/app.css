@@ -208,6 +208,11 @@ layer(base);
             transform: translateY(0);
         }
     }
+    --color-primary: var(--color-brand-primary);
+    --color-stroke: var(--color-gray-200);
+    --color-strokedark: var(--color-gray-700);
+
+    /* Original @theme content continued below... */
 }
 
 /*

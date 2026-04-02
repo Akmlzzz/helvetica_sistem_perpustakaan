@@ -138,7 +138,7 @@ class VerifikasiAnggotaController extends Controller
         $members = Pengguna::with('anggota')
             ->where('level_akses', 'anggota')
             ->latest('dibuat_pada')
-            ->paginate(15);
+            ->paginate(15)->withQueryString();
 
         return view('admin.verifikasi-anggota.all', compact('members'));
     }

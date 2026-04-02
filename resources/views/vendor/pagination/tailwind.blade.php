@@ -6,7 +6,7 @@
             {{-- Previous Button --}}
             @if ($paginator->onFirstPage())
                 <button disabled
-                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400 bg-white border border-stroke rounded-md cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
+                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-md cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -14,7 +14,7 @@
                 </button>
             @else
                 <a href="{{ $paginator->previousPageUrl() }}" rel="prev"
-                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-stroke rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -24,15 +24,15 @@
 
             {{-- Page Info --}}
             <div class="flex-1 text-center">
-                <span class="text-sm text-gray-700 dark:text-gray-400">
-                    Page {{ $paginator->currentPage() }} of {{ $paginator->lastPage() }}
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-400">
+                    Halaman {{ $paginator->currentPage() }} dari {{ $paginator->lastPage() }}
                 </span>
             </div>
 
             {{-- Next Button --}}
             @if ($paginator->hasMorePages())
                 <a href="{{ $paginator->nextPageUrl() }}" rel="next"
-                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-stroke rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -40,7 +40,7 @@
                 </a>
             @else
                 <button disabled
-                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400 bg-white border border-stroke rounded-md cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
+                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-md cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -54,7 +54,7 @@
             {{-- Previous Button --}}
             @if ($paginator->onFirstPage())
                 <button disabled
-                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400 bg-white border border-stroke rounded-md cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
+                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-md cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -62,7 +62,7 @@
                 </button>
             @else
                 <a href="{{ $paginator->previousPageUrl() }}" rel="prev"
-                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-stroke rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -83,12 +83,12 @@
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
                             <span aria-current="page"
-                                class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-white bg-primary border border-primary rounded-md dark:bg-primary dark:border-primary">
+                                class="inline-flex items-center justify-center w-10 h-10 text-sm font-bold text-white bg-brand-primary border border-brand-primary rounded-md shadow-md">
                                 {{ $page }}
                             </span>
                         @else
                             <a href="{{ $url }}"
-                                class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-stroke rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors"
+                                class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors shadow-sm"
                                 aria-label="{{ __('Go to page :page', ['page' => $page]) }}">
                                 {{ $page }}
                             </a>
@@ -100,7 +100,7 @@
             {{-- Next Button --}}
             @if ($paginator->hasMorePages())
                 <a href="{{ $paginator->nextPageUrl() }}" rel="next"
-                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-stroke rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors shadow-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -108,7 +108,7 @@
                 </a>
             @else
                 <button disabled
-                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400 bg-white border border-stroke rounded-md cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
+                    class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400 bg-white border border-gray-200 rounded-md cursor-not-allowed dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />

@@ -58,7 +58,7 @@ class DendaController extends Controller
             $query->orderBy('dibuat_pada', 'desc');
         }
 
-        $denda = $query->paginate(10);
+        $denda = $query->paginate(10)->withQueryString();
 
         return view('admin.denda.index', compact('denda'));
     }

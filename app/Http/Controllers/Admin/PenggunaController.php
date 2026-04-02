@@ -45,7 +45,7 @@ class PenggunaController extends Controller
             $query->orderBy('dibuat_pada', 'desc');
         }
 
-        $users = $query->paginate(10);
+        $users = $query->paginate(10)->withQueryString();
         return view('admin.pengguna.index', compact('users'));
     }
 

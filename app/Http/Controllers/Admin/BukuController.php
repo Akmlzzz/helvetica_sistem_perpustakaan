@@ -46,7 +46,7 @@ class BukuController extends Controller
             $query->orderBy('dibuat_pada', 'desc');
         }
 
-        $buku = $query->paginate(10);
+        $buku = $query->paginate(10)->withQueryString();
         $kategori = Kategori::all();
         $series = Series::orderBy('nama_series')->get();
 
