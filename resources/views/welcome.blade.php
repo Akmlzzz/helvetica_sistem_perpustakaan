@@ -535,56 +535,52 @@
                 <!-- Card 1 -->
                 <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
-                        "It's one of the most compelling and completely flabbergasting demonstrations of AI's potential yet."
+                        "Sistem perpustakaan digital ini benar-benar mempermudah saya dalam mencari dan meminjam buku. Fitur 'Smart Fine Tracker'-nya sangat membantu saya agar tidak lupa tanggal pengembalian."
                     </p>
                     <div class="flex items-center gap-4 mt-auto">
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-white shrink-0 flex justify-center items-center font-bold text-[#87D800] border border-gray-100">
-                            <!-- Foto P1 -->
-                            WP
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/han ahreun.jfif') }}" alt="Han Ahreun" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-[#3F3D56] text-sm font-medium">WSJ</span>
+                        <span class="text-[#3F3D56] text-sm font-bold">Han Ahreun</span>
                     </div>
                 </div>
 
                 <!-- Card 2 -->
                 <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
-                        "NotebookLM is a beautiful way to walk through information space"
+                        "Saya paling suka fitur Kartu Anggota Digital! Tidak perlu repot bawa kartu fisik lagi, tinggal tunjukkan QR Code di HP sewaktu ingin ambil buku. Benar-benar sangat memanjakan kami."
                     </p>
                     <div class="flex items-center gap-4 mt-auto">
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#6300E6] shrink-0 flex justify-center items-center text-white">
-                            <!-- Foto P2 -->
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13h-13l6.5-13z"/></svg>
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/grace ashcroft.jfif') }}" alt="Grace Ashcroft" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-[#3F3D56] text-sm font-medium">The Verge</span>
+                        <span class="text-[#3F3D56] text-sm font-bold">Grace Ashcroft</span>
                     </div>
                 </div>
 
                 <!-- Card 3 -->
                 <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
-                        "It's possible that NotebookLM podcast episode generation is touching on a new territory of highly compelling product formats. Feels reminiscent of ChatGPT. Maybe I'm overreacting!"
+                        "Koleksi bukunya selalu ter-update dan fitur Booking Fisik Real-Time menyelamatkan saya dari kekecewaan kehabisan stok buku. Saya selalu bisa memantau ketersediaan buku."
                     </p>
                     <div class="flex items-center gap-4 mt-auto">
                         <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
-                            <!-- Foto P3 -->
-                            <img src="https://ui-avatars.com/api/?name=Andrej+Karpathy&background=random" alt="Andrej" class="w-full h-full object-cover">
+                            <img src="{{ asset('img/testimonial/haein.jpeg') }}" alt="Haein" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-[#3F3D56] text-sm font-medium">Andrej Karpathy on X</span>
+                        <span class="text-[#3F3D56] text-sm font-bold">Haein</span>
                     </div>
                 </div>
 
                 <!-- Card 4 -->
                 <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
-                        "A truly revolutionary approach to consuming books. The digital library experience has completely transformed how I organize my readings."
+                        "Proses registrasinya gampang dan cepat! Dashboard personalnya membuat saya bisa melihat riwayat bacaan dan menyimpan rekomendasi buku yang ingin saya baca berikutnya. The best lah!"
                     </p>
                     <div class="flex items-center gap-4 mt-auto">
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#084734] shrink-0 flex justify-center items-center text-white font-bold">
-                            <!-- Foto P4 -->
-                            JL
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/Yang Mohyeon.jpg') }}" alt="Yang Mohyeon" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-[#3F3D56] text-sm font-medium">Jane Doe</span>
+                        <span class="text-[#3F3D56] text-sm font-bold">Yang Mohyeon</span>
                     </div>
                 </div>
             </div>
@@ -594,52 +590,52 @@
                 <!-- Card 1 -->
                 <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
-                        "It's one of the most compelling and completely flabbergasting demonstrations of AI's potential yet."
+                        "Sistem perpustakaan digital ini benar-benar mempermudah saya dalam mencari dan meminjam buku. Fitur 'Smart Fine Tracker'-nya sangat membantu saya agar tidak lupa tanggal pengembalian."
                     </p>
                     <div class="flex items-center gap-4 mt-auto">
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-white shrink-0 flex justify-center items-center font-bold text-[#87D800] border border-gray-100">
-                            WP
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/han ahreun.jfif') }}" alt="Han Ahreun" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-[#3F3D56] text-sm font-medium">WSJ</span>
+                        <span class="text-[#3F3D56] text-sm font-bold">Han Ahreun</span>
                     </div>
                 </div>
 
                 <!-- Card 2 -->
                 <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
-                        "NotebookLM is a beautiful way to walk through information space"
+                        "Saya paling suka fitur Kartu Anggota Digital! Tidak perlu repot bawa kartu fisik lagi, tinggal tunjukkan QR Code di HP sewaktu ingin ambil buku. Benar-benar sangat memanjakan kami."
                     </p>
                     <div class="flex items-center gap-4 mt-auto">
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#6300E6] shrink-0 flex justify-center items-center text-white">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13h-13l6.5-13z"/></svg>
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/grace ashcroft.jfif') }}" alt="Grace Ashcroft" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-[#3F3D56] text-sm font-medium">The Verge</span>
+                        <span class="text-[#3F3D56] text-sm font-bold">Grace Ashcroft</span>
                     </div>
                 </div>
 
                 <!-- Card 3 -->
                 <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
-                        "It's possible that NotebookLM podcast episode generation is touching on a new territory of highly compelling product formats. Feels reminiscent of ChatGPT. Maybe I'm overreacting!"
+                        "Koleksi bukunya selalu ter-update dan fitur Booking Fisik Real-Time menyelamatkan saya dari kekecewaan kehabisan stok buku. Saya selalu bisa memantau ketersediaan buku."
                     </p>
                     <div class="flex items-center gap-4 mt-auto">
                         <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
-                            <img src="https://ui-avatars.com/api/?name=Andrej+Karpathy&background=random" alt="Andrej" class="w-full h-full object-cover">
+                            <img src="{{ asset('img/testimonial/haein.jpeg') }}" alt="Haein" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-[#3F3D56] text-sm font-medium">Andrej Karpathy on X</span>
+                        <span class="text-[#3F3D56] text-sm font-bold">Haein</span>
                     </div>
                 </div>
 
                 <!-- Card 4 -->
                 <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
                     <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
-                        "A truly revolutionary approach to consuming books. The digital library experience has completely transformed how I organize my readings."
+                        "Proses registrasinya gampang dan cepat! Dashboard personalnya membuat saya bisa melihat riwayat bacaan dan menyimpan rekomendasi buku yang ingin saya baca berikutnya. The best lah!"
                     </p>
                     <div class="flex items-center gap-4 mt-auto">
-                        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#084734] shrink-0 flex justify-center items-center text-white font-bold">
-                            JL
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/Yang Mohyeon.jpg') }}" alt="Yang Mohyeon" class="w-full h-full object-cover">
                         </div>
-                        <span class="text-[#3F3D56] text-sm font-medium">Jane Doe</span>
+                        <span class="text-[#3F3D56] text-sm font-bold">Yang Mohyeon</span>
                     </div>
                 </div>
             </div>
