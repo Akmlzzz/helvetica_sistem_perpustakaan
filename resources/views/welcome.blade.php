@@ -22,6 +22,23 @@
             scroll-behavior: smooth;
         }
 
+        @keyframes marquee {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(calc(-100% - 1.5rem)); /* gap-6 is 1.5rem */
+            }
+        }
+
+        .animate-marquee {
+            animation: marquee 30s linear infinite;
+        }
+
+        .marquee-container:hover .animate-marquee {
+            animation-play-state: paused;
+        }
+
         .reveal-on-scroll {
             opacity: 0;
             transform: translateY(30px);
@@ -500,6 +517,129 @@
                             <span class="block font-extrabold text-[#084734]">BE</span>
                             <span class="text-gray-500 font-normal text-xs">Back End Developer</span>
                         </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seksi Testimonial -->
+    <section id="testimonial" class="py-16 md:py-24 bg-white overflow-hidden text-center">
+        <div class="container mx-auto px-6 mb-12">
+            <h2 class="text-3xl md:text-5xl font-medium text-[#1E1E1E]">Pendapat orang lain</h2>
+        </div>
+
+        <div class="relative w-full flex overflow-hidden gap-6 marquee-container pb-8 select-none">
+            <!-- Track 1 -->
+            <div class="flex shrink-0 animate-marquee gap-6 px-3">
+                <!-- Card 1 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "It's one of the most compelling and completely flabbergasting demonstrations of AI's potential yet."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-white shrink-0 flex justify-center items-center font-bold text-[#87D800] border border-gray-100">
+                            <!-- Foto P1 -->
+                            WP
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-medium">WSJ</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "NotebookLM is a beautiful way to walk through information space"
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#6300E6] shrink-0 flex justify-center items-center text-white">
+                            <!-- Foto P2 -->
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13h-13l6.5-13z"/></svg>
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-medium">The Verge</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "It's possible that NotebookLM podcast episode generation is touching on a new territory of highly compelling product formats. Feels reminiscent of ChatGPT. Maybe I'm overreacting!"
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <!-- Foto P3 -->
+                            <img src="https://ui-avatars.com/api/?name=Andrej+Karpathy&background=random" alt="Andrej" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-medium">Andrej Karpathy on X</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "A truly revolutionary approach to consuming books. The digital library experience has completely transformed how I organize my readings."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#084734] shrink-0 flex justify-center items-center text-white font-bold">
+                            <!-- Foto P4 -->
+                            JL
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-medium">Jane Doe</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Track 2 (Duplicate for Seamless Effect) -->
+            <div class="flex shrink-0 animate-marquee gap-6 px-3" aria-hidden="true">
+                <!-- Card 1 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "It's one of the most compelling and completely flabbergasting demonstrations of AI's potential yet."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-white shrink-0 flex justify-center items-center font-bold text-[#87D800] border border-gray-100">
+                            WP
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-medium">WSJ</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "NotebookLM is a beautiful way to walk through information space"
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#6300E6] shrink-0 flex justify-center items-center text-white">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13h-13l6.5-13z"/></svg>
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-medium">The Verge</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "It's possible that NotebookLM podcast episode generation is touching on a new territory of highly compelling product formats. Feels reminiscent of ChatGPT. Maybe I'm overreacting!"
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="https://ui-avatars.com/api/?name=Andrej+Karpathy&background=random" alt="Andrej" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-medium">Andrej Karpathy on X</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-[2rem] shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "A truly revolutionary approach to consuming books. The digital library experience has completely transformed how I organize my readings."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-[#084734] shrink-0 flex justify-center items-center text-white font-bold">
+                            JL
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-medium">Jane Doe</span>
                     </div>
                 </div>
             </div>
