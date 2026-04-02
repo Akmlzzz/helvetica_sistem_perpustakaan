@@ -167,8 +167,8 @@
                                 </div>
                             </div>
 
-                            {{-- Progres Badge --}}
-                            <div class="flex items-center gap-3">
+                            {{-- Progres Badge & Toggle All --}}
+                            <div class="flex items-center gap-4">
                                 <div class="hidden sm:block">
                                     <div class="flex items-center gap-2">
                                         <div class="h-2 w-32 overflow-hidden rounded-full bg-gray-200">
@@ -190,6 +190,21 @@
                                     {{ $totalDimiliki == $totalFitur ? 'Akses Penuh' :
                         ($totalDimiliki > 0 ? 'Partial' : 'Tidak Ada Akses') }}
                                 </span>
+
+                                <div class="hidden sm:block h-6 w-px bg-gray-200"></div>
+
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-gray-700 hidden sm:block">Izinkan Semua</span>
+                                    <button type="button" id="toggle-all-{{ $p->id_pengguna }}"
+                                        onclick="toggleAllHakAkses(this, '{{ $p->id_pengguna }}')"
+                                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-1
+                                        {{ $totalDimiliki == $totalFitur ? 'bg-brand-primary' : 'bg-gray-200' }}"
+                                        aria-label="Toggle semua akses untuk {{ $p->nama_pengguna }}">
+                                        <span class="inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-300
+                                        {{ $totalDimiliki == $totalFitur ? 'translate-x-6' : 'translate-x-1' }}">
+                                        </span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -400,6 +415,86 @@
                         badge.className = 'rounded-full px-3 py-1 text-xs font-bold bg-gray-100 text-gray-600';
                     }
                 }
+
+                // Update master toggle
+                const toggleAllBtn = document.getElementById(`toggle-all-${idPengguna}`);
+                if (toggleAllBtn) {
+                    if (aktifCount === totalCount) {
+                        toggleAllBtn.classList.replace('bg-gray-200', 'bg-brand-primary');
+                        toggleAllBtn.querySelector('span').classList.replace('translate-x-1', 'translate-x-6');
+                    } else {
+                        toggleAllBtn.classList.replace('bg-brand-primary', 'bg-gray-200');
+                        toggleAllBtn.querySelector('span').classList.replace('translate-x-6', 'translate-x-1');
+                    }
+                }
+            }
+
+            /**
+             * Toggle semua hak akses untuk seorang pengguna
+             */
+            function toggleAllHakAkses(btnAll, idPengguna) {
+                const isActive = btnAll.classList.contains('bg-brand-primary');
+                const targetState = !isActive; 
+                
+                btnAll.disabled = true;
+                btnAll.classList.add('opacity-60', 'cursor-not-allowed');
+
+                const allToggles = document.querySelectorAll(`[data-pengguna="${idPengguna}"]`);
+                const togglesToChange = Array.from(allToggles).filter(t => (t.dataset.aktif === 'true') !== targetState);
+
+                if (togglesToChange.length === 0) {
+                    btnAll.disabled = false;
+                    btnAll.classList.remove('opacity-60', 'cursor-not-allowed');
+                    return;
+                }
+
+                const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                showToast(targetState ? 'Mengaktifkan semua fitur...' : 'Menonaktifkan semua fitur...', 'warning');
+
+                const requests = togglesToChange.map(btn => {
+                    const url = btn.dataset.url;
+                    const fitur = btn.dataset.fitur;
+                    
+                    return fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrf,
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ fitur: fitur }),
+                    }).then(res => res.json()).then(data => {
+                        const isAktif = data.status;
+                        if (isAktif) {
+                            btn.classList.replace('bg-gray-200', 'bg-brand-primary');
+                            btn.querySelector('span').classList.replace('translate-x-1', 'translate-x-6');
+                            btn.dataset.aktif = 'true';
+                        } else {
+                            btn.classList.replace('bg-brand-primary', 'bg-gray-200');
+                            btn.querySelector('span').classList.replace('translate-x-6', 'translate-x-1');
+                            btn.dataset.aktif = 'false';
+                        }
+                        const labelEl = btn.previousElementSibling;
+                        if (labelEl) {
+                            labelEl.textContent = isAktif ? 'Aktif' : 'Nonaktif';
+                            labelEl.className = 'text-xs font-medium ' + (isAktif ? 'text-green-600' : 'text-gray-400');
+                        }
+                    });
+                });
+
+                Promise.all(requests)
+                    .then(() => {
+                        updatePetugasProgress(idPengguna);
+                        showToast(targetState ? 'Semua fitur berhasil diaktifkan!' : 'Semua fitur berhasil dinonaktifkan!', 'success');
+                    })
+                    .catch(() => {
+                        showToast('Terjadi kesalahan saat memproses sebagian fitur.', 'error');
+                        updatePetugasProgress(idPengguna);
+                    })
+                    .finally(() => {
+                        btnAll.disabled = false;
+                        btnAll.classList.remove('opacity-60', 'cursor-not-allowed');
+                    });
             }
 
             function showToast(pesan, tipe = 'success') {

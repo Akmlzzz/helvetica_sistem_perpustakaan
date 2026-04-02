@@ -73,7 +73,7 @@
             <!-- Table Section with Responsive Scroll -->
             <div class="flex flex-col overflow-x-auto">
                 <div class="min-w-[1000px]">
-                    <div class="grid grid-cols-6 rounded-sm bg-gray-50 dark:bg-gray-800 sm:grid-cols-6">
+                    <div class="grid grid-cols-7 rounded-sm bg-gray-50 dark:bg-gray-800 sm:grid-cols-7">
                         <div class="p-2.5 xl:p-5">
                             <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Nama Peminjam</h5>
                         </div>
@@ -81,13 +81,16 @@
                             <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Judul Buku</h5>
                         </div>
                         <div class="p-2.5 text-center xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Tgl Pinjam</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Nominal Denda</h5>
                         </div>
                         <div class="p-2.5 text-center xl:p-5">
                             <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Deadline</h5>
                         </div>
                          <div class="p-2.5 text-center xl:p-5">
-                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Status</h5>
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Status Pinjam</h5>
+                        </div>
+                        <div class="p-2.5 text-center xl:p-5">
+                            <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Pembayaran</h5>
                         </div>
                         <div class="p-2.5 text-center xl:p-5">
                             <h5 class="text-sm font-medium uppercase xsm:text-base dark:text-gray-300">Aksi</h5>
@@ -95,7 +98,7 @@
                     </div>
 
                     @foreach($denda as $item)
-                        <div class="grid grid-cols-6 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors sm:grid-cols-6">
+                        <div class="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors sm:grid-cols-7">
                             <!-- Nama Peminjam -->
                             <div class="flex items-center p-2.5 xl:p-5">
                                 <p class="text-black dark:text-white">
@@ -121,9 +124,9 @@
                                 @endif
                             </div>
 
-                            <!-- Tgl Pinjam -->
+                            <!-- Nominal Denda -->
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
-                                <p class="text-black dark:text-white">{{ $item->peminjaman->tgl_pinjam }}</p>
+                                <p class="text-black dark:text-white font-bold text-danger">Rp {{ number_format($item->jumlah_denda, 0, ',', '.') }}</p>
                             </div>
 
                             <!-- Deadline -->
@@ -131,9 +134,18 @@
                                 <p class="text-black dark:text-white">{{ $item->peminjaman->tgl_kembali }}</p>
                             </div>
 
-                            <!-- Status -->
+                            <!-- Status Pinjam -->
                             <div class="flex items-center justify-center p-2.5 xl:p-5">
                                 <x-status-badge :type="$item->peminjaman->status_transaksi" />
+                            </div>
+
+                            <!-- Pembayaran -->
+                            <div class="flex items-center justify-center p-2.5 xl:p-5">
+                                @if(strtolower($item->status_pembayaran) == 'lunas')
+                                    <span class="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">Lunas</span>
+                                @else
+                                    <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">Belum Lunas</span>
+                                @endif
                             </div>
 
                             <!-- Aksi -->
@@ -151,6 +163,40 @@
             <div class="mt-4 px-4 pb-4 sm:px-7.5">
                  {{ $denda->links() }}
             </div>
+        </div>
+    </div>
+    <!-- Edit Config Modal -->
+    <div x-data="{ isOpen: false }" x-show="isOpen" @open-edit-config-modal.window="isOpen = true" x-cloak
+        class="fixed inset-0 z-99999 flex items-center justify-center overflow-y-auto bg-black/50 px-4 py-6">
+        <div @click.outside="isOpen = false"
+            class="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-boxdark sm:p-8">
+            <h3 class="mb-4 text-xl font-bold text-black dark:text-white">Edit Konfigurasi Denda</h3>
+            <p class="mb-6 text-sm text-gray-500">Sesuaikan nominal denda yang akan dibebankan kepada anggota per hari keterlambatan.</p>
+            
+            <form action="{{ route('admin.denda.config.update') }}" method="POST">
+                @csrf
+                <div class="mb-5">
+                    <label class="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Nominal Denda (Per Hari)
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-black dark:text-white">Rp</span>
+                        <input type="number" name="denda_per_hari" min="0" step="500" value="{{ $tarifDenda ?? 2000 }}" required
+                            class="w-full rounded border border-stroke bg-gray pl-12 pr-4 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary" />
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 mt-6">
+                    <button type="button" @click="isOpen = false"
+                        class="rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="rounded bg-primary px-6 py-2 font-medium text-white hover:bg-opacity-90">
+                        Simpan
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection

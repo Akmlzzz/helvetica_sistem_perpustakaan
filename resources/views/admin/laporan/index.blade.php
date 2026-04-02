@@ -9,6 +9,48 @@
             </h2>
         </div>
 
+        <!-- Google Sheets Sync Card -->
+        <div class="mb-8 overflow-hidden rounded-[20px] bg-white shadow-default dark:bg-gray-900 border border-stroke dark:border-gray-800 transition-all hover:shadow-lg group">
+            <div class="flex flex-col md:flex-row items-center p-6 md:p-8 gap-6">
+                <!-- Icon/Badge Section -->
+                <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-green-50 dark:bg-green-900/20 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="h-10 w-10 text-green-600 dark:text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                
+                <!-- Content Section -->
+                <div class="flex-1 text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-1">
+                        <h3 class="text-xl font-bold text-black dark:text-white">Auto-Report Dashboard</h3>
+                        <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/40 dark:text-green-400">
+                            <span class="mr-1 h-1.5 w-1.5 rounded-full bg-green-600 animate-pulse"></span>
+                            Live Sync
+                        </span>
+                    </div>
+                    <p class="text-base text-gray-600 dark:text-gray-400">
+                        Akses laporan otomatis yang tersinkronisasi secara real-time dengan Google Sheets. Pantau data peminjaman secara langsung tanpa perlu export manual.
+                    </p>
+                </div>
+
+                <!-- Action Section -->
+                <div class="shrink-0 w-full md:w-auto">
+                    <a href="https://docs.google.com/spreadsheets/d/1RgzZ3NgEsuIG_lPne0WoAAntmClGHVhadagzl_hzy7g/edit?usp=sharing" 
+                       target="_blank"
+                       class="inline-flex w-full md:w-auto items-center justify-center gap-2 rounded-xl bg-green-600 px-6 py-3.5 text-center font-bold text-white hover:bg-green-700 transition-all shadow-md hover:shadow-lg">
+                        <span>Buka Spreadsheet</span>
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Filter Card -->
         <div
             class="mb-8 rounded-[20px] border border-stroke bg-white px-5 pt-6 pb-6 shadow-default dark:border-gray-800 dark:bg-gray-900 sm:px-7.5">

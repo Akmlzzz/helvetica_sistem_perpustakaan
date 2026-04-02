@@ -50,6 +50,8 @@ class MenuHelper
             }
             if ($fiturAkses->contains('buku')) {
                 $fiturTambahan[] = ['name' => 'Data Buku', 'path' => '/buku', 'new' => false];
+            }
+            if ($fiturAkses->contains('series_buku')) {
                 $fiturTambahan[] = ['name' => 'Series Buku', 'path' => '/series', 'new' => false];
             }
             if ($fiturAkses->contains('peminjaman')) {
@@ -58,8 +60,11 @@ class MenuHelper
             if ($fiturAkses->contains('denda')) {
                 $fiturTambahan[] = ['name' => 'Denda', 'path' => '/denda', 'new' => false];
             }
-            if ($fiturAkses->contains('laporan')) {
-                $fiturTambahan[] = ['name' => 'Laporan', 'path' => '/laporan', 'new' => false];
+            if ($fiturAkses->contains('hero_banner')) {
+                $fiturTambahan[] = ['name' => 'Hero Banner', 'path' => '/hero-banners', 'new' => false];
+            }
+            if ($fiturAkses->contains('musik_player')) {
+                $fiturTambahan[] = ['name' => 'Musik Player', 'path' => '/admin/musik', 'new' => false];
             }
 
             // Jika ada fitur tambahan, tampilkan sebagai submenu "Kelola Data"
@@ -68,6 +73,15 @@ class MenuHelper
                     'name' => 'Kelola Data',
                     'icon' => 'database',
                     'subItems' => $fiturTambahan,
+                ];
+            }
+            
+            // Laporan berdiri sendiri jika diizinkan
+            if ($fiturAkses->contains('laporan')) {
+                $items[] = [
+                    'name' => 'Laporan',
+                    'icon' => 'report',
+                    'path' => '/laporan',
                 ];
             }
 

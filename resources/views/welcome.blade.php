@@ -22,6 +22,23 @@
             scroll-behavior: smooth;
         }
 
+        @keyframes marquee {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(calc(-100% - 1.5rem)); /* gap-6 is 1.5rem */
+            }
+        }
+
+        .animate-marquee {
+            animation: marquee 30s linear infinite;
+        }
+
+        .marquee-container:hover .animate-marquee {
+            animation-play-state: paused;
+        }
+
         .reveal-on-scroll {
             opacity: 0;
             transform: translateY(30px);
@@ -500,6 +517,125 @@
                             <span class="block font-extrabold text-[#084734]">BE</span>
                             <span class="text-gray-500 font-normal text-xs">Back End Developer</span>
                         </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seksi Testimonial -->
+    <section id="testimonial" class="py-16 md:py-24 bg-white overflow-hidden text-center">
+        <div class="container mx-auto px-6 mb-12">
+            <h2 class="text-3xl md:text-5xl font-medium text-[#1E1E1E]">Pendapat orang lain</h2>
+        </div>
+
+        <div class="relative w-full flex overflow-hidden gap-6 marquee-container pb-8 select-none">
+            <!-- Track 1 -->
+            <div class="flex shrink-0 animate-marquee gap-6 px-3">
+                <!-- Card 1 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "Sistem perpustakaan digital ini benar-benar mempermudah saya dalam mencari dan meminjam buku. Fitur 'Smart Fine Tracker'-nya sangat membantu saya agar tidak lupa tanggal pengembalian."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/han ahreun.jfif') }}" alt="Han Ahreun" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-bold">Han Ahreun</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "Saya paling suka fitur Kartu Anggota Digital! Tidak perlu repot bawa kartu fisik lagi, tinggal tunjukkan QR Code di HP sewaktu ingin ambil buku. Benar-benar sangat memanjakan kami."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/grace ashcroft.jfif') }}" alt="Grace Ashcroft" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-bold">Grace Ashcroft</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "Koleksi bukunya selalu ter-update dan fitur Booking Fisik Real-Time menyelamatkan saya dari kekecewaan kehabisan stok buku. Saya selalu bisa memantau ketersediaan buku."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/haein.jpeg') }}" alt="Haein" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-bold">Haein</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "Proses registrasinya gampang dan cepat! Dashboard personalnya membuat saya bisa melihat riwayat bacaan dan menyimpan rekomendasi buku yang ingin saya baca berikutnya. The best lah!"
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/Yang Mohyeon.jpg') }}" alt="Yang Mohyeon" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-bold">Yang Mohyeon</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Track 2 (Duplicate for Seamless Effect) -->
+            <div class="flex shrink-0 animate-marquee gap-6 px-3" aria-hidden="true">
+                <!-- Card 1 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "Sistem perpustakaan digital ini benar-benar mempermudah saya dalam mencari dan meminjam buku. Fitur 'Smart Fine Tracker'-nya sangat membantu saya agar tidak lupa tanggal pengembalian."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/han ahreun.jfif') }}" alt="Han Ahreun" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-bold">Han Ahreun</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "Saya paling suka fitur Kartu Anggota Digital! Tidak perlu repot bawa kartu fisik lagi, tinggal tunjukkan QR Code di HP sewaktu ingin ambil buku. Benar-benar sangat memanjakan kami."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/grace ashcroft.jfif') }}" alt="Grace Ashcroft" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-bold">Grace Ashcroft</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "Koleksi bukunya selalu ter-update dan fitur Booking Fisik Real-Time menyelamatkan saya dari kekecewaan kehabisan stok buku. Saya selalu bisa memantau ketersediaan buku."
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/haein.jpeg') }}" alt="Haein" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-bold">Haein</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="w-[320px] md:w-[420px] flex flex-col bg-[#F7F7F9] p-8 rounded-4xl shrink-0 text-left cursor-pointer transition-all hover:bg-[#F2F2F4]">
+                    <p class="text-[#5B5B5B] mb-12 font-medium leading-relaxed md:text-lg">
+                        "Proses registrasinya gampang dan cepat! Dashboard personalnya membuat saya bisa melihat riwayat bacaan dan menyimpan rekomendasi buku yang ingin saya baca berikutnya. The best lah!"
+                    </p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-200 shrink-0">
+                            <img src="{{ asset('img/testimonial/Yang Mohyeon.jpg') }}" alt="Yang Mohyeon" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-[#3F3D56] text-sm font-bold">Yang Mohyeon</span>
                     </div>
                 </div>
             </div>

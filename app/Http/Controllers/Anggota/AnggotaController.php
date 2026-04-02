@@ -320,7 +320,8 @@ class AnggotaController extends Controller
         // Auto-buat record denda untuk buku yang terlambat (jika belum ada)
         foreach ($peminjamanTerlambat as $loan) {
             $hariTerlambat = Carbon::today()->diffInDays(Carbon::parse($loan->tgl_jatuh_tempo));
-            $estimasiDenda = $hariTerlambat * 2000;
+            $tarifPerHari = \App\Helpers\AppSetting::get('denda_per_hari', 2000);
+            $estimasiDenda = $hariTerlambat * $tarifPerHari;
 
             \App\Models\Denda::firstOrCreate(
                 ['id_peminjaman' => $loan->id_peminjaman],
@@ -334,7 +335,8 @@ class AnggotaController extends Controller
         // Update jumlah denda yang sudah ada (agar selalu sinkron dengan hari terlambat terkini)
         foreach ($peminjamanTerlambat as $loan) {
             $hariTerlambat = Carbon::today()->diffInDays(Carbon::parse($loan->tgl_jatuh_tempo));
-            $estimasiDenda = $hariTerlambat * 2000;
+            $tarifPerHari = \App\Helpers\AppSetting::get('denda_per_hari', 2000);
+            $estimasiDenda = $hariTerlambat * $tarifPerHari;
 
             \App\Models\Denda::where('id_peminjaman', $loan->id_peminjaman)
                 ->where('status_pembayaran', 'belum_bayar')
@@ -352,7 +354,8 @@ class AnggotaController extends Controller
         // Hitung estimasi untuk tampilan keterlambatan aktif
         $dendaBerjalan = $peminjamanTerlambat->map(function ($loan) {
             $hariTerlambat = Carbon::today()->diffInDays(Carbon::parse($loan->tgl_jatuh_tempo));
-            $loan->estimasi_denda = $hariTerlambat * 2000;
+            $tarifPerHari = \App\Helpers\AppSetting::get('denda_per_hari', 2000);
+            $loan->estimasi_denda = $hariTerlambat * $tarifPerHari;
             $loan->hari_terlambat = $hariTerlambat;
             return $loan;
         });

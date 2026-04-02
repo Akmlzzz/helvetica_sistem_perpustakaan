@@ -20,7 +20,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [App\Http\Controllers\PasswordResetController::class, 'reset'])->name('password.update');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'back_history'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // =========================================================
@@ -113,8 +113,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/verifikasi-anggota/all', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'allMembers'])->name('admin.verifikasi-anggota.all');
         Route::post('/verifikasi-anggota/{id}/toggle', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'toggleStatus'])->name('admin.verifikasi-anggota.toggle');
 
-        // Hero Banner Management
-        Route::resource('hero-banners', \App\Http\Controllers\Admin\HeroBannerController::class)->names('admin.hero-banners');
+
 
         // Dokumentasi (Docs)
         Route::get('/admin/docs', [\App\Http\Controllers\Admin\DocsController::class, 'index'])->name('admin.docs.index');
@@ -164,6 +163,7 @@ Route::middleware('auth')->group(function () {
     // Denda — admin atau petugas yang punya izin 'denda'
     Route::middleware('akses:denda')->group(function () {
         Route::get('/denda', [\App\Http\Controllers\Admin\DendaController::class, 'index'])->name('admin.denda.index');
+        Route::post('/denda/config', [\App\Http\Controllers\Admin\DendaController::class, 'updateConfig'])->name('admin.denda.config.update');
         Route::get('/denda/{id}', [\App\Http\Controllers\Admin\DendaController::class, 'show'])->name('admin.denda.show');
     });
 
@@ -172,6 +172,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/laporan', [\App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan.index');
         Route::get('/laporan/pdf', [\App\Http\Controllers\Admin\LaporanController::class, 'exportPdf'])->name('admin.laporan.pdf');
         Route::get('/laporan/excel', [\App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('admin.laporan.excel');
+    });
+
+    // Hero Banner — admin atau petugas yang punya izin 'hero_banner'
+    Route::middleware('akses:hero_banner')->group(function () {
+        Route::resource('hero-banners', \App\Http\Controllers\Admin\HeroBannerController::class)->names('admin.hero-banners');
+    });
+
+    // Music Player — admin atau petugas yang punya izin 'musik_player'
+    Route::middleware('akses:musik_player')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'index'])->name('musik.index');
+        Route::post('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'store'])->name('musik.store');
+        Route::put('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'update'])->name('musik.update');
+        Route::delete('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'destroy'])->name('musik.destroy');
+        Route::patch('/musik/{musik}/toggle', [\App\Http\Controllers\Admin\MusikController::class, 'toggleAktif'])->name('musik.toggle');
     });
 
     // =========================================================
@@ -229,10 +243,10 @@ Route::middleware('auth')->group(function () {
 
 // API Routes for AJAX calls
 Route::get('/api/buku/search', [\App\Http\Controllers\Api\BukuApiController::class, 'search'])->name('api.buku.search');
-Route::post('/api/booking', [\App\Http\Controllers\Api\BookingApiController::class, 'storeBooking'])->name('api.booking.store')->middleware(['auth', \App\Http\Middleware\AnggotaMiddleware::class]);
+Route::post('/api/booking', [\App\Http\Controllers\Api\BookingApiController::class, 'storeBooking'])->name('api.booking.store')->middleware(['auth', 'back_history', \App\Http\Middleware\AnggotaMiddleware::class]);
 
 // Pengajuan Buku - Form Publik (bisa diakses anggota yang sudah login)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'back_history'])->group(function () {
     Route::get('/ajukan-buku', [\App\Http\Controllers\PengajuanBukuPublikController::class, 'create'])->name('pengajuan-buku.create');
     Route::post('/ajukan-buku', [\App\Http\Controllers\PengajuanBukuPublikController::class, 'store'])->name('pengajuan-buku.store');
 
@@ -244,7 +258,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // AI Chatbot Routes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'back_history'])->group(function () {
     Route::post('/api/ai/chat', [\App\Http\Controllers\AiChatController::class, 'chat'])->name('api.ai.chat');
     Route::post('/api/ai/summary', [\App\Http\Controllers\AiChatController::class, 'summary'])->name('api.ai.summary');
 });
@@ -253,12 +267,12 @@ Route::middleware('auth')->group(function () {
 // PAYMENT — Midtrans (Pembayaran Denda)
 // =========================================================
 // Generate Snap Token (hanya anggota yang login)
-Route::middleware(['auth', \App\Http\Middleware\AnggotaMiddleware::class])
+Route::middleware(['auth', 'back_history', \App\Http\Middleware\AnggotaMiddleware::class])
     ->post('/payment/snap-token', [\App\Http\Controllers\Anggota\PaymentController::class, 'createSnapToken'])
     ->name('payment.snap-token');
 
 // Cek & update status pembayaran (tanpa webhook, cocok untuk lokal)
-Route::middleware(['auth', \App\Http\Middleware\AnggotaMiddleware::class])
+Route::middleware(['auth', 'back_history', \App\Http\Middleware\AnggotaMiddleware::class])
     ->post('/payment/check-status', [\App\Http\Controllers\Anggota\PaymentController::class, 'checkAndUpdateStatus'])
     ->name('payment.check-status');
 
@@ -266,14 +280,7 @@ Route::middleware(['auth', \App\Http\Middleware\AnggotaMiddleware::class])
 Route::post('/payment/midtrans/callback', [\App\Http\Controllers\Anggota\PaymentController::class, 'handleNotification'])
     ->name('payment.midtrans.callback');
 
-// Music Player Management (Admin only)
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'index'])->name('musik.index');
-    Route::post('/musik', [\App\Http\Controllers\Admin\MusikController::class, 'store'])->name('musik.store');
-    Route::put('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'update'])->name('musik.update');
-    Route::delete('/musik/{musik}', [\App\Http\Controllers\Admin\MusikController::class, 'destroy'])->name('musik.destroy');
-    Route::patch('/musik/{musik}/toggle', [\App\Http\Controllers\Admin\MusikController::class, 'toggleAktif'])->name('musik.toggle');
-});
+
 
 // Public API: get active tracks for music player
 Route::get('/api/musik', function () {

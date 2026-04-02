@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'akses' => \App\Http\Middleware\CekHakAkses::class,
+            'back_history' => \App\Http\Middleware\PreventBackHistory::class,
         ]);
 
         // Kecualikan endpoint callback Midtrans dari CSRF

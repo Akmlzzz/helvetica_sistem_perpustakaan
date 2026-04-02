@@ -58,8 +58,9 @@ class PeminjamanController extends Controller
         }
 
         $peminjaman = $query->paginate(10)->withQueryString();
+        $tarifDenda = \App\Helpers\AppSetting::get('denda_per_hari', 2000);
 
-        return view('admin.peminjaman.index', compact('peminjaman'));
+        return view('admin.peminjaman.index', compact('peminjaman', 'tarifDenda'));
     }
 
     public function create()

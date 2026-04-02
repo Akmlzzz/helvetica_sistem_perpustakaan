@@ -7,17 +7,6 @@
             <h2 class="text-title-md2 font-bold text-black dark:text-white">
                 Data Peminjaman
             </h2>
-            <a href="{{ route('admin.peminjaman.create') }}"
-                class="inline-flex items-center gap-2 rounded-xl bg-brand-primary px-6 py-3 font-medium text-white hover:bg-opacity-90">
-                <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 4.16666V15.8333" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                    <path d="M4.16669 10H15.8334" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round" />
-                </svg>
-                Tambah Peminjaman
-            </a>
         </div>
 
         <!-- Search & Filter -->
@@ -244,10 +233,14 @@
         </div>
     </div>
 
+    <!-- App config (PHP vars exposed safely to JS via data attributes) -->
+    <div id="app-config" data-tarif-denda="{{ $tarifDenda ?? 2000 }}" class="hidden"></div>
+
     <script>
         function dendaModal() {
             return {
                 isOpen: false,
+                tarifDefault: parseInt(document.getElementById('app-config').dataset.tarifDenda) || 2000,
                 data: {
                     id: '',
                     nama: '',
@@ -260,8 +253,7 @@
                     this.data.nama = detail.nama;
                     this.data.tgl_kembali = detail.tgl_kembali;
 
-                    // Simple logic to calculate fine (Example: 1000 per day)
-                    // In real app, this should probably come from backend or config
+                    // Calculate fine dynamically based on setting
                     const tglKembali = new Date(detail.tgl_kembali);
                     const today = new Date();
                     const diffTime = Math.abs(today - tglKembali);
@@ -270,7 +262,7 @@
                     // If today is after due date
                     if (today > tglKembali) {
                         this.data.terlambat = diffDays;
-                        this.data.total_denda = diffDays * 1000; // Asumsi denda 1000 per hari
+                        this.data.total_denda = diffDays * this.tarifDefault;
                     } else {
                         this.data.terlambat = 0;
                         this.data.total_denda = 0;
