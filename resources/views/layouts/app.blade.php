@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $title ?? 'Dashboard' }} | Biblio </title>
-    <link rel="icon" href="{{ asset('img/Logo.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('img/Logo-tab.svg') }}" type="image/svg+xml">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
