@@ -99,25 +99,31 @@ Route::middleware(['auth', 'back_history'])->group(function () {
         Route::post('/hak-akses/{id_pengguna}', [\App\Http\Controllers\Admin\HakAksesController::class, 'update'])->name('admin.hak-akses.update');
         Route::post('/hak-akses/{id_pengguna}/toggle', [\App\Http\Controllers\Admin\HakAksesController::class, 'toggle'])->name('admin.hak-akses.toggle');
 
-        // Pengajuan Buku Management (admin only)
-        Route::get('/pengajuan-buku', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'index'])->name('admin.pengajuan-buku.index');
-        Route::get('/pengajuan-buku/{id}', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'show'])->name('admin.pengajuan-buku.show');
-        Route::patch('/pengajuan-buku/{id}/status', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'updateStatus'])->name('admin.pengajuan-buku.status');
-        Route::delete('/pengajuan-buku/{id}', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'destroy'])->name('admin.pengajuan-buku.destroy');
-
-        // Verifikasi Anggota Management (admin only)
-        Route::get('/verifikasi-anggota', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'index'])->name('admin.verifikasi-anggota.index');
-        Route::get('/verifikasi-anggota/{id}', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'show'])->name('admin.verifikasi-anggota.show');
-        Route::post('/verifikasi-anggota/{id}/approve', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'approve'])->name('admin.verifikasi-anggota.approve');
-        Route::post('/verifikasi-anggota/{id}/reject', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'reject'])->name('admin.verifikasi-anggota.reject');
-        Route::get('/verifikasi-anggota/all', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'allMembers'])->name('admin.verifikasi-anggota.all');
-        Route::post('/verifikasi-anggota/{id}/toggle', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'toggleStatus'])->name('admin.verifikasi-anggota.toggle');
 
 
 
         // Dokumentasi (Docs)
         Route::get('/admin/docs', [\App\Http\Controllers\Admin\DocsController::class, 'index'])->name('admin.docs.index');
         Route::get('/admin/docs/{slug}', [\App\Http\Controllers\Admin\DocsController::class, 'show'])->name('admin.docs.show');
+    });
+
+    // =========================================================
+    // SHARED — Admin ATAU Petugas 
+    // =========================================================
+    Route::middleware('admin_petugas')->group(function () {
+        // Pengajuan Buku Management 
+        Route::get('/pengajuan-buku', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'index'])->name('admin.pengajuan-buku.index');
+        Route::get('/pengajuan-buku/{id}', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'show'])->name('admin.pengajuan-buku.show');
+        Route::patch('/pengajuan-buku/{id}/status', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'updateStatus'])->name('admin.pengajuan-buku.status');
+        Route::delete('/pengajuan-buku/{id}', [\App\Http\Controllers\Admin\PengajuanBukuController::class, 'destroy'])->name('admin.pengajuan-buku.destroy');
+
+        // Verifikasi Anggota Management 
+        Route::get('/verifikasi-anggota', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'index'])->name('admin.verifikasi-anggota.index');
+        Route::get('/verifikasi-anggota/{id}', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'show'])->name('admin.verifikasi-anggota.show');
+        Route::post('/verifikasi-anggota/{id}/approve', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'approve'])->name('admin.verifikasi-anggota.approve');
+        Route::post('/verifikasi-anggota/{id}/reject', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'reject'])->name('admin.verifikasi-anggota.reject');
+        Route::get('/verifikasi-anggota/all', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'allMembers'])->name('admin.verifikasi-anggota.all');
+        Route::post('/verifikasi-anggota/{id}/toggle', [\App\Http\Controllers\Admin\VerifikasiAnggotaController::class, 'toggleStatus'])->name('admin.verifikasi-anggota.toggle');
     });
 
     // =========================================================

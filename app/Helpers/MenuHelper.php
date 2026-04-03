@@ -40,6 +40,18 @@ class MenuHelper
                     'icon' => 'book',
                     'path' => '/petugas/katalog',
                 ],
+                [
+                    'name' => 'Pengajuan Buku',
+                    'icon' => 'inbox',
+                    'path' => '/pengajuan-buku',
+                    'badge' => \App\Models\PengajuanBuku::where('sudah_dibaca', false)->count() ?: null,
+                ],
+                [
+                    'name' => 'Verifikasi Anggota',
+                    'icon' => 'shield',
+                    'path' => '/verifikasi-anggota',
+                    'badge' => \App\Models\Pengguna::where('level_akses', 'anggota')->where('status', 'pending')->count() ?: null,
+                ],
             ];
 
             // Fitur tambahan berdasarkan hak akses
