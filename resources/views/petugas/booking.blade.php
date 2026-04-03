@@ -45,10 +45,7 @@
             <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                 <div class="border-b border-gray-100 bg-linear-to-r from-[#004236]/5 to-transparent px-6 py-4">
                     <h3 class="font-bold text-gray-800 flex items-center gap-2">
-                        <svg class="h-5 w-5 text-[#004236]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 3.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                        </svg>
-                        Input Kode Booking
+                        Kode Booking
                     </h3>
                     <p class="text-xs text-gray-500 mt-1">Masukkan kode booking yang ditunjukkan anggota</p>
                 </div>
