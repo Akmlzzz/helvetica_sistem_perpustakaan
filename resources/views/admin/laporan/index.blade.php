@@ -189,21 +189,23 @@
                 <div class="flex flex-wrap gap-2">
                     <a href="{{ route('admin.laporan.pdf', request()->all()) }}" target="_blank"
                         class="inline-flex items-center justify-center gap-2 rounded-md border border-success bg-white px-4 py-2 text-sm font-medium text-success">
-                        <svg class="fill-current" width="16" height="16" viewBox="0 0 20 20" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M16.6667 2.5H3.33333C2.8731 2.5 2.5 2.8731 2.5 3.33333V16.6667C2.5 17.1269 2.8731 17.5 3.33333 17.5H16.6667C17.1269 17.5 17.5 17.1269 17.5 16.6667V3.33333C17.5 2.8731 17.1269 2.5 16.6667 2.5ZM15.8333 15.8333H4.16667V4.16667H15.8333V15.8333Z"
-                                fill="currentColor" />
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
                         </svg>
                         PDF
                     </a>
                     <a href="{{ route('admin.laporan.excel', request()->all()) }}"
                         class="inline-flex items-center justify-center gap-2 rounded-md border border-success bg-white px-4 py-2 text-sm font-medium text-success">
-                        <svg class="fill-current" width="16" height="16" viewBox="0 0 20 20" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M16.6667 2.5H3.33333C2.8731 2.5 2.5 2.8731 2.5 3.33333V16.6667C2.5 17.1269 2.8731 17.5 3.33333 17.5H16.6667C17.1269 17.5 17.5 17.1269 17.5 16.6667V3.33333C17.5 2.8731 17.1269 2.5 16.6667 2.5ZM13.3333 12.5L10 15.8333L6.66667 12.5H9.16667V7.5H10.8333V12.5H13.3333Z"
-                                fill="currentColor" />
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="3" y1="15" x2="21" y2="15"></line>
+                            <line x1="9" y1="9" x2="9" y2="21"></line>
+                            <line x1="15" y1="9" x2="15" y2="21"></line>
                         </svg>
                         Excel
                     </a>
