@@ -8,6 +8,18 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
+/**
+ * @property int $id_pengguna
+ * @property string $nama_pengguna
+ * @property string $email
+ * @property string $kata_sandi
+ * @property string $level_akses (admin, petugas, anggota)
+ * @property string $status (active, pending, rejected)
+ * @property string $nomor_anggota (null for non-anggota)
+ * @property \Carbon\Carbon $dibuat_pada
+ * @property \Carbon\Carbon $diperbarui_pada
+ * @property-read \App\Models\Anggota|null $anggota
+ */
 class Pengguna extends Authenticatable implements CanResetPassword
 {
     use HasFactory, Notifiable;
