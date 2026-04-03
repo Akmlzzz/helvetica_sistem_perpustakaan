@@ -85,6 +85,33 @@
             @include('layouts.app-header')
             <!-- app header end -->
             <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6 mt-[47px]">
+                @if(Auth::check() && Auth::user()->isAnggota() && Auth::user()->isPending())
+                    <div class="mb-6 flex items-center gap-4 rounded-2xl bg-amber-50 border border-amber-200 p-5 shadow-sm animate-pulse-subtle">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-100/80 shadow-inner">
+                            <svg class="h-6 w-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-amber-900 flex items-center gap-2">
+                                Halo, {{ Auth::user()->anggota->nama_lengkap ?? Auth::user()->nama_pengguna }}! 👋
+                                <span class="px-2 py-0.5 rounded-full bg-amber-200 text-[10px] uppercase tracking-wider font-extrabold text-amber-800">Menunggu Verifikasi</span>
+                            </h4>
+                            <p class="text-sm text-amber-800/80 mt-1">Sembari menunggu Admin memverifikasi akun Anda, silakan jelajahi koleksi buku kami. Fitur peminjaman akan otomatis aktif setelah akun Anda disetujui.</p>
+                        </div>
+                    </div>
+
+                    <style>
+                        @keyframes pulse-subtle {
+                            0%, 100% { transform: scale(1); opacity: 1; }
+                            50% { transform: scale(1.002); opacity: 0.98; }
+                        }
+                        .animate-pulse-subtle {
+                            animation: pulse-subtle 4s ease-in-out infinite;
+                        }
+                    </style>
+                @endif
+
                 @yield('content')
             </div>
         </div>

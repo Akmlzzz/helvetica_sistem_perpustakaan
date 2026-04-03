@@ -90,7 +90,7 @@ class AuthController extends Controller
             DB::commit();
             Auth::login($pengguna);
 
-            return redirect()->route('anggota.dashboard');
+            return redirect()->route('anggota.dashboard')->with('success', 'Akun berhasil dibuat! Silakan jelajahi katalog buku kami sementara menunggu verifikasi Admin untuk mulai meminjam.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->withErrors(['error' => 'Registrasi gagal: ' . $e->getMessage()]);
