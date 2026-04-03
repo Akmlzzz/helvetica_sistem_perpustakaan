@@ -36,7 +36,7 @@ class MenuHelper
                     'path' => '/petugas/pengembalian',
                 ],
                 [
-                    'name' => 'Katalog Buku',
+                    'name' => 'Cek Stok & Rak',
                     'icon' => 'book',
                     'path' => '/petugas/katalog',
                 ],
