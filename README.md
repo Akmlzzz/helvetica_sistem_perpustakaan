@@ -71,9 +71,10 @@ Berikut adalah beberapa pratinjau antarmuka beresolusi tinggi di sistem Biblio:
 ### 5. Integrasi Midtrans & Checkout Denda (Baru!)
 
 > Pembayaran denda otomatis tanpa intervensi admin.
-> <img src="public/img/readme-img/pilih metode pembayaran.JPG" width="800">
-> <br><br>
-> <img src="public/img/readme-img/v2/pembayaran berhasil.JPG" width="800">
+
+| Pilih Metode Pembayaran (Snap Midtrans) | Konfirmasi Pembayaran Berhasil |
+|:---:|:---:|
+| <img src="public/img/readme-img/v2/pilih metode pembayaran.JPG" height="400"> | <img src="public/img/readme-img/v2/pembayaran berhasil.JPG" height="400"> |
 
 ### 6. Auto Report Generation & Spreadsheet Export
 
