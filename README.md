@@ -79,7 +79,7 @@ Berikut adalah beberapa pratinjau antarmuka beresolusi tinggi di sistem Biblio:
 
 Proyek ini mengadopsi stack tekonologi yang lincah dan berpusat pada optimalisasi alur pengalaman user:
 
-- **Bahasa & Backend Framework**: PHP (Laravel 11.x)
+- **Bahasa & Backend Framework**: PHP (Laravel 12.x)
 - **Frontend / Styling Toolbox**: CSS Utility-First (Tailwind CSS v3+), Flowbite UI
 - **Database Server**: Relational DB (MySQL)
 - **State & Interactivity**: Alpine.js, Ajax
