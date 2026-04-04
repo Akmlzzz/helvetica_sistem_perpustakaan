@@ -13,9 +13,10 @@
 
 ## Fitur Unggulan Sistem
 
-Aplikasi ini menyajikan desain yang *responsive* dengan dukungan fitur-fitur **advance / tingkat lanjut** sebagai berikut:
+Aplikasi ini menyajikan desain yang _responsive_ dengan dukungan fitur-fitur **advance / tingkat lanjut** sebagai berikut:
 
 ### Fitur Baru & Integrasi Modern
+
 - **Integrasi Payment Gateway (Midtrans)**: Anggota dapat membayar tagihan denda secara _cashless_ langsung dari panel dashboard mereka menggunakan QRIS, Virtual Account (BCA, Mandiri, BNI, BRI), atau e-Wallet (GoPay, ShopeePay). Transaksi diverifikasi secara otomatis tanpa input manual admin!
 - **Cendekia AI (Chatbot Assistant)**: Terintegrasi dengan algoritma Google Gemini API. Pustakawan virtual ini dapat merekomendasikan buku romantis, merangkum plot cerita, hingga mendiskusikan berbagai topik literatur layaknya kawan membaca sesungguhnya.
 - **Otomasi Webhook via Make.com**: Usulan pengadaan koleksi judul baru (propose book) yang disubmit pemustaka akan secara riwayat dikirimkan alert / notifikasi ping ke sistem _webhook_ sehingga staf pengelola langsung terinformasi.
@@ -48,26 +49,34 @@ Aplikasi ini menyajikan desain yang *responsive* dengan dukungan fitur-fitur **a
 Berikut adalah beberapa pratinjau antarmuka beresolusi tinggi di sistem Biblio:
 
 ### 1. Dashboard Admin
+
 > Menyajikan data analitik operasional harian perpustakaan serta persentase rasio.
 > <img src="public/img/readme-img/v2/dashboard-admin.jpg" width="800">
 
 ### 2. Dashboard Petugas (Layanan Sirkulasi)
+
 > Terminal utama sehari-hari bagi Pustakawan yang bertugas mengelola peminjaman.
 > <img src="public/img/readme-img/v2/dashboard-petugas.jpg" width="800">
 
 ### 3. Katalog Koleksi untuk Anggota & Skeleton Loader
+
 > Eksplorasi ribuan judul menarik menggunakan load balancing asinkron modern.
 > <img src="public/img/readme-img/v2/katalog-buku-anggota.jpg" width="800">
 
 ### 4. Pustakawan AI (Cendekia Chatbot / Gemini API)
+
 > Pustakawan virtual yang membantu mengidentifikasi kisah tanpa tersesat di tumpukan buku!
 > <img src="public/img/readme-img/v2/chatbot-ai-new.JPG" width="398">
 
 ### 5. Integrasi Midtrans & Checkout Denda (Baru!)
+
 > Pembayaran denda otomatis tanpa intervensi admin.
-> <img src="public/img/readme-img/detail-buku.png" width="800">
+> <img src="public/img/readme-img/pilih metode pembayaran.JPG" width="800">
+> <br><br>
+> <img src="public/img/readme-img/v2/pembayaran berhasil.JPG" width="800">
 
 ### 6. Auto Report Generation & Spreadsheet Export
+
 > Fitur pencetakan rekap dan formulasi auto-report berkala via Spreadsheet (XLSX).
 > <img src="public/img/readme-img/v2/Auto%20Report.JPG" width="800">
 > <br><br>
@@ -83,10 +92,10 @@ Proyek ini mengadopsi stack tekonologi yang lincah dan berpusat pada optimalisas
 - **Frontend / Styling Toolbox**: CSS Utility-First (Tailwind CSS v3+), Flowbite UI
 - **Database Server**: Relational DB (MySQL)
 - **State & Interactivity**: Alpine.js, Ajax
-- **Gateway & API Eksternal**: 
-   - Midtrans Snap API (Digital Payment)
-   - Google Gemini API (AI Studio)
-   - Make.com (Webhook Automation)
+- **Gateway & API Eksternal**:
+    - Midtrans Snap API (Digital Payment)
+    - Google Gemini API (AI Studio)
+    - Make.com (Webhook Automation)
 
 ---
 
