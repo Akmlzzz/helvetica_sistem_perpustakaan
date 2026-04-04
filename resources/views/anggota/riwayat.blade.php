@@ -383,6 +383,12 @@
         })
         .then(res => res.json())
         .then(data => {
+            if (data.status === 'lunas') {
+                alert(data.message || 'Denda telah dilunasi.');
+                window.location.reload();
+                return;
+            }
+
             if (!data.snap_token) {
                 alert(data.message || 'Gagal mendapatkan token pembayaran.');
                 resetBtn(btn);

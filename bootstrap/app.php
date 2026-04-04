@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'admin_petugas' => \App\Http\Middleware\AdminPetugasMiddleware::class,
             'akses' => \App\Http\Middleware\CekHakAkses::class,
             'back_history' => \App\Http\Middleware\PreventBackHistory::class,
         ]);

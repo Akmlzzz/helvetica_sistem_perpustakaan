@@ -120,7 +120,7 @@
                                     {{-- Kode Booking (mini, untuk status selain booking) --}}
                                     @if($status !== 'booking')
                                     <span class="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 font-mono font-bold text-gray-700">
-                                        🎫 {{ $item->kode_booking }}
+                                        {{ $item->kode_booking }}
                                     </span>
                                     @endif
 
@@ -267,19 +267,19 @@
             <div class="flex flex-wrap gap-3 text-xs">
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1.5 font-bold text-blue-700">
                     <span class="h-2 w-2 rounded-full bg-blue-500"></span>
-                    BOOKING — Menunggu pengambilan di perpustakaan
+                    BOOKING Menunggu pengambilan di perpustakaan
                 </span>
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-yellow-100 px-3 py-1.5 font-bold text-yellow-700">
                     <span class="h-2 w-2 rounded-full bg-yellow-500"></span>
-                    AKTIF — Sedang dipinjam, belum jatuh tempo
+                    AKTIF Sedang dipinjam, belum jatuh tempo
                 </span>
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1.5 font-bold text-green-700">
                     <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                    DIKEMBALIKAN — Buku sudah dikembalikan
+                    DIKEMBALIKAN Buku sudah dikembalikan
                 </span>
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1.5 font-bold text-red-700">
                     <span class="h-2 w-2 rounded-full bg-red-500"></span>
-                    TERLAMBAT — Melewati batas waktu, kena denda Rp 2.000/hari
+                    TERLAMBAT Melewati batas waktu, kena denda Rp 2.000/hari
                 </span>
             </div>
         </div>

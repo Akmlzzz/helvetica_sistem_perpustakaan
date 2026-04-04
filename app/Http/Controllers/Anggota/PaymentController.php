@@ -50,10 +50,21 @@ class PaymentController extends Controller
         $anggota = $user->anggota;
         $buku    = $denda->peminjaman->buku;
 
-        // Pastikan jumlah denda valid (minimal Rp 100)
+        // Pastikan jumlah denda valid
         $grossAmount = (int) round($denda->jumlah_denda);
+
+        // Jika denda Rp 0, anggap sudah lunas langsung
+        if ($grossAmount <= 0) {
+            $denda->update(['status_pembayaran' => 'lunas']);
+            return response()->json([
+                'status' => 'lunas',
+                'message' => 'Denda Rp 0 telah otomatis dianggap lunas.'
+            ]);
+        }
+
+        // Minimal Rp 100 agar diterima Midtrans
         if ($grossAmount < 100) {
-            return response()->json(['message' => 'Jumlah denda terlalu kecil untuk diproses via pembayaran digital (minimum Rp 100).'], 422);
+            $grossAmount = 100;
         }
 
         // Order ID unik per denda (agar tidak tabrakan saat retry)
