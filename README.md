@@ -20,7 +20,6 @@ Aplikasi ini menyajikan desain yang _responsive_ dengan dukungan fitur-fitur **a
 - **Integrasi Payment Gateway (Midtrans)**: Anggota dapat membayar tagihan denda secara _cashless_ langsung dari panel dashboard mereka menggunakan QRIS, Virtual Account (BCA, Mandiri, BNI, BRI), atau e-Wallet (GoPay, ShopeePay). Transaksi diverifikasi secara otomatis tanpa input manual admin!
 - **Cendekia AI (Chatbot Assistant)**: Terintegrasi dengan algoritma Google Gemini API. Pustakawan virtual ini dapat merekomendasikan buku romantis, merangkum plot cerita, hingga mendiskusikan berbagai topik literatur layaknya kawan membaca sesungguhnya.
 - **Otomasi Webhook via Make.com**: Usulan pengadaan koleksi judul baru (propose book) yang disubmit pemustaka akan secara riwayat dikirimkan alert / notifikasi ping ke sistem _webhook_ sehingga staf pengelola langsung terinformasi.
-- **Tema Mode Gelap (Dark Mode Switch)**: Dukungan antar-muka siang-malam berbasis OS dengan _toggle preference_ pada dashboard anggota, memberikan pengalaman visual yang epik sekaligus ramah di mata saat membaca malam hari.
 - **Dynamic Skeleton Screen Loader**: Transisi asinkron halus pada katalog atau tabel riwayat, memperlihatkan "kerangka" (_skeleton_) sementara _background task_ dimuat. Tidak ada lagi layar _freeze_!
 - **Laporan Administrasi Premium**: Dilengkapi fitur _Export to Excel (XLSX)_ dan Cetak Instan untuk pembuatan rekap sirkulasi maupun audit denda.
 
@@ -72,8 +71,8 @@ Berikut adalah beberapa pratinjau antarmuka beresolusi tinggi di sistem Biblio:
 
 > Pembayaran denda otomatis tanpa intervensi admin.
 
-| Pilih Metode Pembayaran (Snap Midtrans) | Konfirmasi Pembayaran Berhasil |
-|:---:|:---:|
+|                    Pilih Metode Pembayaran (Snap Midtrans)                    |                      Konfirmasi Pembayaran Berhasil                       |
+| :---------------------------------------------------------------------------: | :-----------------------------------------------------------------------: |
 | <img src="public/img/readme-img/v2/pilih metode pembayaran.JPG" height="400"> | <img src="public/img/readme-img/v2/pembayaran berhasil.JPG" height="400"> |
 
 ### 6. Auto Report Generation & Spreadsheet Export
